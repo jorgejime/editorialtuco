@@ -10,7 +10,7 @@ $q = $_GET['q'] ?? '';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= e(SITE_NAME) ?><?= isset($page_title) ? ' — ' . e($page_title) : '' ?></title>
-<link rel="stylesheet" href="assets/style.css?v=20261007a">
+<link rel="stylesheet" href="assets/style.css?v=20261007_compliance">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>

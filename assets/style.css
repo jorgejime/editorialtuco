@@ -76,15 +76,95 @@ main.wrap { padding-top: 22px; padding-bottom: 44px; }
 .articulo .resumen { font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #333; line-height: 1.65; margin-bottom: 20px; }
 .articulo .contenido p { margin-bottom: 18px; font-size: 17px; line-height: 1.7; }
 
-/* Pie */
-.footer { border-top: 3px solid var(--tinta); margin-top: 24px; font-family: Arial, Helvetica, sans-serif; }
-.footer-in { display: flex; flex-direction: column; gap: 12px; padding-top: 22px; padding-bottom: 26px; font-size: 13px; color: var(--gris); }
-.footer strong { color: var(--tinta); font-size: 15px; font-family: Georgia, serif; }
+/* Pie y Compliance Argentina */
+.footer { border-top: 3px solid var(--tinta); margin-top: 36px; background: #fafafa; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: var(--gris); }
+.footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; padding-top: 32px; padding-bottom: 24px; }
+.footer-col-title { font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--tinta); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--linea); }
+.footer-brand-title { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: var(--tinta); }
+.footer-tagline { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: var(--rojo); margin-top: 2px; margin-bottom: 10px; }
+.footer-staff-mini p { margin-bottom: 6px; font-size: 12px; line-height: 1.45; }
+.footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.footer-links a { color: var(--gris); }
+.footer-links a:hover { color: var(--rojo); text-decoration: underline; }
 
-/* Crédito de desarrollo — hiper pequeño */
-.footer-credit { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px 14px; border-top: 1px solid var(--linea); font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: var(--gris-claro); opacity: .7; }
+/* Botones de Compliance Defensa del Consumidor */
+.footer-compliance-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.btn-arrepentimiento, .btn-baja { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 12px; font-size: 12px; font-weight: 700; border-radius: 2px; text-decoration: none; text-align: center; }
+.btn-arrepentimiento { background: #fff; color: var(--rojo); border: 1.5px solid var(--rojo); }
+.btn-arrepentimiento:hover { background: var(--rojo); color: #fff; }
+.btn-baja { background: #fff; color: var(--tinta); border: 1px solid var(--tinta); }
+.btn-baja:hover { background: var(--tinta); color: #fff; }
+
+/* Data Fiscal Badge */
+.data-fiscal-badge { border: 1px solid #ccc; background: #fff; padding: 12px; text-align: center; border-radius: 4px; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; max-width: 140px; }
+.data-fiscal-header { font-size: 12px; font-weight: 800; color: #003366; letter-spacing: 1px; }
+.data-fiscal-sub { font-size: 9px; font-weight: 700; color: var(--gris-claro); text-transform: uppercase; }
+.data-fiscal-qr { color: #111; margin: 4px 0; }
+.data-fiscal-titular { font-size: 10px; font-weight: 600; color: #333; }
+.data-fiscal-link { font-size: 9px; color: #1a5fb4; text-decoration: underline; }
+
+/* Franja AAIP */
+.footer-aaip-strip { border-top: 1px solid var(--linea); padding-top: 14px; padding-bottom: 14px; }
+.aaip-box { background: #fff; border: 1px solid #e0e0e0; border-left: 3px solid #1a5fb4; padding: 10px 14px; font-size: 11px; line-height: 1.5; color: #444; }
+.aaip-box strong { color: var(--tinta); }
+.aaip-box a { color: #1a5fb4; text-decoration: underline; font-weight: 600; }
+
+/* Barra inferior y créditos */
+.footer-bottom-bar { border-top: 1px solid var(--linea); display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: space-between; padding-top: 12px; padding-bottom: 16px; font-size: 11px; color: var(--gris-claro); }
+.footer-copy { text-align: center; }
+.footer-credit { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 10px; color: var(--gris-claro); opacity: .75; }
 .footer-credit img { height: 10px; width: auto; }
 .footer-credit a:hover { opacity: 1; }
+
+/* Páginas Legales */
+.legal-page { max-width: 860px; margin: 0 auto; padding: 12px 0 32px; font-family: Arial, Helvetica, sans-serif; }
+.legal-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--tinta); }
+.legal-header h1 { font-family: Georgia, serif; font-size: 32px; line-height: 1.2; margin: 6px 0 8px; }
+.legal-body section { margin-bottom: 24px; }
+.legal-body h2 { font-family: Georgia, serif; font-size: 20px; margin-bottom: 10px; color: var(--tinta); border-bottom: 1px solid var(--linea); padding-bottom: 4px; }
+.legal-body p { font-size: 15px; line-height: 1.7; color: #2e2e2e; margin-bottom: 12px; }
+.legal-body ul { padding-left: 20px; margin-bottom: 14px; font-size: 15px; line-height: 1.7; color: #2e2e2e; }
+.legal-body li { margin-bottom: 6px; }
+.legal-highlight { background: #fdf5f5; border-left: 3px solid var(--rojo); padding: 14px 16px; margin: 16px 0; font-size: 14px; line-height: 1.6; color: #2e2e2e; }
+.legal-highlight a { color: var(--rojo); font-weight: 700; text-decoration: underline; }
+
+/* Banner AAIP en página de Privacidad */
+.legal-banner-aaip { background: #f4f8fc; border: 1px solid #c9def4; border-left: 4px solid #1a5fb4; padding: 16px 18px; margin-bottom: 24px; border-radius: 2px; }
+.aaip-logo-text strong { display: block; font-size: 14px; color: #003366; letter-spacing: .5px; }
+.aaip-logo-text span { font-size: 11px; text-transform: uppercase; color: #555; }
+.aaip-legal-text { font-size: 12px; line-height: 1.55; color: #222; margin: 8px 0 !important; }
+.aaip-links { font-size: 11px; color: #666; margin-top: 10px; }
+.aaip-links a { color: #1a5fb4; font-weight: 600; text-decoration: underline; }
+
+/* Ficha Técnica Legales */
+.ficha-tecnica { border: 1px solid var(--linea); background: #fff; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.ficha-row { display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.ficha-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.ficha-label { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--gris); letter-spacing: .6px; }
+.ficha-val { color: var(--tinta); }
+.ficha-val a { color: #1a5fb4; text-decoration: underline; }
+
+/* Trámite Arrepentimiento / Baja */
+.legal-form { margin-top: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.input-select { font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 10px; border: 1px solid var(--linea); background: #fff; width: 100%; }
+.btn-arrepentimiento-form { background: var(--rojo); }
+.tramite-confirmacion { background: #f6faf6; border: 2px solid #2e7d32; padding: 24px; margin-top: 16px; }
+.tramite-badge { display: inline-block; background: #2e7d32; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; margin-bottom: 12px; }
+.tramite-codigo-box { background: #fff; border: 1px dashed #2e7d32; padding: 16px; margin: 16px 0; text-align: center; }
+.tramite-label { display: block; font-size: 12px; color: var(--gris); text-transform: uppercase; letter-spacing: 1px; }
+.tramite-numero { display: block; font-size: 24px; font-family: monospace; color: var(--tinta); margin: 6px 0; }
+.tramite-fecha { font-size: 11px; color: var(--gris-claro); }
+.consumidor-federal-box { margin-top: 28px; padding: 18px; background: #fff; border: 1px solid var(--linea); }
+.consumidor-federal-box h4 { font-size: 14px; margin-bottom: 6px; }
+.consumidor-federal-box p { font-size: 13px; color: var(--gris); margin-bottom: 12px; }
+.btn-consumidor-ext { display: inline-block; font-size: 13px; color: #1a5fb4; font-weight: 700; text-decoration: underline; }
+
+/* Cookie Banner */
+.cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 18, 18, 0.96); color: #fff; z-index: 9999; padding: 14px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.15); font-family: Arial, Helvetica, sans-serif; }
+.cookie-in { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; justify-content: space-between; font-size: 12px; line-height: 1.45; }
+.cookie-text a { color: #fff; text-decoration: underline; }
+.btn-sm { font-size: 12px; padding: 8px 16px; white-space: nowrap; }
 
 .muted { color: var(--gris); font-family: Arial, Helvetica, sans-serif; font-size: 13px; }
 .error { background: #fdecea; color: #8c1620; border: 1px solid #f5c6c0; padding: 10px 14px; font-family: Arial, Helvetica, sans-serif; margin-bottom: 14px; font-size: 14px; }
@@ -149,6 +229,10 @@ body.admin { font-family: Arial, Helvetica, sans-serif; background: #f4f4f4; }
   .btn-sec { margin-left: 8px; margin-top: 0; }
   .form-inline { flex-direction: row; align-items: center; }
   .form-inline input { width: 280px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr 1fr; }
+  .ficha-row { flex-direction: row; justify-content: space-between; align-items: baseline; }
+  .cookie-in { flex-direction: row; align-items: center; }
 }
 
 /* ===== Escritorio (>=900px): portada a dos columnas, tipografía grande ===== */
@@ -173,6 +257,8 @@ body.admin { font-family: Arial, Helvetica, sans-serif; background: #f4f4f4; }
   .grid .card:nth-child(n+4) { padding-top: 22px; border-top: 1px solid var(--linea); }
   .articulo h1 { font-size: 42px; line-height: 1.15; }
   .articulo .contenido p { font-size: 18px; }
-  .footer-in { flex-direction: row; justify-content: space-between; gap: 20px; }
+  .footer-grid { grid-template-columns: 2.2fr 1fr 1.8fr 1fr; gap: 32px; }
+  .footer-bottom-bar { flex-direction: row; }
+  .footer-copy { text-align: left; }
   .adminbar-in { flex-direction: row; justify-content: space-between; align-items: center; }
 }
