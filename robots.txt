@@ -1,0 +1,37 @@
+# Robots.txt — Editorial Tucó (https://editorialtuco.com)
+# Optimizado para Motores de Búsqueda y Motores de Respuesta / IA (AOI)
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /data/
+Disallow: /inc/
+
+# AI Crawlers & Answer Engines (Permitidos para citación y respuesta generativa)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Sitemaps y Documentación de IA
+Sitemap: https://editorialtuco.com/sitemap.xml
+Sitemap: https://editorialtuco.com/sitemap.php

@@ -16,7 +16,10 @@ if (!$cat) {
     exit;
 }
 
-$page_title = $cat['nombre'];
+$page_title = 'Noticias de ' . $cat['nombre'];
+$meta_description = 'Últimas noticias, análisis y actualidad sobre ' . $cat['nombre'] . ' en Editorial Tucó, República Argentina.';
+$canonical_url = 'https://editorialtuco.com/categoria.php?slug=' . rawurlencode($cat['slug']);
+
 $st = $pdo->prepare(
     "SELECT n.*, c.nombre AS categoria FROM noticias n
      JOIN categorias c ON c.id = n.categoria_id

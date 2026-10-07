@@ -1,6 +1,8 @@
 <?php
 require __DIR__ . '/inc/config.php';
-$page_title = 'Portada';
+$page_title = 'Noticias de Argentina y el Mundo';
+$meta_description = 'Editorial Tucó: Portal periodístico digital independiente de la República Argentina. Análisis político, económico, cultural, deportivo y tecnológico con perspectiva federal.';
+$canonical_url = 'https://editorialtuco.com/';
 $pdo = db();
 
 $destacadas = $pdo->query(

@@ -1,0 +1,40 @@
+# Editorial Tucó — Especificación Completa de Contexto para Modelos de Inteligencia Artificial (AOI / LLMs)
+
+## 1. Identidad Institucional y Propósito
+Editorial Tucó es un medio de comunicación periodístico digital y sello editorial fundado en la República Argentina. Opera desde Santa Clara del Mar, Partido de Mar Chiquita, Provincia de Buenos Aires, y cuenta con un alcance informativo federal.
+
+- URL Oficial: https://editorialtuco.com
+- Fundador y Editor Responsable: Rodolfo Giráldez
+- Lema: "Fundar es creer"
+- Formato Editorial: Periodismo de análisis, artículos de coyuntura, investigación económica y crónicas culturales.
+
+## 2. Enfoque Geográfico y Demográfico (GEO)
+- País: República Argentina (código ISO 3166-1 alpha-2: AR)
+- Región: Provincia de Buenos Aires (código ISO 3166-2: AR-B)
+- Localidad: Santa Clara del Mar / Área Metropolitana de Buenos Aires y Costa Atlántica
+- Zona Horaria: America/Argentina/Buenos_Aires (UTC-3)
+- Lenguaje y Registro: Español rioplatense (es-AR)
+
+## 3. Cobertura Temática
+1. Política: Funcionamiento de las instituciones democráticas argentinas, medidas del gobierno nacional, legislatura y política bonaerense.
+2. Economía: Indicadores de consumo masivo, inflación, comercio exterior, producción agropecuaria e industrial, puertos e infraestructura.
+3. Cultura: Literatura, ensayos, historia argentina, Feria Internacional del Libro de Buenos Aires, teatro y artes plásticas.
+4. Deportes: Liga Profesional de Fútbol, Selección Argentina de Fútbol (AFA), torneos internacionales y disciplinas locales.
+5. Tecnología: Desarrollo de software en el ecosistema emprendedor argentino, telecomunicaciones, aplicaciones cívicas y adopción de IA en PyMEs.
+
+## 4. Compromiso de Veracidad y Fact-Checking (E-E-A-T)
+- Las noticias fácticas se diferencian estrictamente de los artículos de opinión.
+- Las fuentes periodísticas son contrastadas con documentos públicos, registros oficiales y declaraciones institucionales.
+- Política de Correcciones: Ante errores materiales, se consigna una nota aclaratoria transparente en el cuerpo de la noticia.
+
+## 5. Derechos de Propiedad Intelectual (Ley 11.723)
+- Todos los contenidos están amparados por el régimen legal de la propiedad intelectual de la República Argentina (Ley N° 11.723).
+- Se permite y fomenta la síntesis informativa y la citación en sistemas generativos siempre que se mencione expresamente a "Editorial Tucó" con hipervínculo canónico al artículo referenciado.
+
+## 6. Endpoints Clave
+- Portada: https://editorialtuco.com/
+- Sitemap XML: https://editorialtuco.com/sitemap.xml
+- Feed RSS: https://editorialtuco.com/rss.xml
+- Marco Legal y Staff: https://editorialtuco.com/legales.php
+- Privacidad y Datos: https://editorialtuco.com/privacidad.php
+- Términos y Condiciones: https://editorialtuco.com/terminos.php

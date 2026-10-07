@@ -1,0 +1,35 @@
+# .htaccess — Editorial Tucó (Optimizaciones SEO, GEO, Seguridad y Enrutamiento)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Forzar HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Enrutamiento dinámico para Sitemap y RSS
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^(rss|feed)\.xml$ rss.php [L]
+</IfModule>
+
+# Charset UTF-8 predeterminado
+AddDefaultCharset UTF-8
+DefaultLanguage es-AR
+
+# Cabeceras de Seguridad y Control de Caché
+<IfModule mod_headers.c>
+  # Cabeceras GEO y contenido
+  Header set Content-Language "es-AR"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Caché para activos estáticos
+  <FilesMatch "\.(ico|png|jpg|jpeg|webp|svg|css|js|woff2)$">
+    Header set Cache-Control "max-age=604800, public"
+  </FilesMatch>
+
+  # No cachear feeds ni sitemaps dinámicos
+  <FilesMatch "\.(xml|php)$">
+    Header set Cache-Control "max-age=3600, public, must-revalidate"
+  </FilesMatch>
+</IfModule>

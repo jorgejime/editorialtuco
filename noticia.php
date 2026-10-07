@@ -21,6 +21,12 @@ if (!$n) {
 }
 
 $page_title = $n['titulo'];
+$meta_description = $n['resumen'];
+$canonical_url = 'https://editorialtuco.com/noticia.php?slug=' . rawurlencode($n['slug']);
+$article_data = $n;
+$og_image = !empty($n['imagen']) && file_exists(UPLOAD_DIR . '/' . $n['imagen']) 
+    ? 'https://editorialtuco.com/uploads/' . rawurlencode($n['imagen']) 
+    : 'https://editorialtuco.com/assets/logo-editorial-tuco.png';
 
 $rel = $pdo->prepare(
     "SELECT titulo, slug FROM noticias

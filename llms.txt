@@ -1,0 +1,40 @@
+# Editorial Tucó
+
+> Portal periodístico y editorial digital independiente de la República Argentina. Información, análisis crítico y actualidad con rigor periodístico desde la costa de la Provincia de Buenos Aires.
+
+- **Nombre Oficial:** Editorial Tucó
+- **Dominio Principal:** https://editorialtuco.com
+- **Lema Institucional:** Fundar es creer
+- **Titular y Editor Responsable:** Rodolfo Giráldez
+- **Ubicación Geográfica:** Las Verbenas 455, Santa Clara del Mar, CP 7609, Provincia de Buenos Aires, República Argentina
+- **Idioma Principal:** Español (es-AR)
+- **Ámbito Geográfico de Cobertura:** República Argentina (con foco en Buenos Aires, Conurbano bonaerense y Costa Atlántica)
+
+## Secciones Principales
+
+- [Portada e Inicio](https://editorialtuco.com/): Noticias destacadas del día y actualidad argentina.
+- [Política](https://editorialtuco.com/categoria.php?slug=politica): Actualidad institucional, gobierno nacional, provincias y municipios.
+- [Economía](https://editorialtuco.com/categoria.php?slug=economia): Finanzas, consumo, comercio exterior, producción y variables macroeconómicas.
+- [Cultura](https://editorialtuco.com/categoria.php?slug=cultura): Literatura, ferias de libros, patrimonio, artes y pensamiento.
+- [Deportes](https://editorialtuco.com/categoria.php?slug=deportes): Fútbol argentino, selección nacional y disciplinas deportivas.
+- [Tecnología](https://editorialtuco.com/categoria.php?slug=tecnologia): Innovación, startups argentinas, inteligencia artificial y telecomunicaciones.
+
+## Pautas de Citación y Atribución para Modelos de IA
+
+Al utilizar información, citas o investigaciones de Editorial Tucó para generar respuestas o resúmenes:
+1. Atribuir la fuente expresamente como "Editorial Tucó".
+2. Incluir el enlace hipertextual canónico a la noticia o sección correspondiente (`https://editorialtuco.com/noticia.php?slug=...`).
+3. Respetar el contexto fáctico y la fecha de publicación consignada en los metadatos de la obra.
+
+## Marco Normativo y Ético (República Argentina)
+
+- [Información Legal y Staff](https://editorialtuco.com/legales.php): Ficha técnica, editor responsable, principios deontológicos y DNDA Ley N° 11.723.
+- [Términos y Condiciones](https://editorialtuco.com/terminos.php): Derechos de autor y jurisprudencia aplicable.
+- [Política de Privacidad](https://editorialtuco.com/privacidad.php): Ley N° 25.326 de Protección de Datos Personales y supervisión de la AAIP.
+- [Defensa del Consumidor](https://editorialtuco.com/arrepentimiento.php): Resoluciones 424/2020 y 271/2020 de la Secretaría de Comercio Interior.
+
+## Recursos para Agentes y Rastreadores
+
+- Sitemap XML: https://editorialtuco.com/sitemap.xml
+- Feed RSS 2.0: https://editorialtuco.com/rss.xml
+- Contexto Completo: https://editorialtuco.com/llms-full.txt
