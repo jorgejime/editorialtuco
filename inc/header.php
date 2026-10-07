@@ -17,9 +17,22 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" id="meta-theme-color">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>
+(function() {
+  try {
+    var saved = localStorage.getItem('editorialtuco_theme');
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    var metaColor = document.querySelector('meta[name="color-scheme"]');
+    if (metaColor) metaColor.content = theme;
+  } catch(e) {}
+})();
+</script>
 <title><?= $full_title ?></title>
 <meta name="description" content="<?= $meta_desc ?>">
 <link rel="canonical" href="<?= e($canonical) ?>">
@@ -66,7 +79,7 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="bingbot" content="index, follow">
 
-<link rel="stylesheet" href="assets/style.css?v=20261007_mobile">
+<link rel="stylesheet" href="assets/style.css?v=20261007_darkmode">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 
 <!-- Datos Estructurados JSON-LD (Schema.org / Google News / Motores de IA) -->
@@ -178,7 +191,14 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <div class="topbar">
   <div class="wrap topbar-in">
     <span><?= e(fecha_larga(date('Y-m-d'))) ?> · Buenos Aires, Argentina</span>
-    <span class="edition-badge">Edición Digital</span>
+    <div class="topbar-right">
+      <span class="edition-badge">Edición Digital</span>
+      <button type="button" class="theme-toggle" aria-label="Cambiar tema de color" title="Alternar modo claro / oscuro">
+        <svg class="icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="theme-toggle-label">Modo</span>
+      </button>
+    </div>
   </div>
 </div>
 <header class="masthead">

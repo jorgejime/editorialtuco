@@ -115,16 +115,62 @@
 
 <script>
 (function() {
+  // Manejo de Cookies
   if (!localStorage.getItem('editorialtuco_cookies_consent')) {
     var banner = document.getElementById('cookie-banner');
     if (banner) banner.style.display = 'block';
   }
-  var btn = document.getElementById('cookie-accept-btn');
-  if (btn) {
-    btn.addEventListener('click', function() {
+  var cookieBtn = document.getElementById('cookie-accept-btn');
+  if (cookieBtn) {
+    cookieBtn.addEventListener('click', function() {
       localStorage.setItem('editorialtuco_cookies_consent', 'accepted_' + new Date().toISOString());
       var banner = document.getElementById('cookie-banner');
       if (banner) banner.style.display = 'none';
+    });
+  }
+
+  // Controlador de Modo Claro / Modo Oscuro
+  function getEffectiveTheme() {
+    var saved = localStorage.getItem('editorialtuco_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme, persist) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (persist) {
+      try { localStorage.setItem('editorialtuco_theme', theme); } catch(e) {}
+    }
+    var metaScheme = document.querySelector('meta[name="color-scheme"]');
+    if (metaScheme) metaScheme.content = theme;
+    var metaThemeColor = document.getElementById('meta-theme-color') || document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.content = theme === 'dark' ? '#121212' : '#ffffff';
+    }
+    var toggles = document.querySelectorAll('.theme-toggle');
+    toggles.forEach(function(btn) {
+      var label = btn.querySelector('.theme-toggle-label');
+      if (label) label.textContent = theme === 'dark' ? 'Claro' : 'Oscuro';
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+    });
+  }
+
+  var currentTheme = getEffectiveTheme();
+  applyTheme(currentTheme, false);
+
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.theme-toggle');
+    if (!btn) return;
+    var now = document.documentElement.getAttribute('data-theme') || getEffectiveTheme();
+    var next = now === 'dark' ? 'light' : 'dark';
+    applyTheme(next, true);
+  });
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      if (!localStorage.getItem('editorialtuco_theme')) {
+        applyTheme(e.matches ? 'dark' : 'light', false);
+      }
     });
   }
 })();

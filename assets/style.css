@@ -6,6 +6,7 @@
    ========================================================================== */
 
 :root {
+  color-scheme: light dark;
   --tinta: #121212;
   --tinta-suave: #2b2b2b;
   --gris: #5a5a5a;
@@ -13,12 +14,75 @@
   --linea: #e2e2e2;
   --fondo: #ffffff;
   --superficie: #fbfbfb;
+  --superficie-card: #ffffff;
   --rojo: #c7120a;
   --rojo-osc: #9b0e08;
   --azul-legal: #1a5fb4;
   --azul-legal-bg: #f4f8fc;
   --verde-ok: #2e7d32;
   --verde-ok-bg: #f6faf6;
+  --sombra-card: rgba(0, 0, 0, 0.05);
+}
+
+/* Modo Claro Explícito */
+[data-theme="light"] {
+  color-scheme: light;
+  --tinta: #121212;
+  --tinta-suave: #2b2b2b;
+  --gris: #5a5a5a;
+  --gris-claro: #8a8a8a;
+  --linea: #e2e2e2;
+  --fondo: #ffffff;
+  --superficie: #fbfbfb;
+  --superficie-card: #ffffff;
+  --rojo: #c7120a;
+  --rojo-osc: #9b0e08;
+  --azul-legal: #1a5fb4;
+  --azul-legal-bg: #f4f8fc;
+  --verde-ok: #2e7d32;
+  --verde-ok-bg: #f6faf6;
+  --sombra-card: rgba(0, 0, 0, 0.05);
+}
+
+/* Modo Oscuro: Selección explícita o preferencia del sistema operativo */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --tinta: #f4f4f4;
+  --tinta-suave: #d6d6d6;
+  --gris: #a2a2a2;
+  --gris-claro: #7e7e7e;
+  --linea: #2c2c2c;
+  --fondo: #121212;
+  --superficie: #1a1a1a;
+  --superficie-card: #181818;
+  --rojo: #ff4d45;
+  --rojo-osc: #e63830;
+  --azul-legal: #5b9bf8;
+  --azul-legal-bg: #132438;
+  --verde-ok: #4caf50;
+  --verde-ok-bg: #122b17;
+  --sombra-card: rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --tinta: #f4f4f4;
+    --tinta-suave: #d6d6d6;
+    --gris: #a2a2a2;
+    --gris-claro: #7e7e7e;
+    --linea: #2c2c2c;
+    --fondo: #121212;
+    --superficie: #1a1a1a;
+    --superficie-card: #181818;
+    --rojo: #ff4d45;
+    --rojo-osc: #e63830;
+    --azul-legal: #5b9bf8;
+    --azul-legal-bg: #132438;
+    --verde-ok: #4caf50;
+    --verde-ok-bg: #122b17;
+    --sombra-card: rgba(0, 0, 0, 0.35);
+  }
 }
 
 /* Reset y caja nativa */
@@ -43,6 +107,11 @@ body {
   overflow-x: hidden;
   width: 100%;
   min-width: 320px;
+}
+
+/* Transiciones suaves al alternar temas */
+body, .mainnav, .topbar, .footer, .card, .hero, .form, .tabla, .login-box, .cookie-banner, .ficha-tecnica, .aaip-box, .data-fiscal-badge, .search input, .theme-toggle {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
 }
 
 /* Contenedor fluido */
@@ -73,7 +142,7 @@ img {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   color: var(--gris);
-  background: #fafafa;
+  background: var(--superficie);
 }
 
 .topbar-in {
@@ -81,10 +150,16 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   padding-top: 6px;
   padding-bottom: 6px;
   text-align: center;
+}
+
+.topbar-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .edition-badge {
@@ -96,12 +171,60 @@ img {
   font-weight: 700;
 }
 
+/* Selector de Tema Claro / Oscuro */
+.theme-toggle {
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  color: var(--tinta);
+  border-radius: 20px;
+  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  min-height: 28px;
+  transition: all .15s ease;
+  user-select: none;
+}
+
+.theme-toggle:hover {
+  border-color: var(--rojo);
+  color: var(--rojo);
+}
+
+.theme-toggle svg {
+  display: block;
+}
+
+/* Por defecto en modo claro: icono de luna (acción: pasar a oscuro) */
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+/* En modo oscuro: icono de sol (acción: pasar a claro) */
+[data-theme="dark"] .theme-toggle .icon-sun,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+}
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
 /* ==========================================================================
    Cabecera de Marca (Masthead) · Mobile-First
    ========================================================================== */
 .masthead {
   text-align: center;
   padding: 16px 0 12px;
+}
+
+/* Adaptación del logo editorial en modo oscuro */
+[data-theme="dark"] .brand-logo img,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand-logo img {
+    filter: brightness(0) invert(1);
+  }
 }
 
 .brand-box {
@@ -843,7 +966,7 @@ main.wrap {
 }
 
 .btn-arrepentimiento {
-  background: #fff;
+  background: var(--fondo);
   color: var(--rojo);
   border: 1.5px solid var(--rojo);
 }
@@ -854,14 +977,14 @@ main.wrap {
 }
 
 .btn-baja {
-  background: #fff;
+  background: var(--fondo);
   color: var(--tinta);
   border: 1.5px solid var(--tinta);
 }
 
 .btn-baja:hover {
   background: var(--tinta);
-  color: #fff;
+  color: var(--fondo);
 }
 
 /* Identificación Fiscal en Móvil */
@@ -873,8 +996,8 @@ main.wrap {
 }
 
 .data-fiscal-badge {
-  border: 1px solid #ccc;
-  background: #fff;
+  border: 1px solid var(--linea);
+  background: var(--fondo);
   padding: 12px;
   text-align: center;
   border-radius: 4px;
@@ -890,7 +1013,7 @@ main.wrap {
 .data-fiscal-header {
   font-size: 12px;
   font-weight: 800;
-  color: #003366;
+  color: var(--azul-legal);
   letter-spacing: 1px;
 }
 
@@ -902,14 +1025,14 @@ main.wrap {
 }
 
 .data-fiscal-qr {
-  color: #111;
+  color: var(--tinta);
   margin: 4px 0;
 }
 
 .data-fiscal-titular {
   font-size: 10px;
   font-weight: 600;
-  color: #333;
+  color: var(--tinta-suave);
 }
 
 .data-fiscal-link {
@@ -928,13 +1051,13 @@ main.wrap {
 }
 
 .aaip-box {
-  background: #fff;
-  border: 1px solid #e0e0e0;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
   border-left: 3px solid var(--azul-legal);
   padding: 12px 14px;
   font-size: 11px;
   line-height: 1.55;
-  color: #444;
+  color: var(--tinta-suave);
 }
 
 .aaip-box strong {
@@ -982,7 +1105,7 @@ main.wrap {
   gap: 6px;
   padding: 8px 14px;
   border: 1px solid var(--linea);
-  background: #fff;
+  background: var(--fondo);
   color: var(--gris);
   font-size: 12px;
   font-weight: 600;
@@ -993,7 +1116,7 @@ main.wrap {
 
 .btn-admin-footer:hover {
   background: var(--tinta);
-  color: #fff;
+  color: var(--fondo);
   border-color: var(--tinta);
 }
 
@@ -1193,7 +1316,7 @@ body.admin {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--linea);
-  background: #fff;
+  background: var(--superficie);
   border-radius: 3px;
   margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
@@ -1202,7 +1325,8 @@ body.admin {
 .tabla {
   width: 100%;
   min-width: 580px;
-  background: #fff;
+  background: var(--superficie);
+  color: var(--tinta);
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -1215,7 +1339,7 @@ body.admin {
 }
 
 .tabla th {
-  background: #fafafa;
+  background: var(--fondo);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: .6px;
@@ -1232,7 +1356,8 @@ body.admin {
   color: var(--azul-legal);
   padding: 6px 8px;
   display: inline-block;
-  background: #f4f8fc;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
   border-radius: 2px;
   font-size: 12px;
   font-weight: 600;
@@ -1240,12 +1365,13 @@ body.admin {
 
 .tabla .acciones a.danger {
   color: var(--rojo);
-  background: #fdf2f2;
+  background: var(--fondo);
+  border-color: var(--rojo);
 }
 
 /* Formularios de administración */
 .form {
-  background: #fff;
+  background: var(--superficie);
   border: 1px solid var(--linea);
   padding: 16px;
   display: flex;
@@ -1277,7 +1403,9 @@ body.admin {
 .form textarea {
   font-size: 16px; /* Evita zoom molesto en iOS */
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--linea);
+  background: var(--fondo);
+  color: var(--tinta);
   font-weight: 400;
   font-family: Arial, Helvetica, sans-serif;
   width: 100%;
@@ -1309,7 +1437,9 @@ body.admin {
 .form-inline input {
   font-size: 16px;
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--linea);
+  background: var(--fondo);
+  color: var(--tinta);
   width: 100%;
 }
 
@@ -1322,7 +1452,7 @@ body.admin {
 }
 
 .login-box {
-  background: #fff;
+  background: var(--superficie);
   border: 1px solid var(--linea);
   border-top: 4px solid var(--rojo);
   padding: 24px 18px;
@@ -1330,7 +1460,7 @@ body.admin {
   max-width: 360px;
   text-align: center;
   border-radius: 3px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px var(--sombra-card);
 }
 
 .login-box h1 {
@@ -1357,7 +1487,9 @@ body.admin {
 .login-box input {
   font-size: 16px;
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--linea);
+  background: var(--fondo);
+  color: var(--tinta);
   font-weight: 400;
   width: 100%;
   border-radius: 2px;
