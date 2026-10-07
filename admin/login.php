@@ -32,7 +32,7 @@ if (es_admin()) { header('Location: index.php'); exit; }
 })();
 </script>
 <title>Ingresar · Panel <?= e(SITE_NAME) ?></title>
-<link rel="stylesheet" href="../assets/style.css?v=20261007_darkmode">
+<link rel="stylesheet" href="../assets/style.css?v=20261007_v2">
 </head>
 <body class="admin login-page">
 <div class="login-box">

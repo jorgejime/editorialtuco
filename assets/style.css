@@ -219,35 +219,38 @@ img {
   padding: 16px 0 12px;
 }
 
-/* Adaptación del logo editorial en modo oscuro */
-[data-theme="dark"] .brand-logo img,
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .brand-logo img {
-    filter: brightness(0) invert(1);
-  }
-}
-
-.brand-box {
-  display: inline-block;
-  background: var(--rojo);
-  color: #fff;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: .5px;
-  padding: 8px 18px;
-  transition: background-color .15s ease;
-}
-
-.brand-box:hover {
-  background: var(--rojo-osc);
-}
-
+/* Adaptación del logo editorial en modo claro y modo oscuro */
 .brand-logo img {
   display: block;
   margin: 0 auto;
   max-width: 250px;
   width: 78%;
   height: auto;
+}
+
+.brand-logo .logo-dark {
+  display: none !important;
+}
+
+.brand-logo .logo-light {
+  display: block !important;
+}
+
+[data-theme="dark"] .brand-logo .logo-dark {
+  display: block !important;
+}
+
+[data-theme="dark"] .brand-logo .logo-light {
+  display: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand-logo .logo-dark {
+    display: block !important;
+  }
+  :root:not([data-theme="light"]) .brand-logo .logo-light {
+    display: none !important;
+  }
 }
 
 .tagline {
