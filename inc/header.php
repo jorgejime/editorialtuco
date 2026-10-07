@@ -10,14 +10,14 @@ $q = $_GET['q'] ?? '';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= e(SITE_NAME) ?><?= isset($page_title) ? ' — ' . e($page_title) : '' ?></title>
-<link rel="stylesheet" href="assets/style.css?v=20261007_compliance">
+<link rel="stylesheet" href="assets/style.css?v=20261007_prod">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
 <div class="topbar">
   <div class="wrap topbar-in">
     <span><?= e(fecha_larga(date('Y-m-d'))) ?> · Buenos Aires, Argentina</span>
-    <a href="admin/" class="admin-link">Administrar</a>
+    <span class="edition-badge">Edición Digital</span>
   </div>
 </div>
 <header class="masthead">

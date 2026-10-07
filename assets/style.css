@@ -110,11 +110,15 @@ main.wrap { padding-top: 22px; padding-bottom: 44px; }
 .aaip-box a { color: #1a5fb4; text-decoration: underline; font-weight: 600; }
 
 /* Barra inferior y créditos */
-.footer-bottom-bar { border-top: 1px solid var(--linea); display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: space-between; padding-top: 12px; padding-bottom: 16px; font-size: 11px; color: var(--gris-claro); }
+.footer-bottom-bar { border-top: 1px solid var(--linea); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 16px; font-size: 11px; color: var(--gris-claro); }
 .footer-copy { text-align: center; }
+.footer-bottom-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.btn-admin-footer { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--linea); background: #fff; color: var(--gris); font-size: 11px; font-weight: 600; text-decoration: none; border-radius: 2px; }
+.btn-admin-footer:hover { background: var(--tinta); color: #fff; border-color: var(--tinta); }
 .footer-credit { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 10px; color: var(--gris-claro); opacity: .75; }
 .footer-credit img { height: 10px; width: auto; }
 .footer-credit a:hover { opacity: 1; }
+.edition-badge { font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gris); font-weight: 600; }
 
 /* Páginas Legales */
 .legal-page { max-width: 860px; margin: 0 auto; padding: 12px 0 32px; font-family: Arial, Helvetica, sans-serif; }

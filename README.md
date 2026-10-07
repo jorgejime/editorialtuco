@@ -1,52 +1,53 @@
-# Mi Diario — Portal de noticias autoadministrable (demo)
+# Editorial Tucó — Portal de noticias digital
 
-Portal de noticias online, mobile-first, estilo economist.com. PHP + SQLite, sin frameworks ni base de datos externa: se instala copiando los archivos a cualquier hosting con PHP.
+Portal de noticias y contenidos periodísticos online, mobile-first, para **Editorial Tucó** (`https://editorialtuco.com`). Desarrollado en PHP + SQLite con compliance normativo completo para la República Argentina.
 
-**Demo en vivo:** https://caro.liaa.cloud
+**Sitio en producción:** https://editorialtuco.com
 
 ## Características
 
-- Portada con noticia destacada, secciones por categoría, buscador y página de noticia individual.
-- Panel de administración en `/admin/` (crear, editar, eliminar noticias y categorías, subir imágenes, destacar portada).
-- SEO básico: URLs amigables (slugs), meta tags Open Graph, sitemap implícito.
-- Imágenes de reemplazo automáticas (SVG) cuando la noticia no tiene foto.
-- Todo el contenido de ejemplo está en español rioplatense (voseo), listo para reemplazar.
+- Portada periodística con noticia destacada, secciones por categoría, buscador en vivo y páginas de artículo individuales.
+- Panel de administración y redacción en `/admin/` (crear, editar, eliminar noticias y categorías, subir imágenes y gestionar publicaciones).
+- SEO técnico: URLs amigables (slugs), meta tags Open Graph, imágenes adaptativas.
+- **Compliance normativo para la República Argentina:**
+  - Ley N° 25.326 de Protección de los Datos Personales (derechos ARCO y leyenda obligatoria de la Agencia de Acceso a la Información Pública - AAIP).
+  - Defensa del Consumidor (Ley N° 24.240, Resolución 424/2020 SCI - Botón de Arrepentimiento, Resolución 271/2020 SCI - Botón de Baja de Servicios).
+  - Régimen de Medios Periodísticos y Propiedad Intelectual (Ley N° 11.723, Staff y Pie de Imprenta formal).
+  - Identificación Fiscal (AFIP / ARCA - Formulario 960/D Data Fiscal).
+  - Aviso de consentimiento de cookies y privacidad con persistencia local.
 
-## Requisitos
+## Requisitos del Servidor
 
 - PHP 8.0+ con extensiones `pdo_sqlite` y `mbstring`.
-- La base de datos SQLite se crea sola en `data/portal.db` en la primera visita (incluye 7 noticias de ejemplo).
+- Base de datos SQLite gestionada automáticamente en `data/portal.db`.
+- Permisos de escritura para el usuario web en los directorios `data/` y `uploads/`.
 
-## Instalación
+## Panel de Administración
 
-1. Copia todos los archivos a la raíz pública del hosting (ej. `public_html/caro/`).
-2. Asegúrate de que el servidor web pueda escribir en `data/` y `uploads/`.
-3. Abre el sitio. Listo.
+- URL: `/admin/` (`https://editorialtuco.com/admin/`)
+- Gestión de artículos, categorías y carga de imágenes.
+- Las credenciales maestras se configuran en `inc/config.php`.
 
-## Panel de administración
-
-- URL: `/admin/` (ej. `https://tu-dominio.com/admin/`)
-- Usuario demo: `admin`
-- Clave demo: `demo2026`
-- **En producción cambia estas credenciales en `inc/config.php`.**
-
-## Estructura
+## Estructura de Archivos
 
 ```
-index.php            Portada
-noticia.php          Noticia individual
-categoria.php        Listado por categoría
-buscar.php           Buscador
-inc/                 Configuración, header y footer compartidos
-admin/               Panel de administración
-assets/style.css     Estilos (mobile-first)
-assets/logo-editorial-tuco.png  Logo del cabezote (extraído de la portada)
-assets/favicon.png   Favicon (pájaros del logo)
-data/                Base SQLite (se genera sola) + .htaccess de protección
+index.php            Portada principal
+noticia.php          Visualización de noticia individual
+categoria.php        Listado de noticias por categoría
+buscar.php           Buscador de contenidos
+terminos.php         Términos y condiciones de uso (Ley 11.723 / Jurisdicción PBA)
+privacidad.php       Política de privacidad y datos personales (Ley 25.326 / AAIP)
+arrepentimiento.php  Botón de Arrepentimiento (Res. 424/2020) y Baja (Res. 271/2020)
+legales.php          Staff, ficha técnica editorial y pie de imprenta
+inc/                 Configuración general, header y footer compartidos
+admin/               Panel de redacción y administración
+assets/style.css     Hoja de estilos responsiva
+assets/logo-editorial-tuco.png  Logo oficial de Editorial Tucó
+assets/favicon.png   Favicon institucional
+data/                Base de datos SQLite y logs de trámites
 uploads/             Imágenes subidas desde el panel
-subir.py             Script de despliegue por TUS a Hostinger (uso interno)
 ```
 
 ## Licencia
 
-Código de demostración preparado como propuesta comercial. Todos los derechos reservados.
+Editorial Tucó. Todos los derechos reservados.

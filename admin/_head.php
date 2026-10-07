@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel · <?= e(SITE_NAME) ?></title>
-<link rel="stylesheet" href="../assets/style.css?v=20261006c">
+<link rel="stylesheet" href="../assets/style.css?v=20261007_prod">
 </head>
 <body class="admin">
 <header class="adminbar">

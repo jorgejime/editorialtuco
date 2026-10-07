@@ -35,6 +35,7 @@
         <li><a href="privacidad.php">Política de Privacidad (Ley 25.326)</a></li>
         <li><a href="legales.php">Staff y Pie de Imprenta</a></li>
         <li><a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa del Consumidor (Ventanilla Única)</a></li>
+        <li><a href="admin/" class="footer-admin-link">Acceso Redacción / Administrar</a></li>
       </ul>
 
       <!-- Botones de Compliance Defensa del Consumidor -->
@@ -85,11 +86,17 @@
     <div class="footer-copy">
       © <?= date('Y') ?> <?= e(SITE_NAME) ?>. Todos los derechos reservados. Prohibida su reproducción total o parcial sin autorización expresa (Ley 11.723).
     </div>
-    <div class="footer-credit">
-      <span>Desarrollado por</span>
-      <a href="https://liaa.cloud" target="_blank" rel="noopener" aria-label="LIAA · Laboratorio de IA Aplicada">
-        <img src="https://liaa.cloud/brand/liaa-logo.png" alt="LIAA">
+    <div class="footer-bottom-right">
+      <a href="admin/" class="btn-admin-footer" title="Acceso al panel de redacción">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Administración
       </a>
+      <div class="footer-credit">
+        <span>Desarrollado por</span>
+        <a href="https://liaa.cloud" target="_blank" rel="noopener" aria-label="LIAA · Laboratorio de IA Aplicada">
+          <img src="https://liaa.cloud/brand/liaa-logo.png" alt="LIAA">
+        </a>
+      </div>
     </div>
   </div>
 </footer>

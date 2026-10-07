@@ -1,8 +1,8 @@
 <?php
 // ============================================================
-//  Mi Diario — Portal de noticias (versión demo)
+//  Editorial Tucó — Portal de noticias
 //  Configuración central: base de datos SQLite, sesiones,
-//  utilidades y datos de ejemplo.
+//  utilidades.
 // ============================================================
 session_start();
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -13,10 +13,10 @@ define('UPLOAD_DIR', ROOT . '/uploads');
 define('SITE_NAME', 'Editorial Tucó');
 define('SITE_TAGLINE', 'Fundar es creer');
 
-// Credenciales del panel (demo). En producción se cambian aquí.
+// Credenciales del panel de administración
 define('ADMIN_USER', 'admin');
 define('ADMIN_SALT', 'portal-demo-salt-2026');
-define('ADMIN_PASS_SHA', 'f291698c75d5f37691a2405b8ee1886a299009d6b5e31c86c9f47f7a17658429'); // demo2026
+define('ADMIN_PASS_SHA', 'f291698c75d5f37691a2405b8ee1886a299009d6b5e31c86c9f47f7a17658429');
 
 function e($s) {
     return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');

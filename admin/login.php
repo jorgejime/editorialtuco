@@ -36,7 +36,6 @@ if (es_admin()) { header('Location: index.php'); exit; }
     </label>
     <button type="submit" class="btn">Ingresar</button>
   </form>
-  <p class="muted demo-hint">Demo: usuario <strong>admin</strong> · clave <strong>demo2026</strong></p>
   <p><a href="../index.php">← Volver al sitio</a></p>
 </div>
 </body>
