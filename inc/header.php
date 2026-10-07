@@ -10,7 +10,8 @@ $q = $_GET['q'] ?? '';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= e(SITE_NAME) ?><?= isset($page_title) ? ' — ' . e($page_title) : '' ?></title>
-<link rel="stylesheet" href="assets/style.css?v=20261006c">
+<link rel="stylesheet" href="assets/style.css?v=20261007a">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
 <div class="topbar">
@@ -21,7 +22,7 @@ $q = $_GET['q'] ?? '';
 </div>
 <header class="masthead">
   <div class="wrap">
-    <a href="index.php" class="brand-box"><?= e(SITE_NAME) ?></a>
+    <a href="index.php" class="brand-logo"><img src="assets/logo-editorial-tuco.png" alt="<?= e(SITE_NAME) ?>"></a>
     <p class="tagline"><?= e(SITE_TAGLINE) ?></p>
   </div>
 </header>

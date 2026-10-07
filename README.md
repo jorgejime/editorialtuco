@@ -40,6 +40,8 @@ buscar.php           Buscador
 inc/                 Configuración, header y footer compartidos
 admin/               Panel de administración
 assets/style.css     Estilos (mobile-first)
+assets/logo-editorial-tuco.png  Logo del cabezote (extraído de la portada)
+assets/favicon.png   Favicon (pájaros del logo)
 data/                Base SQLite (se genera sola) + .htaccess de protección
 uploads/             Imágenes subidas desde el panel
 subir.py             Script de despliegue por TUS a Hostinger (uso interno)

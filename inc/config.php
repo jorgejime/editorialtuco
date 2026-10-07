@@ -10,8 +10,8 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 define('ROOT', dirname(__DIR__));
 define('DB_FILE', ROOT . '/data/portal.db');
 define('UPLOAD_DIR', ROOT . '/uploads');
-define('SITE_NAME', 'Mi Diario');
-define('SITE_TAGLINE', 'Portal de noticias · Versión demo');
+define('SITE_NAME', 'Editorial Tucó');
+define('SITE_TAGLINE', 'Fundar es creer');
 
 // Credenciales del panel (demo). En producción se cambian aquí.
 define('ADMIN_USER', 'admin');
