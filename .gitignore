@@ -1,0 +1,4 @@
+# La base SQLite se genera sola en la primera visita; no versionar datos locales
+data/portal.db
+uploads/*
+!uploads/.gitkeep
