@@ -40,7 +40,7 @@ include __DIR__ . '/inc/header.php';
     <?php foreach (array_slice($destacadas, 1, 2) as $s): ?>
     <a class="hero-card" href="noticia.php?slug=<?= e($s['slug']) ?>">
       <img src="<?= e(img_noticia($s)) ?>" alt="<?= e($s['titulo']) ?>">
-      <div>
+      <div class="hero-card-txt">
         <span class="kicker"><?= e($s['categoria']) ?></span>
         <h3><?= e($s['titulo']) ?></h3>
       </div>

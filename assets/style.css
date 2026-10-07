@@ -1,268 +1,1637 @@
-/* Mi Diario — estética inspirada en diarios internacionales.
-   Mobile-first: la base es celular; las media queries MEJORAN
-   progresivamente para tablet (>=600px) y escritorio (>=900px). */
+/* ==========================================================================
+   Editorial Tucó — Arquitectura de Estilos Mobile-First
+   Estética inspirada en diarios internacionales de referencia.
+   Base: Dispositivos Móviles (320px - 599px)
+   Mejora Progresiva: Tablet (>=600px) y Escritorio (>=900px)
+   ========================================================================== */
+
 :root {
   --tinta: #121212;
+  --tinta-suave: #2b2b2b;
   --gris: #5a5a5a;
   --gris-claro: #8a8a8a;
-  --linea: #e3e3e3;
+  --linea: #e2e2e2;
   --fondo: #ffffff;
-  --rojo: #e3120b;
-  --rojo-osc: #b30d08;
+  --superficie: #fbfbfb;
+  --rojo: #c7120a;
+  --rojo-osc: #9b0e08;
+  --azul-legal: #1a5fb4;
+  --azul-legal-bg: #f4f8fc;
+  --verde-ok: #2e7d32;
+  --verde-ok-bg: #f6faf6;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Georgia, 'Times New Roman', serif; color: var(--tinta); background: var(--fondo); line-height: 1.55; -webkit-text-size-adjust: 100%; }
-.wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; display: block; }
 
-/* Barra superior */
-.topbar { border-bottom: 1px solid var(--linea); font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: var(--gris); }
-.topbar-in { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 8px; padding-bottom: 8px; }
-.admin-link { color: var(--tinta); border: 1px solid var(--tinta); padding: 8px 14px; font-weight: 700; font-size: 12px; white-space: nowrap; }
-.admin-link:hover { background: var(--tinta); color: #fff; }
+/* Reset y caja nativa */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* Cabecera estilo diario */
-.masthead { text-align: center; padding: 22px 0 16px; }
-.brand-box { display: inline-block; background: var(--rojo); color: #fff; font-size: 30px; font-weight: 700; letter-spacing: .5px; padding: 8px 20px; }
-.brand-box:hover { background: var(--rojo-osc); }
-.brand-logo img { display: block; margin: 0 auto; max-width: 300px; width: 82%; height: auto; }
-.tagline { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: var(--gris); letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
-/* Navegación */
-.mainnav { border-top: 1px solid var(--tinta); border-bottom: 1px solid var(--tinta); background: #fff; position: sticky; top: 0; z-index: 50; }
-.nav-in { display: flex; align-items: center; flex-wrap: wrap; }
-.nav-item { font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 600; padding: 12px 10px; color: var(--tinta); }
-.nav-item:hover { color: var(--rojo); }
-.search { display: flex; flex-basis: 100%; padding: 0 0 10px; }
-.search input { font-family: Arial, Helvetica, sans-serif; font-size: 16px; padding: 10px 12px; border: 1px solid var(--linea); border-right: 0; flex: 1; min-width: 0; }
-.search input:focus { outline: 1px solid var(--rojo); }
-.search button { background: var(--tinta); color: #fff; border: 0; padding: 0 16px; cursor: pointer; display: flex; align-items: center; }
-.search button:hover { background: var(--rojo); }
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--tinta);
+  background: var(--fondo);
+  line-height: 1.55;
+  overflow-x: hidden;
+  width: 100%;
+  min-width: 320px;
+}
 
-main.wrap { padding-top: 22px; padding-bottom: 44px; }
+/* Contenedor fluido */
+.wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
 
-/* Portada */
-.hero { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 8px; padding-bottom: 22px; border-bottom: 1px solid var(--tinta); }
-.hero-main img { width: 100%; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 12px; }
-.hero-main h2 { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 8px 0 10px; }
-.hero-main h2:hover { text-decoration: underline; text-decoration-color: var(--rojo); text-underline-offset: 4px; }
-.hero-main p { font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: var(--gris); line-height: 1.6; }
-.hero-side { display: flex; flex-direction: column; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--linea); }
-.hero-side .hero-card { padding: 14px 0; border-bottom: 1px solid var(--linea); }
-.hero-card h3 { font-size: 19px; line-height: 1.3; margin-top: 6px; }
-.hero-card h3:hover { color: var(--rojo); }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-.kicker { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--rojo); }
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 
-/* Secciones */
-.section-block { padding: 22px 0; border-bottom: 1px solid var(--linea); }
-.section-title { font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--tinta); }
-.page-title { font-size: 28px; line-height: 1.2; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--tinta); }
+/* ==========================================================================
+   Barra Superior (Topbar) · Mobile-First
+   ========================================================================== */
+.topbar {
+  border-bottom: 1px solid var(--linea);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  color: var(--gris);
+  background: #fafafa;
+}
 
-.grid { display: grid; grid-template-columns: 1fr; gap: 0; }
-.grid .card { padding: 0 0 18px; margin-bottom: 18px; border-bottom: 1px solid var(--linea); }
-.card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 10px; }
-.card h3 { font-size: 20px; line-height: 1.3; margin: 6px 0 8px; }
-.card h3:hover { color: var(--rojo); }
-.card p { font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: var(--gris); line-height: 1.55; }
-.card time { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: var(--gris-claro); display: block; margin-top: 8px; }
+.topbar-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  text-align: center;
+}
 
-/* Artículo */
-.articulo { max-width: 720px; margin: 0 auto; }
-.articulo h1 { font-size: 28px; line-height: 1.2; margin: 10px 0 12px; }
-.articulo .fecha { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: var(--gris); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--linea); }
-.articulo-img { width: 100%; margin-bottom: 18px; }
-.articulo .resumen { font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #333; line-height: 1.65; margin-bottom: 20px; }
-.articulo .contenido p { margin-bottom: 18px; font-size: 17px; line-height: 1.7; }
+.edition-badge {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--rojo);
+  font-weight: 700;
+}
 
-/* Pie y Compliance Argentina */
-.footer { border-top: 3px solid var(--tinta); margin-top: 36px; background: #fafafa; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: var(--gris); }
-.footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; padding-top: 32px; padding-bottom: 24px; }
-.footer-col-title { font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--tinta); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--linea); }
-.footer-brand-title { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: var(--tinta); }
-.footer-tagline { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: var(--rojo); margin-top: 2px; margin-bottom: 10px; }
-.footer-staff-mini p { margin-bottom: 6px; font-size: 12px; line-height: 1.45; }
-.footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
-.footer-links a { color: var(--gris); }
-.footer-links a:hover { color: var(--rojo); text-decoration: underline; }
+/* ==========================================================================
+   Cabecera de Marca (Masthead) · Mobile-First
+   ========================================================================== */
+.masthead {
+  text-align: center;
+  padding: 16px 0 12px;
+}
 
-/* Botones de Compliance Defensa del Consumidor */
-.footer-compliance-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-.btn-arrepentimiento, .btn-baja { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 12px; font-size: 12px; font-weight: 700; border-radius: 2px; text-decoration: none; text-align: center; }
-.btn-arrepentimiento { background: #fff; color: var(--rojo); border: 1.5px solid var(--rojo); }
-.btn-arrepentimiento:hover { background: var(--rojo); color: #fff; }
-.btn-baja { background: #fff; color: var(--tinta); border: 1px solid var(--tinta); }
-.btn-baja:hover { background: var(--tinta); color: #fff; }
+.brand-box {
+  display: inline-block;
+  background: var(--rojo);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  padding: 8px 18px;
+  transition: background-color .15s ease;
+}
 
-/* Data Fiscal Badge */
-.data-fiscal-badge { border: 1px solid #ccc; background: #fff; padding: 12px; text-align: center; border-radius: 4px; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; max-width: 140px; }
-.data-fiscal-header { font-size: 12px; font-weight: 800; color: #003366; letter-spacing: 1px; }
-.data-fiscal-sub { font-size: 9px; font-weight: 700; color: var(--gris-claro); text-transform: uppercase; }
-.data-fiscal-qr { color: #111; margin: 4px 0; }
-.data-fiscal-titular { font-size: 10px; font-weight: 600; color: #333; }
-.data-fiscal-link { font-size: 9px; color: #1a5fb4; text-decoration: underline; }
+.brand-box:hover {
+  background: var(--rojo-osc);
+}
 
-/* Franja AAIP */
-.footer-aaip-strip { border-top: 1px solid var(--linea); padding-top: 14px; padding-bottom: 14px; }
-.aaip-box { background: #fff; border: 1px solid #e0e0e0; border-left: 3px solid #1a5fb4; padding: 10px 14px; font-size: 11px; line-height: 1.5; color: #444; }
-.aaip-box strong { color: var(--tinta); }
-.aaip-box a { color: #1a5fb4; text-decoration: underline; font-weight: 600; }
+.brand-logo img {
+  display: block;
+  margin: 0 auto;
+  max-width: 250px;
+  width: 78%;
+  height: auto;
+}
 
-/* Barra inferior y créditos */
-.footer-bottom-bar { border-top: 1px solid var(--linea); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 16px; font-size: 11px; color: var(--gris-claro); }
-.footer-copy { text-align: center; }
-.footer-bottom-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
-.btn-admin-footer { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--linea); background: #fff; color: var(--gris); font-size: 11px; font-weight: 600; text-decoration: none; border-radius: 2px; }
-.btn-admin-footer:hover { background: var(--tinta); color: #fff; border-color: var(--tinta); }
-.footer-credit { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 10px; color: var(--gris-claro); opacity: .75; }
-.footer-credit img { height: 10px; width: auto; }
-.footer-credit a:hover { opacity: 1; }
-.edition-badge { font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gris); font-weight: 600; }
+.tagline {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  color: var(--gris);
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin-top: 8px;
+  font-weight: 600;
+}
 
-/* Páginas Legales */
-.legal-page { max-width: 860px; margin: 0 auto; padding: 12px 0 32px; font-family: Arial, Helvetica, sans-serif; }
-.legal-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--tinta); }
-.legal-header h1 { font-family: Georgia, serif; font-size: 32px; line-height: 1.2; margin: 6px 0 8px; }
-.legal-body section { margin-bottom: 24px; }
-.legal-body h2 { font-family: Georgia, serif; font-size: 20px; margin-bottom: 10px; color: var(--tinta); border-bottom: 1px solid var(--linea); padding-bottom: 4px; }
-.legal-body p { font-size: 15px; line-height: 1.7; color: #2e2e2e; margin-bottom: 12px; }
-.legal-body ul { padding-left: 20px; margin-bottom: 14px; font-size: 15px; line-height: 1.7; color: #2e2e2e; }
-.legal-body li { margin-bottom: 6px; }
-.legal-highlight { background: #fdf5f5; border-left: 3px solid var(--rojo); padding: 14px 16px; margin: 16px 0; font-size: 14px; line-height: 1.6; color: #2e2e2e; }
-.legal-highlight a { color: var(--rojo); font-weight: 700; text-decoration: underline; }
+/* ==========================================================================
+   Navegación Táctil Móvil (Main Navigation)
+   ========================================================================== */
+.mainnav {
+  border-top: 1px solid var(--tinta);
+  border-bottom: 1px solid var(--tinta);
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
 
-/* Banner AAIP en página de Privacidad */
-.legal-banner-aaip { background: #f4f8fc; border: 1px solid #c9def4; border-left: 4px solid #1a5fb4; padding: 16px 18px; margin-bottom: 24px; border-radius: 2px; }
-.aaip-logo-text strong { display: block; font-size: 14px; color: #003366; letter-spacing: .5px; }
-.aaip-logo-text span { font-size: 11px; text-transform: uppercase; color: #555; }
-.aaip-legal-text { font-size: 12px; line-height: 1.55; color: #222; margin: 8px 0 !important; }
-.aaip-links { font-size: 11px; color: #666; margin-top: 10px; }
-.aaip-links a { color: #1a5fb4; font-weight: 600; text-decoration: underline; }
+.nav-in {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Contenedor deslizable de categorías con scroll táctil fluido */
+.nav-scroll-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-bottom: 1px solid var(--linea);
+}
+
+.nav-scroll {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  padding: 0 12px;
+  touch-action: pan-x;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.nav-item {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--tinta);
+  padding: 0 10px;
+  min-height: 44px; /* Touch target estándar accesible */
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: color .15s ease, border-color .15s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: var(--rojo);
+  border-bottom-color: var(--rojo);
+}
+
+/* Buscador móvil integrado */
+.search {
+  display: flex;
+  width: 100%;
+  padding: 8px 16px;
+}
+
+.search input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px; /* Evita zoom forzado en iOS Safari */
+  padding: 0 12px;
+  height: 40px;
+  border: 1px solid var(--linea);
+  border-right: 0;
+  border-radius: 2px 0 0 2px;
+  flex: 1;
+  min-width: 0;
+  -webkit-appearance: none;
+  background: #fafafa;
+}
+
+.search input:focus {
+  outline: 1px solid var(--rojo);
+  background: #fff;
+}
+
+.search button {
+  background: var(--tinta);
+  color: #fff;
+  border: 0;
+  border-radius: 0 2px 2px 0;
+  min-width: 46px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color .15s ease;
+}
+
+.search button:hover {
+  background: var(--rojo);
+}
+
+/* ==========================================================================
+   Contenido Principal y Portada (Hero) · Mobile-First
+   ========================================================================== */
+main.wrap {
+  padding-top: 18px;
+  padding-bottom: 36px;
+}
+
+.kicker {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--rojo);
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--tinta);
+}
+
+.hero-main {
+  display: block;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.hero-main img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.hero-main h2 {
+  font-size: clamp(22px, 5.8vw, 36px);
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 6px 0 8px;
+  color: var(--tinta);
+  word-break: break-word;
+}
+
+.hero-main h2:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--rojo);
+  text-underline-offset: 4px;
+}
+
+.hero-main p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  color: var(--gris);
+  line-height: 1.6;
+}
+
+/* Tarjetas secundarias en portada móvil: formato compacto horizontal */
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+}
+
+.hero-card {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.hero-card:last-child {
+  border-bottom: 0;
+}
+
+.hero-card img {
+  width: 105px;
+  height: 78px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.hero-card-txt h3 {
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+  margin-top: 2px;
+  color: var(--tinta);
+}
+
+.hero-card:hover h3 {
+  color: var(--rojo);
+}
+
+/* ==========================================================================
+   Secciones y Cuadrículas de Noticias · Mobile-First
+   ========================================================================== */
+.section-block {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.section-title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--tinta);
+}
+
+.page-title {
+  font-size: clamp(23px, 5.5vw, 36px);
+  line-height: 1.2;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--tinta);
+  word-break: break-word;
+}
+
+/* En móvil las noticias se presentan en lista vertical fluida */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.grid .card {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.grid .card:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  font-size: clamp(18px, 4.8vw, 21px);
+  line-height: 1.3;
+  margin: 4px 0 8px;
+  color: var(--tinta);
+}
+
+.card h3:hover {
+  color: var(--rojo);
+}
+
+.card p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: var(--gris);
+  line-height: 1.55;
+}
+
+.card time {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  color: var(--gris-claro);
+  display: block;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   Artículo de Noticia (Lectura Editorial Móvil)
+   ========================================================================== */
+.articulo {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.articulo h1 {
+  font-size: clamp(25px, 6vw, 42px);
+  line-height: 1.18;
+  margin: 8px 0 12px;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.articulo .fecha {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: var(--gris);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.articulo-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+
+.articulo .resumen {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: clamp(16px, 4.2vw, 19px);
+  line-height: 1.6;
+  color: #2b2b2b;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--rojo);
+  background: var(--superficie);
+}
+
+.articulo .contenido p {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--tinta-suave);
+  margin-bottom: 20px;
+  word-break: break-word;
+}
+
+/* ==========================================================================
+   Páginas Legales y Compliance Argentina · Mobile-First
+   ========================================================================== */
+.legal-page {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 6px 0 28px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.legal-header {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--tinta);
+}
+
+.legal-header h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(23px, 5.5vw, 32px);
+  line-height: 1.25;
+  margin: 6px 0 8px;
+}
+
+.legal-body section {
+  margin-bottom: 22px;
+}
+
+.legal-body h2 {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--tinta);
+  border-bottom: 1px solid var(--linea);
+  padding-bottom: 4px;
+}
+
+.legal-body p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #2e2e2e;
+  margin-bottom: 12px;
+}
+
+.legal-body ul {
+  padding-left: 20px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #2e2e2e;
+}
+
+.legal-body li {
+  margin-bottom: 6px;
+}
+
+.legal-highlight {
+  background: #fdf5f5;
+  border-left: 3px solid var(--rojo);
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2e2e2e;
+}
+
+.legal-highlight a {
+  color: var(--rojo);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Banner Institucional AAIP */
+.legal-banner-aaip {
+  background: var(--azul-legal-bg);
+  border: 1px solid #c9def4;
+  border-left: 4px solid var(--azul-legal);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+
+.aaip-logo-text strong {
+  display: block;
+  font-size: 13px;
+  color: #003366;
+  letter-spacing: .5px;
+}
+
+.aaip-logo-text span {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.aaip-legal-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: #222;
+  margin: 8px 0 !important;
+}
+
+.aaip-links {
+  font-size: 11px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.aaip-links a {
+  color: var(--azul-legal);
+  font-weight: 600;
+  text-decoration: underline;
+}
 
 /* Ficha Técnica Legales */
-.ficha-tecnica { border: 1px solid var(--linea); background: #fff; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
-.ficha-row { display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-.ficha-row:last-child { border-bottom: 0; padding-bottom: 0; }
-.ficha-label { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--gris); letter-spacing: .6px; }
-.ficha-val { color: var(--tinta); }
-.ficha-val a { color: #1a5fb4; text-decoration: underline; }
-
-/* Trámite Arrepentimiento / Baja */
-.legal-form { margin-top: 16px; }
-.form-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
-.input-select { font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 10px; border: 1px solid var(--linea); background: #fff; width: 100%; }
-.btn-arrepentimiento-form { background: var(--rojo); }
-.tramite-confirmacion { background: #f6faf6; border: 2px solid #2e7d32; padding: 24px; margin-top: 16px; }
-.tramite-badge { display: inline-block; background: #2e7d32; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; margin-bottom: 12px; }
-.tramite-codigo-box { background: #fff; border: 1px dashed #2e7d32; padding: 16px; margin: 16px 0; text-align: center; }
-.tramite-label { display: block; font-size: 12px; color: var(--gris); text-transform: uppercase; letter-spacing: 1px; }
-.tramite-numero { display: block; font-size: 24px; font-family: monospace; color: var(--tinta); margin: 6px 0; }
-.tramite-fecha { font-size: 11px; color: var(--gris-claro); }
-.consumidor-federal-box { margin-top: 28px; padding: 18px; background: #fff; border: 1px solid var(--linea); }
-.consumidor-federal-box h4 { font-size: 14px; margin-bottom: 6px; }
-.consumidor-federal-box p { font-size: 13px; color: var(--gris); margin-bottom: 12px; }
-.btn-consumidor-ext { display: inline-block; font-size: 13px; color: #1a5fb4; font-weight: 700; text-decoration: underline; }
-
-/* Cookie Banner */
-.cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 18, 18, 0.96); color: #fff; z-index: 9999; padding: 14px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.15); font-family: Arial, Helvetica, sans-serif; }
-.cookie-in { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; justify-content: space-between; font-size: 12px; line-height: 1.45; }
-.cookie-text a { color: #fff; text-decoration: underline; }
-.btn-sm { font-size: 12px; padding: 8px 16px; white-space: nowrap; }
-
-.muted { color: var(--gris); font-family: Arial, Helvetica, sans-serif; font-size: 13px; }
-.error { background: #fdecea; color: #8c1620; border: 1px solid #f5c6c0; padding: 10px 14px; font-family: Arial, Helvetica, sans-serif; margin-bottom: 14px; font-size: 14px; }
-
-/* ===== Panel de administración ===== */
-body.admin { font-family: Arial, Helvetica, sans-serif; background: #f4f4f4; }
-.adminbar { background: var(--tinta); color: #eee; }
-.adminbar-in { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
-.brand-sm { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: #fff; }
-.brand-sm span { font-family: Arial, Helvetica, sans-serif; font-weight: 400; font-size: 13px; color: #aaa; }
-.adminbar nav { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
-.adminbar nav a { padding: 6px 0; }
-.adminbar nav a:hover { text-decoration: underline; }
-.admin-main { padding-top: 22px; padding-bottom: 46px; }
-.admin-title { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
-.admin-title h1, .admin-main h1 { font-family: Georgia, serif; font-size: 26px; }
-
-.btn { display: inline-block; background: var(--rojo); color: #fff; border: 0; padding: 12px 22px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Arial, Helvetica, sans-serif; text-align: center; }
-.btn:hover { background: var(--rojo-osc); }
-.btn-sec { background: #777; margin-left: 0; margin-top: 8px; }
-.btn-sec:hover { background: #5c5c5c; }
-
-/* En celular la tabla se desplaza horizontalmente */
-.tabla-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.tabla { width: 100%; min-width: 620px; background: #fff; border-collapse: collapse; border: 1px solid var(--linea); font-size: 14px; }
-.tabla th, .tabla td { padding: 11px 13px; text-align: left; border-bottom: 1px solid var(--linea); }
-.tabla th { background: #fafafa; font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--gris); }
-.tabla .acciones { white-space: nowrap; }
-.tabla .acciones a { margin-right: 12px; color: #1a5fb4; padding: 6px 0; display: inline-block; }
-.tabla .acciones a.danger { color: var(--rojo); }
-
-.form { background: #fff; border: 1px solid var(--linea); padding: 18px; display: flex; flex-direction: column; gap: 16px; }
-.form label { font-size: 14px; font-weight: 600; display: flex; flex-direction: column; gap: 6px; }
-.form label.check { flex-direction: row; align-items: center; gap: 8px; font-weight: 400; }
-.form input[type=text], .form input[type=file], .form select, .form textarea { font-size: 16px; padding: 10px 12px; border: 1px solid #ccc; font-weight: 400; font-family: Arial, Helvetica, sans-serif; width: 100%; }
-.form textarea { resize: vertical; }
-.form-actions { display: flex; flex-direction: column; align-items: stretch; }
-
-.form-inline { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-.form-inline input { font-size: 16px; padding: 10px 12px; border: 1px solid #ccc; width: 100%; }
-
-.login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; }
-.login-box { background: #fff; border: 1px solid var(--linea); border-top: 4px solid var(--rojo); padding: 28px 22px; width: 100%; max-width: 360px; text-align: center; }
-.login-box h1 { font-family: Georgia, serif; margin-bottom: 4px; }
-.login-box form { display: flex; flex-direction: column; gap: 14px; margin: 20px 0; text-align: left; }
-.login-box label { font-size: 14px; font-weight: 600; display: flex; flex-direction: column; gap: 6px; }
-.login-box input { font-size: 16px; padding: 10px 12px; border: 1px solid #ccc; font-weight: 400; }
-.login-box .btn { width: 100%; }
-.demo-hint { background: #f7f5f1; padding: 8px; }
-
-/* ===== Tablet (>=600px): dos columnas, nav más amplia ===== */
-@media (min-width: 600px) {
-  .brand-box { font-size: 36px; }
-  .grid { grid-template-columns: 1fr 1fr; }
-  .grid .card { padding: 0 18px 20px 0; margin: 0 18px 20px 0; border-right: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
-  .grid .card:nth-child(2n) { border-right: 0; margin-right: 0; padding-right: 0; }
-  .search { flex-basis: auto; margin-left: auto; padding: 6px 0; }
-  .search input { font-size: 13px; padding: 8px 10px; width: 180px; flex: none; }
-  .admin-title { flex-direction: row; justify-content: space-between; align-items: center; }
-  .form { padding: 24px; max-width: 760px; }
-  .form-actions { flex-direction: row; align-items: center; }
-  .btn-sec { margin-left: 8px; margin-top: 0; }
-  .form-inline { flex-direction: row; align-items: center; }
-  .form-inline input { width: 280px; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .form-row { grid-template-columns: 1fr 1fr; }
-  .ficha-row { flex-direction: row; justify-content: space-between; align-items: baseline; }
-  .cookie-in { flex-direction: row; align-items: center; }
+.ficha-tecnica {
+  border: 1px solid var(--linea);
+  background: #fff;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* ===== Escritorio (>=900px): portada a dos columnas, tipografía grande ===== */
+.ficha-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.ficha-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.ficha-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gris);
+  letter-spacing: .6px;
+}
+
+.ficha-val {
+  color: var(--tinta);
+  word-break: break-word;
+}
+
+.ficha-val a {
+  color: var(--azul-legal);
+  text-decoration: underline;
+}
+
+/* Formulario de Arrepentimiento / Baja (Res. 424 y 271) */
+.legal-form {
+  margin-top: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.input-select {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid var(--linea);
+  background: #fff;
+  width: 100%;
+  border-radius: 2px;
+  min-height: 44px;
+}
+
+.tramite-confirmacion {
+  background: var(--verde-ok-bg);
+  border: 2px solid var(--verde-ok);
+  padding: 20px 16px;
+  margin-top: 16px;
+  border-radius: 4px;
+}
+
+.tramite-badge {
+  display: inline-block;
+  background: var(--verde-ok);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  margin-bottom: 12px;
+}
+
+.tramite-codigo-box {
+  background: #fff;
+  border: 1px dashed var(--verde-ok);
+  padding: 16px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.tramite-label {
+  display: block;
+  font-size: 11px;
+  color: var(--gris);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tramite-numero {
+  display: block;
+  font-size: clamp(18px, 5vw, 24px);
+  font-family: monospace;
+  color: var(--tinta);
+  margin: 6px 0;
+  word-break: break-all;
+}
+
+.tramite-fecha {
+  font-size: 11px;
+  color: var(--gris-claro);
+}
+
+.consumidor-federal-box {
+  margin-top: 24px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--linea);
+}
+
+.consumidor-federal-box h4 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.consumidor-federal-box p {
+  font-size: 13px;
+  color: var(--gris);
+  margin-bottom: 12px;
+}
+
+.btn-consumidor-ext {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--azul-legal);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Pie de Página (Footer) · Mobile-First
+   ========================================================================== */
+.footer {
+  border-top: 3px solid var(--tinta);
+  margin-top: 32px;
+  background: #fafafa;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: var(--gris);
+}
+
+.footer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-top: 28px;
+  padding-bottom: 22px;
+}
+
+.footer-col-title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--tinta);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.footer-brand-title {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--tinta);
+}
+
+.footer-tagline {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: var(--rojo);
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.footer-staff-mini p {
+  margin-bottom: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.footer-links a {
+  color: var(--gris);
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-links a:hover {
+  color: var(--rojo);
+  text-decoration: underline;
+}
+
+/* Botones de Compliance Defensa del Consumidor en Móvil */
+.footer-compliance-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-arrepentimiento,
+.btn-baja {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 3px;
+  text-decoration: none;
+  text-align: center;
+  width: 100%;
+  min-height: 44px; /* Touch target estándar */
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.btn-arrepentimiento {
+  background: #fff;
+  color: var(--rojo);
+  border: 1.5px solid var(--rojo);
+}
+
+.btn-arrepentimiento:hover {
+  background: var(--rojo);
+  color: #fff;
+}
+
+.btn-baja {
+  background: #fff;
+  color: var(--tinta);
+  border: 1.5px solid var(--tinta);
+}
+
+.btn-baja:hover {
+  background: var(--tinta);
+  color: #fff;
+}
+
+/* Identificación Fiscal en Móvil */
+.footer-col-fiscal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.data-fiscal-badge {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 12px;
+  text-align: center;
+  border-radius: 4px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 150px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.data-fiscal-header {
+  font-size: 12px;
+  font-weight: 800;
+  color: #003366;
+  letter-spacing: 1px;
+}
+
+.data-fiscal-sub {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--gris-claro);
+  text-transform: uppercase;
+}
+
+.data-fiscal-qr {
+  color: #111;
+  margin: 4px 0;
+}
+
+.data-fiscal-titular {
+  font-size: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.data-fiscal-link {
+  font-size: 10px;
+  color: var(--azul-legal);
+  text-decoration: underline;
+  padding: 4px;
+  display: inline-block;
+}
+
+/* Franja AAIP */
+.footer-aaip-strip {
+  border-top: 1px solid var(--linea);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.aaip-box {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-left: 3px solid var(--azul-legal);
+  padding: 12px 14px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.aaip-box strong {
+  color: var(--tinta);
+}
+
+.aaip-box a {
+  color: var(--azul-legal);
+  text-decoration: underline;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+/* Barra inferior y créditos */
+.footer-bottom-bar {
+  border-top: 1px solid var(--linea);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 16px;
+  padding-bottom: 20px;
+  font-size: 11px;
+  color: var(--gris-claro);
+  text-align: center;
+}
+
+.footer-copy {
+  line-height: 1.5;
+}
+
+.footer-bottom-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-admin-footer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--linea);
+  background: #fff;
+  color: var(--gris);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 3px;
+  min-height: 40px;
+}
+
+.btn-admin-footer:hover {
+  background: var(--tinta);
+  color: #fff;
+  border-color: var(--tinta);
+}
+
+.footer-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--gris-claro);
+  opacity: .8;
+}
+
+.footer-credit img {
+  height: 11px;
+  width: auto;
+}
+
+/* ==========================================================================
+   Aviso de Cookies (Cookie Banner) · Mobile-First
+   ========================================================================== */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(18, 18, 18, 0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  z-index: 9999;
+  padding: 14px 0;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.2);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cookie-in {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  justify-content: space-between;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.cookie-text a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.cookie-actions {
+  width: 100%;
+}
+
+.cookie-actions .btn-sm {
+  width: 100%;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.btn-sm {
+  font-size: 12px;
+  padding: 8px 16px;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--gris);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.error {
+  background: #fdecea;
+  color: #8c1620;
+  border: 1px solid #f5c6c0;
+  padding: 12px 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: 14px;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Panel de Administración · Mobile-First
+   ========================================================================== */
+body.admin {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f4f4;
+}
+
+.adminbar {
+  background: var(--tinta);
+  color: #eee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.adminbar-in {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.brand-sm {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.brand-sm span {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.adminbar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  font-size: 13px;
+}
+
+.adminbar nav a {
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.adminbar nav a:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.admin-main {
+  padding-top: 20px;
+  padding-bottom: 44px;
+}
+
+.admin-title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.admin-title h1,
+.admin-main h1 {
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rojo);
+  color: #fff;
+  border: 0;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  min-height: 44px; /* Touch target */
+  border-radius: 2px;
+  transition: background-color .15s ease;
+}
+
+.btn:hover {
+  background: var(--rojo-osc);
+}
+
+.btn-sec {
+  background: #666;
+  margin-top: 8px;
+}
+
+.btn-sec:hover {
+  background: #505050;
+}
+
+/* Tabla responsive con scroll táctil en pantallas móviles */
+.tabla-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--linea);
+  background: #fff;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.tabla {
+  width: 100%;
+  min-width: 580px;
+  background: #fff;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabla th,
+.tabla td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--linea);
+}
+
+.tabla th {
+  background: #fafafa;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--gris);
+  font-weight: 700;
+}
+
+.tabla .acciones {
+  white-space: nowrap;
+}
+
+.tabla .acciones a {
+  margin-right: 6px;
+  color: var(--azul-legal);
+  padding: 6px 8px;
+  display: inline-block;
+  background: #f4f8fc;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tabla .acciones a.danger {
+  color: var(--rojo);
+  background: #fdf2f2;
+}
+
+/* Formularios de administración */
+.form {
+  background: #fff;
+  border: 1px solid var(--linea);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 3px;
+}
+
+.form label {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  min-height: 40px;
+}
+
+.form input[type=text],
+.form input[type=email],
+.form input[type=file],
+.form select,
+.form textarea {
+  font-size: 16px; /* Evita zoom molesto en iOS */
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  font-weight: 400;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-actions .btn {
+  width: 100%;
+}
+
+.form-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.form-inline input {
+  font-size: 16px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.login-box {
+  background: #fff;
+  border: 1px solid var(--linea);
+  border-top: 4px solid var(--rojo);
+  padding: 24px 18px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.login-box h1 {
+  font-family: Georgia, serif;
+  margin-bottom: 4px;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 18px 0;
+  text-align: left;
+}
+
+.login-box label {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-box input {
+  font-size: 16px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  font-weight: 400;
+  width: 100%;
+  border-radius: 2px;
+}
+
+.login-box .btn {
+  width: 100%;
+}
+
+
+/* ==========================================================================
+   TABLET PROGRESSIVE ENHANCEMENT (min-width: 600px)
+   ========================================================================== */
+@media (min-width: 600px) {
+  .topbar-in {
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .brand-box {
+    font-size: 34px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .grid .card {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .admin-title {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form {
+    padding: 24px;
+    max-width: 760px;
+  }
+
+  .form-actions {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .form-actions .btn {
+    width: auto;
+  }
+
+  .btn-sec {
+    margin-left: 8px;
+    margin-top: 0;
+  }
+
+  .form-inline {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .form-inline input {
+    width: 280px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-col-fiscal {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .data-fiscal-badge {
+    margin: 0;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ficha-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .cookie-in {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .cookie-actions {
+    width: auto;
+  }
+
+  .cookie-actions .btn-sm {
+    width: auto;
+  }
+
+  .footer-bottom-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .footer-bottom-right {
+    flex-direction: row;
+    width: auto;
+  }
+
+  .btn-admin-footer {
+    width: auto;
+  }
+}
+
+
+/* ==========================================================================
+   DESKTOP PROGRESSIVE ENHANCEMENT (min-width: 900px)
+   ========================================================================== */
 @media (min-width: 900px) {
-  .wrap { padding: 0 20px; }
-  .brand-box { font-size: 44px; padding: 8px 26px; }
-  .brand-logo img { max-width: 380px; width: auto; }
-  .tagline { font-size: 12px; letter-spacing: 2.5px; }
-  .masthead { padding: 26px 0 20px; }
-  main.wrap { padding-top: 28px; padding-bottom: 48px; }
-  .hero { grid-template-columns: 1.9fr 1fr; gap: 28px; padding-bottom: 28px; }
-  .hero-main h2 { font-size: 40px; line-height: 1.15; }
-  .hero-side { margin-top: 0; padding-top: 0; border-top: 0; }
-  .hero-side .hero-card { padding: 16px 0; }
-  .hero-card h3 { font-size: 21px; }
-  .section-block { padding: 26px 0; }
-  .page-title { font-size: 38px; margin-bottom: 22px; }
-  .grid { grid-template-columns: repeat(3, 1fr); }
-  .grid .card { padding: 0 22px 22px 0; margin: 0 22px 4px 0; }
-  .grid .card:nth-child(2n) { border-right: 1px solid var(--linea); margin-right: 22px; padding-right: 22px; }
-  .grid .card:nth-child(3n) { border-right: 0; margin-right: 0; padding-right: 0; }
-  .grid .card:nth-child(n+4) { padding-top: 22px; border-top: 1px solid var(--linea); }
-  .articulo h1 { font-size: 42px; line-height: 1.15; }
-  .articulo .contenido p { font-size: 18px; }
-  .footer-grid { grid-template-columns: 2.2fr 1fr 1.8fr 1fr; gap: 32px; }
-  .footer-bottom-bar { flex-direction: row; }
-  .footer-copy { text-align: left; }
-  .adminbar-in { flex-direction: row; justify-content: space-between; align-items: center; }
+  .wrap {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .masthead {
+    padding: 24px 0 18px;
+  }
+
+  .brand-box {
+    font-size: 42px;
+    padding: 8px 24px;
+  }
+
+  .brand-logo img {
+    max-width: 360px;
+    width: auto;
+  }
+
+  .tagline {
+    font-size: 11px;
+    letter-spacing: 2.4px;
+  }
+
+  /* Navegación de escritorio en una sola fila integrada */
+  .nav-in {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-scroll-wrap {
+    width: auto;
+    border-bottom: 0;
+    overflow: visible;
+  }
+
+  .nav-scroll {
+    overflow-x: visible;
+    padding: 0;
+    gap: 4px;
+  }
+
+  .search {
+    width: auto;
+    padding: 0;
+    margin-left: auto;
+  }
+
+  .search input {
+    font-size: 13px;
+    height: 34px;
+    width: 200px;
+    background: #fff;
+  }
+
+  .search button {
+    height: 34px;
+    min-width: 40px;
+    padding: 0 12px;
+  }
+
+  main.wrap {
+    padding-top: 26px;
+    padding-bottom: 48px;
+  }
+
+  /* Hero con columna principal destacada y lateral periodístico */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.9fr 1fr;
+    gap: 28px;
+    padding-bottom: 28px;
+  }
+
+  .hero-main {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .hero-main h2 {
+    font-size: 38px;
+    line-height: 1.15;
+  }
+
+  .hero-side {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .hero-card {
+    grid-template-columns: 110px 1fr;
+    padding: 16px 0;
+  }
+
+  .hero-card img {
+    width: 110px;
+    height: 82px;
+  }
+
+  .hero-card h3 {
+    font-size: 18px;
+  }
+
+  .section-block {
+    padding: 26px 0;
+  }
+
+  .page-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  /* Grid a tres columnas en escritorio */
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .articulo {
+    max-width: 740px;
+  }
+
+  .articulo h1 {
+    font-size: 42px;
+    line-height: 1.15;
+  }
+
+  .articulo .contenido p {
+    font-size: 18px;
+  }
+
+  /* Footer a cuatro columnas en escritorio */
+  .footer-grid {
+    grid-template-columns: 2.2fr 1fr 1.8fr 1fr;
+    gap: 32px;
+    padding-top: 34px;
+    padding-bottom: 26px;
+  }
+
+  .adminbar-in {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

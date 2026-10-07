@@ -16,7 +16,10 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <html lang="es-AR" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title><?= $full_title ?></title>
 <meta name="description" content="<?= $meta_desc ?>">
 <link rel="canonical" href="<?= e($canonical) ?>">
@@ -63,7 +66,7 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="bingbot" content="index, follow">
 
-<link rel="stylesheet" href="assets/style.css?v=20261007_prod">
+<link rel="stylesheet" href="assets/style.css?v=20261007_mobile">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 
 <!-- Datos Estructurados JSON-LD (Schema.org / Google News / Motores de IA) -->
@@ -184,13 +187,18 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
     <p class="tagline"><?= e(SITE_TAGLINE) ?></p>
   </div>
 </header>
-<nav class="mainnav">
+<nav class="mainnav" aria-label="Navegación principal">
   <div class="wrap nav-in">
-    <a href="index.php" class="nav-item">Inicio</a>
-    <?php foreach ($cats as $c): ?>
-      <a href="categoria.php?slug=<?= e($c['slug']) ?>" class="nav-item"><?= e($c['nombre']) ?></a>
-    <?php endforeach; ?>
-    <form class="search" action="buscar.php" method="get">
+    <div class="nav-scroll-wrap">
+      <div class="nav-scroll">
+        <?php $cur_slug = $_GET['slug'] ?? ''; ?>
+        <a href="index.php" class="nav-item <?= empty($cur_slug) && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">Inicio</a>
+        <?php foreach ($cats as $c): ?>
+          <a href="categoria.php?slug=<?= e($c['slug']) ?>" class="nav-item <?= $cur_slug === $c['slug'] ? 'active' : '' ?>"><?= e($c['nombre']) ?></a>
+        <?php endforeach; ?>
+      </div>
+    </div>
+    <form class="search" action="buscar.php" method="get" role="search">
       <input type="search" name="q" placeholder="Buscar noticias…" value="<?= e($q) ?>" aria-label="Buscar noticias">
       <button type="submit" aria-label="Buscar">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
