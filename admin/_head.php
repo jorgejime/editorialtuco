@@ -17,7 +17,7 @@ header("Pragma: no-cache");
 })();
 </script>
 <title>Panel · <?= e(SITE_NAME) ?></title>
-<link rel="stylesheet" href="../assets/style.css?v=20261009_v5">
+<link rel="stylesheet" href="../assets/style.css?v=20261009_v6">
 </head>
 <body class="admin">
 <header class="adminbar">

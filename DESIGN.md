@@ -31,8 +31,8 @@
 | `--toolbar-btn-active` | `#e2e6ed` | Estado activo (botón presionado / formato aplicado) |
 | `--doc-ink` | `#1a1a1a` | Tinta de texto del documento (negro editorial óptimo) |
 | `--doc-muted` | `#6b7280` | Metadatos, atajos y texto auxiliar |
-| `--accent` | `#c7120a` | Acento identitario de Editorial Tucó (acciones primarias) |
-| `--accent-hover` | `#9b0e08` | Hover del botón de guardar / publicar |
+| `--accent` | `#0b2641` | Acento identitario azul institucional de Editorial Tucó (acciones primarias) |
+| `--accent-hover` | `#163e66` | Hover del botón de guardar / publicar |
 
 ### 2.2. Tokens en Modo Oscuro (`[data-theme="dark"]`)
 | Token CSS | Valor | Propósito Semántico |
@@ -47,8 +47,8 @@
 | `--toolbar-btn-active` | `rgba(255, 255, 255, 0.16)` | Estado activo de formato |
 | `--doc-ink` | `#f0ede6` | Tinta del documento en blanco marfil de baja fatiga visual |
 | `--doc-muted` | `#9ca3af` | Metadatos y etiquetas secundarias |
-| `--accent` | `#e5484d` | Acento carmesí vibrante calibrado para dark mode |
-| `--accent-hover` | `#ff5c62` | Hover de acción primaria |
+| `--accent` | `#58a6ff` | Acento azul luminoso calibrado para alta legibilidad en dark mode |
+| `--accent-hover` | `#7cb5f5` | Hover de acción primaria |
 
 ---
 

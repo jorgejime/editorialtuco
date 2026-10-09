@@ -127,8 +127,16 @@ function markdown_a_html(string $texto): string {
             }
         }
 
+        // Imágenes Markdown con epígrafe/pie de foto (![Pie](url))
+        if (preg_match('/^!\[(.*?)\]\((.+?)\)$/u', $bloque, $m)) {
+            $alt = parsear_inline_markdown(trim($m[1]));
+            $src = trim($m[2]);
+            $salida[] = "<figure class=\"foto-cuerpo align-center\"><img src=\"{$src}\" alt=\"{$alt}\" loading=\"lazy\"><figcaption>{$alt}</figcaption></figure>";
+            continue;
+        }
+
         // Bloque que ya contiene etiquetas HTML estructurales
-        if (preg_match('/^<(p|h[1-6]|ul|ol|blockquote|div|table|hr)\b/i', $bloque)) {
+        if (preg_match('/^<(p|h[1-6]|ul|ol|blockquote|div|table|hr|figure|img)\b/i', $bloque)) {
             $salida[] = parsear_inline_markdown($bloque);
             continue;
         }
@@ -142,8 +150,8 @@ function markdown_a_html(string $texto): string {
 }
 
 /**
- * Sanitiza HTML para notas editoriales permitiendo únicamente etiquetas semánticas y seguras.
- * Previene vectores XSS (scripts, atributos on*, estilos incrustados perjudiciales).
+ * Sanitiza HTML para notas editoriales permitiendo etiquetas semánticas y multimedia segura.
+ * Soporta columnas periodísticas, figuras fotográficas y epígrafes previendo vectores XSS.
  */
 function sanitizar_html_noticia(string $html): string {
     $html = trim($html);
@@ -152,13 +160,17 @@ function sanitizar_html_noticia(string $html): string {
     // Convertir cualquier marcación residual de markdown antes de filtrar etiquetas
     $html = parsear_inline_markdown($html);
 
+    // Normalizar rutas relativas a uploads/ para la base de datos
+    $html = preg_replace('/src=["\']\.\.\/uploads\//i', 'src="uploads/', $html);
+
     if (!preg_match('/<[a-z][\s\S]*>/i', $html)) {
         return htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
     }
 
-    $permitidas = '<p><br><hr><h2><h3><h4><h5><h6><strong><b><em><i><u><s><ul><ol><li><blockquote><a>';
+    $permitidas = '<p><br><hr><h2><h3><h4><h5><h6><strong><b><em><i><u><s><ul><ol><li><blockquote><a><figure><figcaption><img><div><span>';
     $limpio = strip_tags($html, $permitidas);
 
+    // Sanitizar enlaces <a>
     $limpio = preg_replace_callback('/<a\s+([^>]*?)>/i', function($matches) {
         $attrs = $matches[1];
         if (preg_match('/href=([\'"])(.*?)\1/i', $attrs, $m)) {
@@ -171,8 +183,59 @@ function sanitizar_html_noticia(string $html): string {
         return '<a>';
     }, $limpio);
 
+    // Sanitizar imágenes <img>
+    $limpio = preg_replace_callback('/<img\s+([^>]*?)>/i', function($matches) {
+        $attrs = $matches[1];
+        $src = '';
+        $alt = '';
+        if (preg_match('/src=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $src_val = trim($m[2]);
+            if (preg_match('/^(\.{0,2}\/)?uploads\/|^https?:\/\/|^data:image\//i', $src_val)) {
+                $src = htmlspecialchars($src_val, ENT_QUOTES, 'UTF-8');
+            }
+        }
+        if (!$src) return '';
+        if (preg_match('/alt=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $alt = htmlspecialchars(trim($m[2]), ENT_QUOTES, 'UTF-8');
+        }
+        return '<img src="' . $src . '" alt="' . $alt . '" loading="lazy">';
+    }, $limpio);
+
+    // Sanitizar figuras <figure> (permitir clases foto-cuerpo y alineaciones)
+    $limpio = preg_replace_callback('/<figure(\s+[^>]*?)?>/i', function($matches) {
+        $attrs = $matches[1] ?? '';
+        $classes = [];
+        if (preg_match('/class=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $cls_list = explode(' ', $m[2]);
+            foreach ($cls_list as $c) {
+                if (in_array($c, ['foto-cuerpo', 'align-left', 'align-right', 'align-center'], true)) {
+                    $classes[] = $c;
+                }
+            }
+        }
+        if (empty($classes)) $classes = ['foto-cuerpo', 'align-center'];
+        return '<figure class="' . implode(' ', $classes) . '">';
+    }, $limpio);
+
+    // Sanitizar contenedores <div> (permitir clases de columnas editoriales)
+    $limpio = preg_replace_callback('/<div(\s+[^>]*?)?>/i', function($matches) {
+        $attrs = $matches[1] ?? '';
+        $classes = [];
+        if (preg_match('/class=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $cls_list = explode(' ', $m[2]);
+            foreach ($cls_list as $c) {
+                if (in_array($c, ['editorial-cols', 'editorial-col'], true)) {
+                    $classes[] = $c;
+                }
+            }
+        }
+        $cls_attr = !empty($classes) ? ' class="' . implode(' ', $classes) . '"' : '';
+        return '<div' . $cls_attr . '>';
+    }, $limpio);
+
     $limpio = preg_replace('/\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $limpio);
     $limpio = preg_replace('/\s+style\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $limpio);
+    $limpio = preg_replace('/\s+contenteditable\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $limpio);
 
     return trim($limpio);
 }
@@ -190,13 +253,14 @@ function renderizar_resumen(string $resumen): string {
 
 /**
  * Renderiza el cuerpo de una noticia.
- * Transforma cualquier marcación Markdown a HTML semántico y desinfecta el resultado,
- * garantizando cero marcaciones residuales (##, **, etc.) y total seguridad contra XSS.
+ * Transforma marcaciones Markdown y asegura rutas correctas de imágenes en el portal público.
  */
 function renderizar_contenido(string $contenido): string {
     $c = trim($contenido);
     if ($c === '') return '';
 
+    // Normalizar cualquier ruta hacia uploads/ para visualización frontal
+    $c = preg_replace('/src=["\']\.\.\/uploads\//i', 'src="uploads/', $c);
     $html = markdown_a_html($c);
     return sanitizar_html_noticia($html);
 }

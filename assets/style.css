@@ -15,8 +15,11 @@
   --fondo: #ffffff;
   --superficie: #fbfbfb;
   --superficie-card: #ffffff;
-  --rojo: #c7120a;
-  --rojo-osc: #9b0e08;
+  --rojo: #0b2641;
+  --rojo-osc: #163e66;
+  --btn-accent-bg: #0b2641;
+  --btn-accent-hover: #163e66;
+  --btn-accent-text: #ffffff;
   --azul-legal: #1a5fb4;
   --azul-legal-bg: #f4f8fc;
   --verde-ok: #2e7d32;
@@ -35,8 +38,11 @@
   --fondo: #ffffff;
   --superficie: #fbfbfb;
   --superficie-card: #ffffff;
-  --rojo: #c7120a;
-  --rojo-osc: #9b0e08;
+  --rojo: #0b2641;
+  --rojo-osc: #163e66;
+  --btn-accent-bg: #0b2641;
+  --btn-accent-hover: #163e66;
+  --btn-accent-text: #ffffff;
   --azul-legal: #1a5fb4;
   --azul-legal-bg: #f4f8fc;
   --verde-ok: #2e7d32;
@@ -55,8 +61,11 @@
   --fondo: #0e1013;
   --superficie: #15181d;
   --superficie-card: #181b22;
-  --rojo: #e5484d;
-  --rojo-osc: #c53030;
+  --rojo: #58a6ff;
+  --rojo-osc: #7cb5f5;
+  --btn-accent-bg: #1d4ed8;
+  --btn-accent-hover: #2563eb;
+  --btn-accent-text: #ffffff;
   --azul-legal: #6ba4e8;
   --azul-legal-bg: #112238;
   --verde-ok: #4caf50;
@@ -75,8 +84,11 @@
     --fondo: #0e1013;
     --superficie: #15181d;
     --superficie-card: #181b22;
-    --rojo: #e5484d;
-    --rojo-osc: #c53030;
+    --rojo: #58a6ff;
+    --rojo-osc: #7cb5f5;
+    --btn-accent-bg: #1d4ed8;
+    --btn-accent-hover: #2563eb;
+    --btn-accent-text: #ffffff;
     --azul-legal: #6ba4e8;
     --azul-legal-bg: #112238;
     --verde-ok: #4caf50;
@@ -856,6 +868,485 @@ main.wrap {
 }
 
 /* ==========================================================================
+   Estructura Periodística: Bloques de Columnas y Fotografías con Epígrafe
+   ========================================================================== */
+
+/* Bloque a Dos Columnas Periodísticas */
+.articulo .contenido .editorial-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 28px 0;
+  padding: 16px 0;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+}
+
+@media (min-width: 680px) {
+  .articulo .contenido .editorial-cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .articulo .contenido .editorial-col:first-child {
+    border-right: 1px solid var(--linea);
+    padding-right: 24px;
+  }
+}
+
+.articulo .contenido .editorial-col p {
+  margin-bottom: 14px;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+/* Fotografías y Epígrafes / Pie de Foto dentro del Cuerpo de la Noticia */
+.articulo .contenido figure.foto-cuerpo {
+  margin: 28px 0;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.articulo .contenido figure.foto-cuerpo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 580px;
+  object-fit: cover;
+  border-radius: 3px 3px 0 0;
+}
+
+.articulo .contenido figure.foto-cuerpo figcaption {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--gris);
+  padding: 10px 14px;
+  background: var(--superficie);
+  border-top: 1px solid var(--linea);
+  font-style: italic;
+}
+
+.articulo .contenido figure.foto-cuerpo.align-left {
+  float: left;
+  max-width: 48%;
+  margin: 12px 24px 18px 0;
+}
+
+.articulo .contenido figure.foto-cuerpo.align-right {
+  float: right;
+  max-width: 48%;
+  margin: 12px 0 18px 24px;
+}
+
+@media (max-width: 600px) {
+  .articulo .contenido figure.foto-cuerpo.align-left,
+  .articulo .contenido figure.foto-cuerpo.align-right {
+    float: none;
+    max-width: 100%;
+    margin: 20px 0;
+  }
+}
+
+/* ==========================================================================
+   Estilo Periódico Noticias Clásico Elegante (Inspirado en PDF A4 Broadsheet)
+   ========================================================================== */
+
+.articulo-periodico-clasico {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 0 44px;
+}
+
+/* 1. Folio de Cabecera Broadsheet */
+.periodico-folio {
+  text-align: center;
+  padding: 10px 0 16px;
+  border-bottom: 3px double var(--linea);
+  margin-bottom: 24px;
+}
+
+.folio-marca {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.folio-seccion {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(26px, 4.5vw, 38px);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tinta);
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.folio-cintillo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 4px;
+}
+
+.cintillo-linea {
+  flex: 1;
+  height: 1px;
+  background: var(--linea);
+}
+
+.cintillo-texto {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--gris);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .cintillo-texto {
+    font-size: 11.5px;
+    white-space: normal;
+    text-align: center;
+  }
+  .cintillo-linea {
+    display: none;
+  }
+}
+
+/* 2. Encabezado de Noticia y Titular */
+.periodico-header {
+  margin-bottom: 22px;
+}
+
+.periodico-kicker-row {
+  margin-bottom: 12px;
+}
+
+/* Badge Negro / Acento oscuro idéntico al PDF */
+.periodico-badge-negro {
+  display: inline-block;
+  background: var(--tinta);
+  color: var(--fondo) !important;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 5px 12px;
+  border-radius: 2px;
+}
+
+[data-theme="dark"] .periodico-badge-negro {
+  background: #ffffff;
+  color: #0e1013 !important;
+}
+
+.periodico-titulo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4.8vw, 44px);
+  font-weight: 700;
+  line-height: 1.14;
+  color: var(--tinta);
+  letter-spacing: -0.015em;
+  margin: 10px 0 16px;
+  word-break: break-word;
+}
+
+.periodico-bajada {
+  padding: 14px 0;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  margin-bottom: 22px;
+}
+
+.periodico-bajada p {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(17px, 2.2vw, 20px);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--tinta-suave);
+  margin: 0;
+}
+
+/* 3. Fotografía de Portada */
+.periodico-foto-principal {
+  margin: 0 0 24px;
+  border: 1px solid var(--linea);
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--superficie);
+}
+
+.periodico-foto-principal img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.periodico-foto-principal figcaption {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: var(--gris);
+  font-style: italic;
+  padding: 9px 14px;
+  background: var(--superficie);
+  border-top: 1px solid var(--linea);
+}
+
+/* 4. Barra de herramientas de lectura */
+.periodico-toolbar-lectura {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--linea);
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: var(--gris);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.layout-toggle-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-layout-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+  color: var(--gris);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-layout-toggle:hover {
+  border-color: var(--rojo);
+  color: var(--tinta);
+}
+
+.btn-layout-toggle.is-active {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--fondo);
+}
+
+[data-theme="dark"] .btn-layout-toggle.is-active {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0e1013;
+}
+
+/* 5. Cuerpo de Noticia: Formato a Dos Columnas Estilo Periódico */
+.periodico-cuerpo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.74;
+  color: var(--tinta-suave);
+  word-break: break-word;
+}
+
+/* Letra Capitular (Drop Cap) en el primer párrafo */
+.periodico-cuerpo > p:first-of-type::first-letter {
+  float: left;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.6em;
+  line-height: 0.82;
+  padding-top: 4px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  font-weight: 700;
+  color: var(--tinta);
+}
+
+.periodico-cuerpo p {
+  margin-bottom: 1.25em;
+}
+
+/* Reglas de Columna en Escritorio (>=768px) */
+@media (min-width: 768px) {
+  .periodico-cuerpo.layout-2cols {
+    column-count: 2;
+    column-gap: 38px;
+    column-rule: 1px solid var(--linea);
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+}
+
+.periodico-cuerpo.layout-1col {
+  column-count: 1 !important;
+  text-align: left !important;
+}
+
+/* Títulos y Elementos Estructurales dentro de las columnas */
+.periodico-cuerpo h2,
+.periodico-cuerpo h3,
+.periodico-cuerpo h4 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--tinta);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+  break-inside: avoid;
+  break-after: avoid;
+}
+
+.periodico-cuerpo h2 {
+  font-size: 24px;
+  column-span: all;
+  border-bottom: 1px solid var(--linea);
+  padding-bottom: 6px;
+  margin-top: 2em;
+}
+
+.periodico-cuerpo h3 { font-size: 20px; }
+.periodico-cuerpo h4 { font-size: 18px; }
+
+/* Citas que cortan las columnas (Column-span: all) */
+.periodico-cuerpo blockquote {
+  column-span: all;
+  break-inside: avoid;
+  border-left: 3px solid var(--rojo);
+  padding: 16px 24px;
+  margin: 28px 0;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.55;
+  color: var(--tinta);
+  background: var(--superficie);
+  border-radius: 0 3px 3px 0;
+}
+
+/* Figuras e Imágenes en Columnas */
+.periodico-cuerpo figure.foto-cuerpo {
+  break-inside: avoid;
+  margin: 22px 0;
+  border: 1px solid var(--linea);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--superficie);
+}
+
+.periodico-cuerpo figure.foto-cuerpo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.periodico-cuerpo figure.foto-cuerpo figcaption {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gris);
+  padding: 8px 12px;
+  background: var(--superficie);
+  border-top: 1px solid var(--linea);
+  font-style: italic;
+}
+
+.periodico-cuerpo figure.foto-cuerpo.align-center {
+  column-span: all;
+  margin: 28px 0;
+}
+
+.periodico-cuerpo .editorial-cols {
+  column-span: all;
+}
+
+.periodico-cuerpo hr {
+  column-span: all;
+  border: 0;
+  height: 1px;
+  background: var(--linea);
+  margin: 28px 0;
+}
+
+/* 6. Firma y Créditos al Pie del Artículo (Página 2 del PDF) */
+.periodico-firma {
+  margin-top: 40px;
+  padding-top: 24px;
+}
+
+.firma-linea-doble {
+  height: 4px;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  margin-bottom: 20px;
+}
+
+.firma-cuerpo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+}
+
+.firma-avatar img {
+  border-radius: 50%;
+  border: 1px solid var(--linea);
+  display: block;
+}
+
+.firma-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.firma-rol {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gris);
+  font-weight: 700;
+}
+
+.firma-nombre {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  color: var(--tinta);
+}
+
+.firma-locacion {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: var(--gris);
+  margin: 0;
+}
+
+.firma-locacion a {
+  color: var(--rojo);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
    Páginas Legales y Compliance Argentina · Mobile-First
    ========================================================================== */
 .legal-page {
@@ -1544,8 +2035,8 @@ body.admin {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--rojo);
-  color: #fff;
+  background: var(--btn-accent-bg, var(--rojo));
+  color: var(--btn-accent-text, #fff);
   border: 0;
   padding: 12px 20px;
   font-size: 15px;
@@ -1559,7 +2050,7 @@ body.admin {
 }
 
 .btn:hover {
-  background: var(--rojo-osc);
+  background: var(--btn-accent-hover, var(--rojo-osc));
 }
 
 .btn-sec {

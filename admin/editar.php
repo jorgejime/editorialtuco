@@ -81,6 +81,8 @@ $cats = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->fetchA
 $contenido_inicial = $n['contenido'] ?? '';
 if ($contenido_inicial !== '') {
     $contenido_inicial = markdown_a_html($contenido_inicial);
+    // Asegurar que las imágenes del cuerpo se visualicen correctamente en la vista previa del panel admin
+    $contenido_inicial = preg_replace('/src=["\']uploads\//i', 'src="../uploads/', $contenido_inicial);
 }
 
 // Nombre de la categoría activa para mostrar en el kicker de la hoja
@@ -94,7 +96,7 @@ foreach ($cats as $c) {
 
 include __DIR__ . '/_head.php';
 ?>
-<link rel="stylesheet" href="../assets/admin-editor.css?v=20261009_v5">
+<link rel="stylesheet" href="../assets/admin-editor.css?v=20261009_v6">
 
 <div class="editor-workspace">
   <div class="editor-container">
@@ -189,6 +191,23 @@ include __DIR__ . '/_head.php';
           </button>
           <button type="button" class="ribbon-btn" data-cmd="insertHorizontalRule" title="Línea divisoria horizontal" aria-label="Línea divisoria">―</button>
           <button type="button" class="ribbon-btn" data-cmd="removeFormat" title="Limpiar formato" aria-label="Limpiar formato">T⃠</button>
+        </div>
+
+        <div class="ribbon-divider"></div>
+
+        <!-- Multimedia y Columnas Periodísticas -->
+        <div class="ribbon-group">
+          <button type="button" class="ribbon-btn" id="btnInsertFotoCuerpo" title="Insertar fotografía con epígrafe o pie de foto" aria-label="Insertar foto con pie" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Foto y Pie
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertCols" title="Insertar sección a 2 columnas (Texto en paralelo)" aria-label="Insertar 2 columnas" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
+            2 Columnas
+          </button>
+          <button type="button" class="ribbon-btn" id="btnExitCols" title="Insertar párrafo normal de 1 columna (Ancho completo)" aria-label="Párrafo normal" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            1 Columna
+          </button>
         </div>
       </div>
 
@@ -564,8 +583,245 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  // 1. Inserción de 2 Columnas Periodísticas
+  var btnInsertCols = document.getElementById('btnInsertCols');
+  if (btnInsertCols) {
+    btnInsertCols.addEventListener('click', function(e) {
+      e.preventDefault();
+      canvas.focus();
+      var colsHtml = '<div class="editorial-cols">' +
+        '<div class="editorial-col"><p>Columna 1: escribe aquí el primer bloque de texto...</p></div>' +
+        '<div class="editorial-col"><p>Columna 2: escribe aquí el segundo bloque de texto...</p></div>' +
+        '</div><p><br></p>';
+      document.execCommand('insertHTML', false, colsHtml);
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 2. Salir de columnas a párrafo normal (1 Columna)
+  var btnExitCols = document.getElementById('btnExitCols');
+  if (btnExitCols) {
+    btnExitCols.addEventListener('click', function(e) {
+      e.preventDefault();
+      canvas.focus();
+      document.execCommand('insertHTML', false, '<p><br></p>');
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 3. Modal de Inserción de Fotografía con Epígrafe
+  var btnInsertFotoCuerpo = document.getElementById('btnInsertFotoCuerpo');
+  var modalFoto = document.getElementById('modalInsertFoto');
+  var btnModalClose = document.getElementById('btnModalClose');
+  var btnModalCancel = document.getElementById('btnModalCancel');
+  var btnModalConfirm = document.getElementById('btnModalConfirm');
+  var modalDropZone = document.getElementById('modalDropZone');
+  var modalFileInput = document.getElementById('modalFileInput');
+  var modalPreviewImg = document.getElementById('modalPreviewImg');
+  var dropZonePrompt = document.getElementById('dropZonePrompt');
+  var modalUrlInput = document.getElementById('modalUrlInput');
+  var modalEpigrafeInput = document.getElementById('modalEpigrafeInput');
+  var modalAlignSelect = document.getElementById('modalAlignSelect');
+  var modalUploadStatus = document.getElementById('modalUploadStatus');
+  var savedRange = null;
+
+  function openFotoModal() {
+    var sel = window.getSelection();
+    if (sel.rangeCount > 0) {
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+    modalFileInput.value = '';
+    modalUrlInput.value = '';
+    modalEpigrafeInput.value = '';
+    modalAlignSelect.value = 'align-center';
+    modalPreviewImg.style.display = 'none';
+    modalPreviewImg.src = '';
+    dropZonePrompt.style.display = 'block';
+    modalUploadStatus.style.display = 'none';
+    modalUploadStatus.textContent = '';
+    btnModalConfirm.disabled = false;
+    btnModalConfirm.textContent = 'Insertar en la Noticia';
+    modalFoto.classList.add('active');
+  }
+
+  function closeFotoModal() {
+    modalFoto.classList.remove('active');
+  }
+
+  if (btnInsertFotoCuerpo) {
+    btnInsertFotoCuerpo.addEventListener('click', function(e) {
+      e.preventDefault();
+      openFotoModal();
+    });
+  }
+  if (btnModalClose) btnModalClose.addEventListener('click', closeFotoModal);
+  if (btnModalCancel) btnModalCancel.addEventListener('click', closeFotoModal);
+
+  // Selector y arrastre de archivo
+  if (modalDropZone && modalFileInput) {
+    modalDropZone.addEventListener('click', function(e) {
+      if (e.target !== modalFileInput) modalFileInput.click();
+    });
+    modalDropZone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      modalDropZone.classList.add('dragover');
+    });
+    modalDropZone.addEventListener('dragleave', function() {
+      modalDropZone.classList.remove('dragover');
+    });
+    modalDropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      modalDropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        modalFileInput.files = e.dataTransfer.files;
+        handleModalFile(modalFileInput.files[0]);
+      }
+    });
+    modalFileInput.addEventListener('change', function() {
+      if (modalFileInput.files && modalFileInput.files[0]) {
+        handleModalFile(modalFileInput.files[0]);
+      }
+    });
+  }
+
+  function handleModalFile(file) {
+    var reader = new FileReader();
+    reader.onload = function(evt) {
+      modalPreviewImg.src = evt.target.result;
+      modalPreviewImg.style.display = 'block';
+      dropZonePrompt.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Confirmar inserción en el cuerpo
+  if (btnModalConfirm) {
+    btnModalConfirm.addEventListener('click', function() {
+      var file = modalFileInput.files && modalFileInput.files[0];
+      var extUrl = (modalUrlInput.value || '').trim();
+      var epigrafe = (modalEpigrafeInput.value || '').trim();
+      var align = modalAlignSelect.value || 'align-center';
+
+      if (!file && !extUrl) {
+        modalUploadStatus.textContent = 'Por favor selecciona un archivo o escribe una URL de imagen.';
+        modalUploadStatus.style.display = 'block';
+        return;
+      }
+
+      function insertPhotoHtml(imgSrc) {
+        canvas.focus();
+        if (savedRange) {
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(savedRange);
+        }
+        var safeEpigrafe = epigrafe
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+
+        var figHtml = '<figure class="foto-cuerpo ' + align + '" contenteditable="false">' +
+          '<img src="' + imgSrc + '" alt="' + safeEpigrafe + '" loading="lazy">' +
+          '<figcaption contenteditable="true">' + (safeEpigrafe || 'Pie de foto / Epígrafe aquí') + '</figcaption>' +
+          '</figure><p><br></p>';
+
+        document.execCommand('insertHTML', false, figHtml);
+        syncContent();
+        updateMetrics();
+        closeFotoModal();
+      }
+
+      if (file) {
+        btnModalConfirm.disabled = true;
+        btnModalConfirm.textContent = 'Subiendo imagen...';
+        modalUploadStatus.style.display = 'none';
+
+        var fd = new FormData();
+        fd.append('foto', file);
+
+        fetch('upload_inline.php', {
+          method: 'POST',
+          body: fd
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.ok) {
+            insertPhotoHtml(data.url);
+          } else {
+            modalUploadStatus.textContent = (data && data.error) ? data.error : 'Error al subir la imagen.';
+            modalUploadStatus.style.display = 'block';
+            btnModalConfirm.disabled = false;
+            btnModalConfirm.textContent = 'Insertar en la Noticia';
+          }
+        })
+        .catch(function(err) {
+          modalUploadStatus.textContent = 'Error al subir la imagen: ' + err.message;
+          modalUploadStatus.style.display = 'block';
+          btnModalConfirm.disabled = false;
+          btnModalConfirm.textContent = 'Insertar en la Noticia';
+        });
+      } else if (extUrl) {
+        insertPhotoHtml(extUrl);
+      }
+    });
+  }
 });
 </script>
+
+<!-- Modal para Inserción de Fotografía con Pie de Foto en el Cuerpo -->
+<div id="modalInsertFoto" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalFotoTitle">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modalFotoTitle">📷 Insertar Fotografía con Epígrafe</h3>
+      <button type="button" class="modal-close-btn" id="btnModalClose" aria-label="Cerrar modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">1. Selecciona o arrastra la imagen (JPG, PNG, WEBP)</label>
+        <div class="drop-zone" id="modalDropZone">
+          <input type="file" id="modalFileInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;">
+          <div id="dropZonePrompt">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--rojo);margin-bottom:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p style="font-size:13px;font-weight:600;margin:0 0 2px;">Haz clic aquí o arrastra tu archivo</p>
+            <span style="font-size:11px;color:var(--doc-muted);">Máximo 8 MB</span>
+          </div>
+          <img id="modalPreviewImg" class="drop-zone-preview" alt="Vista previa">
+        </div>
+      </div>
+
+      <div>
+        <label for="modalUrlInput" style="font-size:12px;font-weight:500;color:var(--doc-muted);display:block;margin-bottom:4px;">O introduce una URL de imagen:</label>
+        <input type="url" id="modalUrlInput" placeholder="https://ejemplo.com/foto.jpg" style="width:100%;padding:8px 10px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:13px;box-sizing:border-box;">
+      </div>
+
+      <div>
+        <label for="modalEpigrafeInput" style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">2. Pie de Foto / Epígrafe Periodístico *</label>
+        <input type="text" id="modalEpigrafeInput" placeholder="Ej: La costa de Camet Norte tras la sudestada. Foto: Télam." style="width:100%;padding:9px 12px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:14px;box-sizing:border-box;">
+      </div>
+
+      <div>
+        <label for="modalAlignSelect" style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">3. Disposición en el Texto</label>
+        <select id="modalAlignSelect" style="width:100%;padding:8px 10px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:13px;box-sizing:border-box;">
+          <option value="align-center">Centrada (Ancho completo de lectura)</option>
+          <option value="align-left">Flotante a la izquierda (El texto rodea a la derecha)</option>
+          <option value="align-right">Flotante a la derecha (El texto rodea a la izquierda)</option>
+        </select>
+      </div>
+
+      <div id="modalUploadStatus" style="font-size:12px;color:var(--rojo);font-weight:600;display:none;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel-doc" id="btnModalCancel">Cancelar</button>
+      <button type="button" class="btn-save-doc" id="btnModalConfirm">
+        Insertar en la Noticia
+      </button>
+    </div>
+  </div>
+</div>
 
 </main>
 </body>

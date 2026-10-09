@@ -79,7 +79,7 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="bingbot" content="index, follow">
 
-<link rel="stylesheet" href="assets/style.css?v=20261008_darkv4">
+<link rel="stylesheet" href="assets/style.css?v=20261009_broadsheet1">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 
 <!-- Datos Estructurados JSON-LD (Schema.org / Google News / Motores de IA) -->

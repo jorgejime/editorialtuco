@@ -3,6 +3,8 @@ import ssl
 import urllib.request
 import socket
 
+import time
+
 # Force IPv4
 old_getaddrinfo = socket.getaddrinfo
 def new_getaddrinfo(*args, **kwargs):
@@ -14,9 +16,21 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-REST_ID = "334fab4b319e125f"
-AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJsb2NhbGUiOiJlbl9VUyIsInZpZXdNb2RlIjoibGlzdCIsInNpbmdsZUNsaWNrIjpmYWxzZSwicmVkaXJlY3RBZnRlckNvcHlNb3ZlIjpmYWxzZSwicGVybSI6eyJhZG1pbiI6ZmFsc2UsImV4ZWN1dGUiOmZhbHNlLCJjcmVhdGUiOnRydWUsInJlbmFtZSI6dHJ1ZSwibW9kaWZ5Ijp0cnVlLCJkZWxldGUiOnRydWUsInNoYXJlIjpmYWxzZSwiZG93bmxvYWQiOnRydWV9LCJjb21tYW5kcyI6W10sImxvY2tQYXNzd29yZCI6dHJ1ZSwiaGlkZURvdGZpbGVzIjpmYWxzZSwiZGF0ZUZvcm1hdCI6ZmFsc2UsInVzZXJuYW1lIjoidTYxMTgyNDMwMSIsImFjZUVkaXRvclRoZW1lIjoiIn0sImlzcyI6IkZpbGUgQnJvd3NlciIsImV4cCI6MTc5MTU5MjI0NCwiaWF0IjoxNzkxNTcwNjQ0fQ.OmlkknudBSTjfi_ca4oF1grgWP2o1ensaekIyia5RSU"
-REST_AUTH_KEY = "74aa54f8f635c6fc50bfa33ae56d9d432b64f96a498ddfc0ce22864c6e99b089-334fab4b319e125f"
+def safe_urlopen(req, timeout=15, retries=3):
+    for attempt in range(retries):
+        try:
+            return urllib.request.urlopen(req, context=ctx, timeout=timeout)
+        except urllib.error.HTTPError:
+            raise
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(1.5)
+            else:
+                raise e
+
+REST_ID = "f0abe8019aba0f0e"
+AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJsb2NhbGUiOiJlbl9VUyIsInZpZXdNb2RlIjoibGlzdCIsInNpbmdsZUNsaWNrIjpmYWxzZSwicmVkaXJlY3RBZnRlckNvcHlNb3ZlIjpmYWxzZSwicGVybSI6eyJhZG1pbiI6ZmFsc2UsImV4ZWN1dGUiOmZhbHNlLCJjcmVhdGUiOnRydWUsInJlbmFtZSI6dHJ1ZSwibW9kaWZ5Ijp0cnVlLCJkZWxldGUiOnRydWUsInNoYXJlIjpmYWxzZSwiZG93bmxvYWQiOnRydWV9LCJjb21tYW5kcyI6W10sImxvY2tQYXNzd29yZCI6dHJ1ZSwiaGlkZURvdGZpbGVzIjpmYWxzZSwiZGF0ZUZvcm1hdCI6ZmFsc2UsInVzZXJuYW1lIjoidTYxMTgyNDMwMSIsImFjZUVkaXRvclRoZW1lIjoiIn0sImlzcyI6IkZpbGUgQnJvd3NlciIsImV4cCI6MTc5MTU5NjEzNywiaWF0IjoxNzkxNTc0NTM3fQ.BP2vgbdbfOXKT22zc69lrPCQDnx92TiWu209O1O6rZQ"
+REST_AUTH_KEY = "b1b9a2708faa6563c74e697dcda9ba9168530d4ae883a73ceb0143d39fc37cfd-f0abe8019aba0f0e"
 
 URL_TUS = f"https://srv807-files.hstgr.io/rest/{REST_ID}/api/tus/public_html"
 URL_RES = f"https://srv807-files.hstgr.io/rest/{REST_ID}/api/resources/public_html"
@@ -51,6 +65,7 @@ FILES_TO_DEPLOY = [
     "admin/index.php",
     "admin/login.php",
     "admin/logout.php",
+    "admin/upload_inline.php",
     "assets/admin-editor.css",
     "assets/favicon.png",
     "assets/logo-editorial-tuco.png",
@@ -81,7 +96,7 @@ def create_dirs():
             method="POST"
         )
         try:
-            with urllib.request.urlopen(req, context=ctx, timeout=10) as r:
+            with safe_urlopen(req, timeout=10) as r:
                 print(f"Directorio {d}: OK (HTTP {r.status})")
         except urllib.error.HTTPError as e:
             if e.code in (409, 400):
@@ -98,7 +113,7 @@ def delete_default_page():
         method="DELETE"
     )
     try:
-        with urllib.request.urlopen(req, context=ctx, timeout=10) as r:
+        with safe_urlopen(req, timeout=10) as r:
             print(f"default.php eliminado: HTTP {r.status}")
     except Exception as e:
         print(f"default.php no eliminado o ya ausente: {e}")
@@ -127,7 +142,7 @@ def upload_file(rel_path):
         method="POST"
     )
     try:
-        with urllib.request.urlopen(req_post, context=ctx, timeout=15) as r:
+        with safe_urlopen(req_post, timeout=15) as r:
             if r.status not in (200, 201):
                 print(f"[FAIL POST] {rel_path}: HTTP {r.status}")
                 return
@@ -149,7 +164,7 @@ def upload_file(rel_path):
         method="PATCH"
     )
     try:
-        with urllib.request.urlopen(req_patch, context=ctx, timeout=30) as r:
+        with safe_urlopen(req_patch, timeout=30) as r:
             offset = r.headers.get("Upload-Offset")
             if r.status in (200, 204) and int(offset) == size:
                 print(f"[OK] {rel_path} ({size:,} bytes)")

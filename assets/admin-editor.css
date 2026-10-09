@@ -600,3 +600,206 @@ body.admin {
   font-family: inherit;
   font-size: 10px;
 }
+
+/* ==========================================================================
+   Canvas Word: Bloques de Dos Columnas y Fotografías con Pie de Foto
+   ========================================================================== */
+
+/* Bloque de Dos Columnas en la Hoja de Word */
+.sheet-content-canvas .editorial-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+  padding: 16px;
+  background: rgba(11, 38, 65, 0.02);
+  border: 1px dashed var(--paper-line);
+  border-radius: 4px;
+  position: relative;
+}
+
+.sheet-content-canvas .editorial-cols::before {
+  content: "📰 Sección en 2 columnas (Vista en paralelo)";
+  display: block;
+  grid-column: 1 / -1;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--rojo);
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.sheet-content-canvas .editorial-col {
+  min-height: 80px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px dotted rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+}
+
+.sheet-content-canvas .editorial-col:focus-within {
+  border-color: var(--rojo);
+  background: #ffffff;
+}
+
+/* Fotografías con Pie de Foto dentro del Canvas */
+.sheet-content-canvas figure.foto-cuerpo {
+  margin: 24px 0;
+  background: var(--superficie);
+  border: 1px solid var(--paper-line);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sheet-content-canvas figure.foto-cuerpo img {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.sheet-content-canvas figure.foto-cuerpo figcaption {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: var(--doc-ink);
+  padding: 10px 14px;
+  background: #ffffff;
+  border-top: 1px solid var(--paper-line);
+  outline: none;
+  font-style: italic;
+  min-height: 24px;
+  cursor: text;
+}
+
+.sheet-content-canvas figure.foto-cuerpo figcaption:empty::before {
+  content: "Escribe aquí el pie de foto o epígrafe periodístico...";
+  color: var(--doc-muted);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.sheet-content-canvas figure.foto-cuerpo figcaption:focus {
+  background: #f8fafc;
+  color: var(--doc-ink);
+}
+
+.sheet-content-canvas figure.foto-cuerpo.align-left {
+  float: left;
+  max-width: 48%;
+  margin: 12px 20px 16px 0;
+}
+
+.sheet-content-canvas figure.foto-cuerpo.align-right {
+  float: right;
+  max-width: 48%;
+  margin: 12px 0 16px 20px;
+}
+
+/* Modal de Inserción Multimedia y Epígrafes */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+  max-width: 520px;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--toolbar-border);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--toolbar-border);
+}
+
+.modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--doc-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--doc-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  color: var(--doc-ink);
+}
+
+.modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-footer {
+  padding: 14px 20px;
+  background: var(--superficie);
+  border-top: 1px solid var(--toolbar-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.drop-zone {
+  border: 2px dashed var(--toolbar-border);
+  border-radius: 6px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  background: #fbfcfd;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  border-color: var(--rojo);
+  background: rgba(11, 38, 65, 0.03);
+}
+
+.drop-zone-preview {
+  max-height: 160px;
+  max-width: 100%;
+  border-radius: 4px;
+  margin-top: 12px;
+  display: none;
+}
