@@ -14,14 +14,16 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-URL_BASE = "https://srv952-files.hstgr.io/rest/3fb84674a48d1f7d/api/tus/public_html"
-AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJsb2NhbGUiOiJlbl9VUyIsInZpZXdNb2RlIjoibGlzdCIsInNpbmdsZUNsaWNrIjpmYWxzZSwicmVkaXJlY3RBZnRlckNvcHlNb3ZlIjpmYWxzZSwicGVybSI6eyJhZG1pbiI6ZmFsc2UsImV4ZWN1dGUiOmZhbHNlLCJjcmVhdGUiOnRydWUsInJlbmFtZSI6dHJ1ZSwibW9kaWZ5Ijp0cnVlLCJkZWxldGUiOnRydWUsInNoYXJlIjpmYWxzZSwiZG93bmxvYWQiOnRydWV9LCJjb21tYW5kcyI6W10sImxvY2tQYXNzd29yZCI6dHJ1ZSwiaGlkZURvdGZpbGVzIjpmYWxzZSwiZGF0ZUZvcm1hdCI6ZmFsc2UsInVzZXJuYW1lIjoidTcxOTY0Nzk1NyIsImFjZUVkaXRvclRoZW1lIjoiIn0sImlzcyI6IkZpbGUgQnJvd3NlciIsImV4cCI6MTc5MTUyOTQ2OSwiaWF0IjoxNzkxNTA3ODY5fQ.Mzjvt4DpvG4Z0EYmaE80po9lI_62tBVJCJStgj6nUJg"
-REST_AUTH_KEY = "13cfe6ad0a3493917461e99711c82031d911a311353e2631289cb1596e718752-3fb84674a48d1f7d"
+URL_BASE = "https://srv952-files.hstgr.io/rest/e57ad4d2a3a074df/api/tus/public_html"
+AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJsb2NhbGUiOiJlbl9VUyIsInZpZXdNb2RlIjoibGlzdCIsInNpbmdsZUNsaWNrIjpmYWxzZSwicmVkaXJlY3RBZnRlckNvcHlNb3ZlIjpmYWxzZSwicGVybSI6eyJhZG1pbiI6ZmFsc2UsImV4ZWN1dGUiOmZhbHNlLCJjcmVhdGUiOnRydWUsInJlbmFtZSI6dHJ1ZSwibW9kaWZ5Ijp0cnVlLCJkZWxldGUiOnRydWUsInNoYXJlIjpmYWxzZSwiZG93bmxvYWQiOnRydWV9LCJjb21tYW5kcyI6W10sImxvY2tQYXNzd29yZCI6dHJ1ZSwiaGlkZURvdGZpbGVzIjpmYWxzZSwiZGF0ZUZvcm1hdCI6ZmFsc2UsInVzZXJuYW1lIjoidTcxOTY0Nzk1NyIsImFjZUVkaXRvclRoZW1lIjoiIn0sImlzcyI6IkZpbGUgQnJvd3NlciIsImV4cCI6MTc5MTU2OTg0OCwiaWF0IjoxNzkxNTQ4MjQ4fQ.kGzDv5N_RxHeicWpK2kcIRW5F9VIA26xAaaZ96XiaeQ"
+REST_AUTH_KEY = "0bfa20f55d5f8b4094632c9142f93a70667a094b44b0f2f38e854cabdeb51d6f-e57ad4d2a3a074df"
 
 FILES = [
     "admin/_head.php",
+    "admin/login.php",
     "admin/index.php",
     "admin/editar.php",
+    "admin/categorias.php",
     "assets/admin-editor.css",
     "assets/style.css",
     "inc/config.php",

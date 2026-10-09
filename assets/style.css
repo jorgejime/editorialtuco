@@ -1309,13 +1309,23 @@ main.wrap {
    Panel de Administración · Mobile-First
    ========================================================================== */
 body.admin {
+  color-scheme: light !important;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f4f4f4;
+  background: #f0f2f5 !important;
+  color: #121212 !important;
+  --tinta: #121212 !important;
+  --tinta-suave: #2b2b2b !important;
+  --gris: #5a5a5a !important;
+  --gris-claro: #8a8a8a !important;
+  --linea: #e2e2e2 !important;
+  --fondo: #ffffff !important;
+  --superficie: #ffffff !important;
+  --superficie-card: #ffffff !important;
 }
 
 .adminbar {
-  background: var(--tinta);
-  color: #eee;
+  background: #121212 !important;
+  color: #eee !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -1349,49 +1359,20 @@ body.admin {
 }
 
 .adminbar nav a {
-  padding: 6px 10px;
+  padding: 6px 12px;
   background: rgba(255,255,255,0.08);
   border-radius: 3px;
   min-height: 38px;
   display: inline-flex;
   align-items: center;
   color: #eee;
+  text-decoration: none;
+  transition: background 0.15s ease;
 }
 
 .adminbar nav a:hover {
   background: rgba(255,255,255,0.2);
   color: #fff;
-}
-
-.adminbar nav .theme-toggle {
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #ffffff;
-  border-radius: 3px;
-  min-height: 38px;
-  padding: 6px 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.adminbar nav .theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.45);
-  color: #ffffff;
-}
-
-.adminbar nav .theme-toggle svg {
-  color: #ffffff;
-  stroke: #ffffff;
-}
-
-.adminbar nav .theme-toggle .theme-toggle-label {
-  color: #ffffff;
-  font-weight: 500;
 }
 
 .admin-main {

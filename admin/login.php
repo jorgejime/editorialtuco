@@ -15,24 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (es_admin()) { header('Location: index.php'); exit; }
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#121212">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
 <script>
 (function() {
-  try {
-    var saved = localStorage.getItem('editorialtuco_theme');
-    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = saved ? saved : (prefersDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
-  } catch(e) {}
+  document.documentElement.setAttribute('data-theme', 'light');
 })();
 </script>
 <title>Ingresar · Panel <?= e(SITE_NAME) ?></title>
-<link rel="stylesheet" href="../assets/style.css?v=20261007_v2">
+<link rel="stylesheet" href="../assets/style.css?v=20261009_v5">
 </head>
 <body class="admin login-page">
 <div class="login-box">

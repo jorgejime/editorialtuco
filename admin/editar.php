@@ -93,7 +93,7 @@ foreach ($cats as $c) {
 
 include __DIR__ . '/_head.php';
 ?>
-<link rel="stylesheet" href="../assets/admin-editor.css?v=20261008">
+<link rel="stylesheet" href="../assets/admin-editor.css?v=20261009_v5">
 
 <div class="editor-workspace">
   <div class="editor-container">

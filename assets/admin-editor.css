@@ -3,7 +3,10 @@
    Gobernado por DESIGN.md (Metodología Refero / Warm Paper Archetype)
    ========================================================================== */
 
-:root {
+:root,
+body.admin,
+.editor-workspace {
+  color-scheme: light !important;
   --desk-bg: #eef1f5;
   --paper-bg: #ffffff;
   --paper-line: #dcdfe4;
@@ -17,38 +20,9 @@
   --inspector-bg: #ffffff;
 }
 
-[data-theme="dark"] {
-  --desk-bg: #0b0d11;
-  --paper-bg: #15181f;
-  --paper-line: rgba(255, 255, 255, 0.09);
-  --paper-shadow: 0 4px 24px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.4);
-  --toolbar-bg: rgba(21, 24, 31, 0.94);
-  --toolbar-border: rgba(255, 255, 255, 0.12);
-  --toolbar-btn-hover: rgba(255, 255, 255, 0.08);
-  --toolbar-btn-active: rgba(255, 255, 255, 0.16);
-  --doc-ink: #f1ede5;
-  --doc-muted: #94a3b8;
-  --inspector-bg: #15181f;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --desk-bg: #0b0d11;
-    --paper-bg: #15181f;
-    --paper-line: rgba(255, 255, 255, 0.09);
-    --paper-shadow: 0 4px 24px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.4);
-    --toolbar-bg: rgba(21, 24, 31, 0.94);
-    --toolbar-border: rgba(255, 255, 255, 0.12);
-    --toolbar-btn-hover: rgba(255, 255, 255, 0.08);
-    --toolbar-btn-active: rgba(255, 255, 255, 0.16);
-    --doc-ink: #f1ede5;
-    --doc-muted: #94a3b8;
-    --inspector-bg: #15181f;
-  }
-}
-
 body.admin {
   background: var(--desk-bg) !important;
+  color: var(--doc-ink) !important;
 }
 
 .admin-main {
