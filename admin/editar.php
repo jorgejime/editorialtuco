@@ -76,17 +76,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $cats = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->fetchAll(PDO::FETCH_ASSOC);
 
-// Preparar contenido para el canvas tipo Word (soporta retrocompatibilidad con notas en texto plano)
+// Preparar contenido para el canvas tipo Word (convierte markdown heredado y soporta HTML previo)
 $contenido_inicial = $n['contenido'] ?? '';
-if ($contenido_inicial !== '' && !preg_match('/<[a-z][\s\S]*>/i', $contenido_inicial)) {
-    $parrafos = preg_split("/\n\s*\n/", trim($contenido_inicial));
-    $contenido_inicial = '';
-    foreach ($parrafos as $p) {
-        $p_txt = trim($p);
-        if ($p_txt !== '') {
-            $contenido_inicial .= '<p>' . nl2br(htmlspecialchars($p_txt, ENT_QUOTES, 'UTF-8')) . '</p>';
-        }
-    }
+if ($contenido_inicial !== '') {
+    $contenido_inicial = markdown_a_html($contenido_inicial);
 }
 
 // Nombre de la categoría activa para mostrar en el kicker de la hoja
@@ -512,15 +505,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Limpieza al pegar texto (Paste Filter): elimina spans y código propietario de Microsoft Word
+  // Auto-conversión de Markdown y limpieza de código Word al pegar texto
   canvas.addEventListener('paste', function(e) {
     var clipboardData = e.clipboardData || window.clipboardData;
     if (!clipboardData) return;
 
+    var text = clipboardData.getData('text/plain');
     var html = clipboardData.getData('text/html');
+
+    // Auto-convertir si el texto contiene marcaciones Markdown directas
+    if (text && (text.indexOf('**') !== -1 || text.indexOf('##') !== -1 || text.indexOf('__') !== -1)) {
+      e.preventDefault();
+      var formatted = text.split(/\n\s*\n/).map(function(block) {
+        var b = block.trim();
+        if (!b) return '';
+        if (b.startsWith('## ')) return '<h2>' + b.replace(/^##\s+/, '') + '</h2>';
+        if (b.startsWith('### ')) return '<h3>' + b.replace(/^###\s+/, '') + '</h3>';
+        if (b.startsWith('> ')) return '<blockquote><p>' + b.replace(/^>\s+/, '') + '</p></blockquote>';
+        var inText = b
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+          .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+        return '<p>' + inText.replace(/\n/g, '<br>') + '</p>';
+      }).filter(Boolean).join('');
+      document.execCommand('insertHTML', false, formatted);
+      syncContent();
+      updateMetrics();
+      return;
+    }
+
     if (html && (html.indexOf('urn:schemas-microsoft-com:office') !== -1 || html.indexOf('mso-') !== -1)) {
       e.preventDefault();
-      // Limpiar etiquetas de Word
       var temp = document.createElement('div');
       temp.innerHTML = html;
       var clean = temp.innerText.split(/\n\s*\n/).map(function(p) {

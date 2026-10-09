@@ -59,6 +59,21 @@ $rich_rendered = renderizar_contenido($rich_in);
 assert_test(str_contains($rich_rendered, '<h2>Gran anuncio</h2>'), 'Renderiza H2 directamente sin escapar');
 assert_test(str_contains($rich_rendered, '<strong>negrillas editoriales</strong>'), 'Renderiza strong directamente sin escapar');
 
+// 7. Eliminación absoluta de marcaciones Markdown en contenido y resumen
+$md_sample = "Párrafo 1 con **negrilla destacada** y *cursiva regional*.\n\n## Subtítulo de Sección\n\nPárrafo 2 con > cita y lista:\n\n- Punto alfa con **relevancia**\n- Punto beta";
+$md_rendered = renderizar_contenido($md_sample);
+assert_test(str_contains($md_rendered, '<h2>Subtítulo de Sección</h2>'), 'Convierte ## en encabezado H2 limpio');
+assert_test(str_contains($md_rendered, '<strong>negrilla destacada</strong>'), 'Convierte ** en etiqueta strong');
+assert_test(str_contains($md_rendered, '<em>cursiva regional</em>'), 'Convierte * en etiqueta em');
+assert_test(str_contains($md_rendered, '<ul><li>Punto alfa'), 'Convierte - en lista con viñetas ul/li');
+assert_test(!str_contains($md_rendered, '##') && !str_contains($md_rendered, '**'), 'CERO marcaciones markdown residuales en contenido');
+
+// 8. Resumen libre de marcaciones markdown
+$res_in = "El fiscal confirmó **la elevación a juicio** en el caso.";
+$res_out = renderizar_resumen($res_in);
+assert_test(str_contains($res_out, '<strong>la elevación a juicio</strong>'), 'Resumen parsea negrita');
+assert_test(!str_contains($res_out, '**'), 'Resumen CERO marcaciones ** residuales');
+
 // 7. Verificación de sintaxis de archivos modificados
 $files_to_check = [
     __DIR__ . '/../inc/config.php',

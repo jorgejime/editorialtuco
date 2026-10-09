@@ -39,12 +39,118 @@ function e($s) {
 }
 
 /**
+ * Parsea formato Markdown inline: negritas (** o __), cursivas (* o _), tachado (~~), enlaces [t](url)
+ */
+function parsear_inline_markdown(string $s): string {
+    // Negrita: **texto** o __texto__
+    $s = preg_replace('/\*\*([^*]+)\*\*/u', '<strong>$1</strong>', $s);
+    $s = preg_replace('/__([^_]+)__/u', '<strong>$1</strong>', $s);
+
+    // Cursiva: *texto* (que no sea doble asterisco)
+    $s = preg_replace('/(?<!\*)\*([^*]+)\*(?!\*)/u', '<em>$1</em>', $s);
+    // Cursiva: _texto_ (evitando variables_con_guion)
+    $s = preg_replace('/(?<![a-zA-Z0-9_])_([^_]+)_(?![a-zA-Z0-9_])/u', '<em>$1</em>', $s);
+
+    // Tachado: ~~texto~~
+    $s = preg_replace('/~~([^~]+)~~/u', '<s>$1</s>', $s);
+
+    // Enlaces: [texto](url)
+    $s = preg_replace('/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/u', '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>', $s);
+
+    return $s;
+}
+
+/**
+ * Convierte texto con sintaxis Markdown (encabezados ##, citas >, listas, negritas **) a HTML semántico.
+ */
+function markdown_a_html(string $texto): string {
+    $t = trim($texto);
+    if ($t === '') return '';
+
+    $bloques = preg_split("/\n\s*\n/", $t);
+    $salida = [];
+
+    foreach ($bloques as $b) {
+        $bloque = trim($b);
+        if ($bloque === '') continue;
+
+        // Encabezados Markdown (#, ##, ###, ####)
+        if (preg_match('/^(#{1,6})\s+(.+)$/u', $bloque, $m)) {
+            $nivel = min(4, max(2, strlen($m[1]))); // Mapear a h2, h3 o h4
+            $txt = parsear_inline_markdown(trim($m[2]));
+            $salida[] = "<h{$nivel}>{$txt}</h{$nivel}>";
+            continue;
+        }
+
+        // Citas Markdown (> ...)
+        if (preg_match('/^>\s+(.+)$/u', $bloque, $m)) {
+            $txt = parsear_inline_markdown(trim($m[1]));
+            $salida[] = "<blockquote><p>{$txt}</p></blockquote>";
+            continue;
+        }
+
+        // Regla horizontal (--- o ***)
+        if (preg_match('/^(\*{3,}|-{3,}|_{3,})$/u', $bloque)) {
+            $salida[] = "<hr>";
+            continue;
+        }
+
+        // Lista de viñetas (- ítem o * ítem)
+        if (preg_match('/^[-*]\s+/u', $bloque)) {
+            $lineas = explode("\n", $bloque);
+            $items = [];
+            foreach ($lineas as $l) {
+                $l = trim($l);
+                if (preg_match('/^[-*]\s+(.+)$/u', $l, $lm)) {
+                    $items[] = '<li>' . parsear_inline_markdown(trim($lm[1])) . '</li>';
+                }
+            }
+            if (!empty($items)) {
+                $salida[] = '<ul>' . implode('', $items) . '</ul>';
+                continue;
+            }
+        }
+
+        // Lista numerada (1. ítem)
+        if (preg_match('/^\d+\.\s+/u', $bloque)) {
+            $lineas = explode("\n", $bloque);
+            $items = [];
+            foreach ($lineas as $l) {
+                $l = trim($l);
+                if (preg_match('/^\d+\.\s+(.+)$/u', $l, $lm)) {
+                    $items[] = '<li>' . parsear_inline_markdown(trim($lm[1])) . '</li>';
+                }
+            }
+            if (!empty($items)) {
+                $salida[] = '<ol>' . implode('', $items) . '</ol>';
+                continue;
+            }
+        }
+
+        // Bloque que ya contiene etiquetas HTML estructurales
+        if (preg_match('/^<(p|h[1-6]|ul|ol|blockquote|div|table|hr)\b/i', $bloque)) {
+            $salida[] = parsear_inline_markdown($bloque);
+            continue;
+        }
+
+        // Bloque de párrafo regular
+        $p_limpio = parsear_inline_markdown($bloque);
+        $salida[] = '<p>' . nl2br($p_limpio) . '</p>';
+    }
+
+    return implode("\n", $salida);
+}
+
+/**
  * Sanitiza HTML para notas editoriales permitiendo únicamente etiquetas semánticas y seguras.
  * Previene vectores XSS (scripts, atributos on*, estilos incrustados perjudiciales).
  */
 function sanitizar_html_noticia(string $html): string {
     $html = trim($html);
     if ($html === '') return '';
+
+    // Convertir cualquier marcación residual de markdown antes de filtrar etiquetas
+    $html = parsear_inline_markdown($html);
 
     if (!preg_match('/<[a-z][\s\S]*>/i', $html)) {
         return htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
@@ -72,27 +178,27 @@ function sanitizar_html_noticia(string $html): string {
 }
 
 /**
+ * Renderiza el resumen de una noticia eliminando marcaciones Markdown literales (** o *)
+ * de forma completamente segura contra XSS.
+ */
+function renderizar_resumen(string $resumen): string {
+    $r = trim($resumen);
+    if ($r === '') return '';
+    $seguro = htmlspecialchars($r, ENT_QUOTES, 'UTF-8');
+    return parsear_inline_markdown($seguro);
+}
+
+/**
  * Renderiza el cuerpo de una noticia.
- * Si contiene marcado HTML semántico, lo desinfecta y lo imprime directamente.
- * Si es texto plano heredado, aplica párrafos automáticos y nl2br para retrocompatibilidad total.
+ * Transforma cualquier marcación Markdown a HTML semántico y desinfecta el resultado,
+ * garantizando cero marcaciones residuales (##, **, etc.) y total seguridad contra XSS.
  */
 function renderizar_contenido(string $contenido): string {
     $c = trim($contenido);
     if ($c === '') return '';
 
-    if (preg_match('/<(p|h[2-6]|ul|ol|blockquote|strong|b|em|i|u|br|hr)\b[^>]*>/i', $c)) {
-        return sanitizar_html_noticia($c);
-    }
-
-    $parrafos = preg_split("/\n\s*\n/", $c);
-    $salida = '';
-    foreach ($parrafos as $par) {
-        $t = trim($par);
-        if ($t !== '') {
-            $salida .= '<p>' . nl2br(e($t)) . '</p>' . "\n";
-        }
-    }
-    return $salida;
+    $html = markdown_a_html($c);
+    return sanitizar_html_noticia($html);
 }
 
 function slugify($t) {

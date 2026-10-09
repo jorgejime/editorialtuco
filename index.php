@@ -6,7 +6,8 @@ $canonical_url = 'https://editorialtuco.com/';
 $pdo = db();
 
 $destacadas = $pdo->query(
-    "SELECT n.*, c.nombre AS categoria FROM noticias n
+    "SELECT n.id, n.categoria_id, n.slug, n.titulo, n.resumen, n.imagen, n.destacada, n.publicada, n.fecha_pub, n.visitas, c.nombre AS categoria, c.slug AS categoria_slug
+     FROM noticias n
      JOIN categorias c ON c.id = n.categoria_id
      WHERE n.publicada = 1 AND n.destacada = 1
      ORDER BY n.fecha_pub DESC LIMIT 3"
@@ -16,7 +17,8 @@ $ids_dest = array_column($destacadas, 'id');
 $where_not = $ids_dest ? 'AND n.id NOT IN (' . implode(',', array_map('intval', $ids_dest)) . ')' : '';
 
 $ultimas = $pdo->query(
-    "SELECT n.*, c.nombre AS categoria FROM noticias n
+    "SELECT n.id, n.categoria_id, n.slug, n.titulo, n.resumen, n.imagen, n.destacada, n.publicada, n.fecha_pub, n.visitas, c.nombre AS categoria, c.slug AS categoria_slug
+     FROM noticias n
      JOIN categorias c ON c.id = n.categoria_id
      WHERE n.publicada = 1 $where_not
      ORDER BY n.fecha_pub DESC LIMIT 9"
@@ -33,7 +35,7 @@ include __DIR__ . '/inc/header.php';
     <div class="hero-txt">
       <span class="kicker"><?= e($p['categoria']) ?> · Destacada</span>
       <h2><?= e($p['titulo']) ?></h2>
-      <p><?= e($p['resumen']) ?></p>
+      <p><?= renderizar_resumen($p['resumen']) ?></p>
     </div>
   </a>
   <div class="hero-side">
@@ -59,7 +61,7 @@ include __DIR__ . '/inc/header.php';
       <div class="card-body">
         <span class="kicker"><?= e($n['categoria']) ?></span>
         <h3><?= e($n['titulo']) ?></h3>
-        <p><?= e($n['resumen']) ?></p>
+        <p><?= renderizar_resumen($n['resumen']) ?></p>
         <time><?= e(fecha_larga(substr($n['fecha_pub'], 0, 10))) ?></time>
       </div>
     </a>

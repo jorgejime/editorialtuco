@@ -26,6 +26,9 @@ FILES = [
     "assets/style.css",
     "inc/config.php",
     "noticia.php",
+    "index.php",
+    "categoria.php",
+    "buscar.php",
     "DESIGN.md"
 ]
 

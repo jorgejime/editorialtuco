@@ -40,7 +40,7 @@ include __DIR__ . '/inc/header.php';
   <h1><?= e($n['titulo']) ?></h1>
   <p class="fecha"><?= e(fecha_larga(substr($n['fecha_pub'], 0, 10))) ?> · <?= e(SITE_NAME) ?></p>
   <img class="articulo-img" src="<?= e(img_noticia($n)) ?>" alt="<?= e($n['titulo']) ?>">
-  <p class="resumen"><?= e($n['resumen']) ?></p>
+  <p class="resumen"><?= renderizar_resumen($n['resumen']) ?></p>
   <div class="contenido">
     <?= renderizar_contenido($n['contenido']) ?>
   </div>

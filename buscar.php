@@ -8,7 +8,8 @@ $resultados = [];
 if ($q !== '') {
     $like = '%' . $q . '%';
     $st = $pdo->prepare(
-        "SELECT n.*, c.nombre AS categoria FROM noticias n
+        "SELECT n.id, n.categoria_id, n.slug, n.titulo, n.resumen, n.imagen, n.destacada, n.publicada, n.fecha_pub, n.visitas, c.nombre AS categoria, c.slug AS categoria_slug
+         FROM noticias n
          JOIN categorias c ON c.id = n.categoria_id
          WHERE n.publicada = 1 AND (n.titulo LIKE ? OR n.resumen LIKE ? OR n.contenido LIKE ?)
          ORDER BY n.fecha_pub DESC"
@@ -32,7 +33,7 @@ include __DIR__ . '/inc/header.php';
     <div class="card-body">
       <span class="kicker"><?= e($n['categoria']) ?></span>
       <h3><?= e($n['titulo']) ?></h3>
-      <p><?= e($n['resumen']) ?></p>
+      <p><?= renderizar_resumen($n['resumen']) ?></p>
     </div>
   </a>
   <?php endforeach; ?>
