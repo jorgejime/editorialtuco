@@ -506,6 +506,152 @@ main.wrap {
 }
 
 /* ==========================================================================
+   Espacio Patrocinado / Partner Tecnológico (Mobile-First)
+   ========================================================================== */
+.ad-sponsor-wrap {
+  margin: 24px 0 16px;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  padding: 12px 0 16px;
+}
+
+.ad-sponsor-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ad-sponsor-tag {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--gris-claro);
+}
+
+.ad-sponsor-disclaimer {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gris-claro);
+}
+
+.ad-sponsor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-left: 3px solid var(--rojo);
+  padding: 14px 16px;
+  border-radius: 2px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.ad-sponsor-card:hover {
+  background: var(--fondo);
+  border-color: var(--tinta-suave);
+  border-left-color: var(--rojo);
+  transform: translateY(-1px);
+}
+
+.ad-sponsor-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ad-sponsor-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ad-sponsor-symbol {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.ad-sponsor-name {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--tinta);
+}
+
+.ad-sponsor-tld {
+  color: var(--rojo);
+  font-weight: 700;
+}
+
+.ad-sponsor-badge {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gris);
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  padding: 2px 6px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.ad-sponsor-info {
+  flex: 1;
+}
+
+.ad-sponsor-title {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tinta);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.ad-sponsor-desc {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: var(--gris);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ad-sponsor-action {
+  display: flex;
+  align-items: center;
+}
+
+.ad-sponsor-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--rojo);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.ad-sponsor-cta svg {
+  transition: transform .15s ease;
+}
+
+.ad-sponsor-card:hover .ad-sponsor-cta svg {
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
    Secciones y Cuadrículas de Noticias · Mobile-First
    ========================================================================== */
 .section-block {
@@ -1849,6 +1995,38 @@ body.admin {
 
   .hero-card h3 {
     font-size: 18px;
+  }
+
+  /* Espacio Patrocinado en Escritorio */
+  .ad-sponsor-wrap {
+    margin: 32px 0 22px;
+    padding: 14px 0 18px;
+  }
+
+  .ad-sponsor-card {
+    display: grid;
+    grid-template-columns: 190px 1fr auto;
+    gap: 28px;
+    align-items: center;
+    padding: 18px 24px;
+  }
+
+  .ad-sponsor-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .ad-sponsor-title {
+    font-size: 18px;
+  }
+
+  .ad-sponsor-desc {
+    font-size: 13.5px;
+  }
+
+  .ad-sponsor-cta {
+    font-size: 13px;
   }
 
   .section-block {

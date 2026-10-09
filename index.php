@@ -59,6 +59,30 @@ include __DIR__ . '/inc/header.php';
 </section>
 <?php endif; ?>
 
+<!-- Espacio Patrocinado / Partner Tecnológico (LIAA.cloud) -->
+<section class="ad-sponsor-wrap" aria-label="Espacio Patrocinado">
+  <div class="ad-sponsor-meta">
+    <span class="ad-sponsor-tag">Espacio Patrocinado · Innovación y Tecnología</span>
+    <span class="ad-sponsor-disclaimer">Alianza Tecnológica</span>
+  </div>
+  <a href="https://liaa.cloud" target="_blank" rel="sponsored noopener" class="ad-sponsor-card" title="Conocer LIAA · Laboratorio de Inteligencia Artificial Aplicada">
+    <div class="ad-sponsor-brand">
+      <div class="ad-sponsor-logo">
+        <span class="ad-sponsor-symbol">⚡</span>
+        <span class="ad-sponsor-name">LIAA<span class="ad-sponsor-tld">.cloud</span></span>
+      </div>
+      <span class="ad-sponsor-badge">Laboratorio de IA</span>
+    </div>
+    <div class="ad-sponsor-info">
+      <h3 class="ad-sponsor-title">Laboratorio de Inteligencia Artificial Aplicada</h3>
+      <p class="ad-sponsor-desc">Desarrollo e implementación de soluciones avanzadas de IA, modelos de lenguaje y automatización estratégica para organizaciones y medios digitales.</p>
+    </div>
+    <div class="ad-sponsor-action">
+      <span class="ad-sponsor-cta">Conocer proyectos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </div>
+  </a>
+</section>
+
 <section class="section-block">
   <h2 class="section-title">Últimas noticias</h2>
   <div class="grid">
