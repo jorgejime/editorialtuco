@@ -40,8 +40,16 @@ require_once __DIR__ . '/inc/header.php';
           <span class="ficha-val">Las Verbenas 455, Santa Clara del Mar, CP 7609, Provincia de Buenos Aires, República Argentina</span>
         </div>
         <div class="ficha-row">
-          <span class="ficha-label">Correo electrónico de redacción:</span>
-          <span class="ficha-val"><a href="mailto:editorialtuco@gmail.com">editorialtuco@gmail.com</a></span>
+          <span class="ficha-label">Correo electrónico institucional:</span>
+          <span class="ficha-val"><a href="mailto:info@editorialtuco.com">info@editorialtuco.com</a></span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-label">Departamento Legal y ARCO:</span>
+          <span class="ficha-val"><a href="mailto:legal@editorialtuco.com">legal@editorialtuco.com</a></span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-label">Publicidad y Comercial:</span>
+          <span class="ficha-val"><a href="mailto:comercial@editorialtuco.com">comercial@editorialtuco.com</a></span>
         </div>
         <div class="ficha-row">
           <span class="ficha-label">Propiedad Intelectual:</span>
@@ -69,7 +77,9 @@ require_once __DIR__ . '/inc/header.php';
       <h2>Atención al Lector y Ejercicio de Derechos</h2>
       <p>Para consultas editoriales, envío de cartas de lectores, rectificaciones periodísticas conforme al derecho a réplica, o ejercicio de los derechos de protección de datos personales (Ley 25.326):</p>
       <ul>
-        <li>Correo: <a href="mailto:editorialtuco@gmail.com">editorialtuco@gmail.com</a></li>
+        <li>Consultas generales: <a href="mailto:info@editorialtuco.com">info@editorialtuco.com</a></li>
+        <li>Asuntos legales y privacidad: <a href="mailto:legal@editorialtuco.com">legal@editorialtuco.com</a></li>
+        <li>Pauta publicitaria y comercial: <a href="mailto:comercial@editorialtuco.com">comercial@editorialtuco.com</a></li>
         <li>Horario de atención de redacción: Lunes a viernes de 09:00 a 18:00 hs. (GMT-3).</li>
       </ul>
     </section>

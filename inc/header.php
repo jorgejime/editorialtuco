@@ -122,7 +122,7 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
       "correctionsPolicy": "<?= $site_url ?>/legales.php",
       "contactPoint": {
         "@type": "ContactPoint",
-        "email": "editorialtuco@gmail.com",
+        "email": "info@editorialtuco.com",
         "contactType": "editorial",
         "areaServed": "AR",
         "availableLanguage": "Spanish"

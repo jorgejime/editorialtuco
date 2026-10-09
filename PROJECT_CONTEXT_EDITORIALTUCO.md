@@ -14,7 +14,9 @@
   * Slogan: *Fundar es creer*
   * Director y Editor Responsable: Rodolfo Giráldez
   * Domicilio Legal: Las Verbenas 455, Santa Clara del Mar (CP 7609), Provincia de Buenos Aires, Argentina
-  * Contacto: `editorialtuco@gmail.com`
+  * Contacto General: `info@editorialtuco.com`
+  * Asuntos Legales: `legal@editorialtuco.com`
+  * Comercial y Pauta: `comercial@editorialtuco.com`
 
 ---
 

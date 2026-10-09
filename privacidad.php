@@ -37,7 +37,7 @@ require_once __DIR__ . '/inc/header.php';
 
     <section>
       <h2>1. Responsable del Tratamiento</h2>
-      <p>El responsable del tratamiento de las bases de datos recolectadas a través del sitio web <strong>https://editorialtuco.com</strong> es <strong>Rodolfo Giráldez</strong> (Editorial Tucó), con domicilio legal constituido en Las Verbenas 455, Santa Clara del Mar, CP 7609, Provincia de Buenos Aires, República Argentina (correo electrónico de contacto: <strong>editorialtuco@gmail.com</strong>).</p>
+      <p>El responsable del tratamiento de las bases de datos recolectadas a través del sitio web <strong>https://editorialtuco.com</strong> es <strong>Rodolfo Giráldez</strong> (Editorial Tucó), con domicilio legal constituido en Las Verbenas 455, Santa Clara del Mar, CP 7609, Provincia de Buenos Aires, República Argentina (correo electrónico de contacto institucional: <strong>info@editorialtuco.com</strong>, departamento legal: <strong>legal@editorialtuco.com</strong>).</p>
     </section>
 
     <section>
@@ -70,7 +70,7 @@ require_once __DIR__ . '/inc/header.php';
         <li><strong>Supresión / Cancelación:</strong> Solicitar la eliminación definitiva de sus datos personales de las bases activas.</li>
       </ul>
       <div class="legal-highlight">
-        <strong>Procedimiento para ejercer sus derechos:</strong> Envíe un correo electrónico a <a href="mailto:editorialtuco@gmail.com"><strong>editorialtuco@gmail.com</strong></a> con el asunto <em>"Protección de Datos - Derechos ARCO"</em>, adjuntando copia de DNI para acreditar identidad y detallando su solicitud concreta. Conforme a la ley, los pedidos de acceso serán respondidos dentro de los <strong>diez (10) días corridos</strong> y los pedidos de rectificación o supresión dentro de los <strong>cinco (5) días hábiles</strong> posteriores a su recepción.
+        <strong>Procedimiento para ejercer sus derechos:</strong> Envíe un correo electrónico al departamento legal a <a href="mailto:legal@editorialtuco.com"><strong>legal@editorialtuco.com</strong></a> con copia a <a href="mailto:info@editorialtuco.com">info@editorialtuco.com</a> con el asunto <em>"Protección de Datos - Derechos ARCO"</em>, adjuntando copia de DNI para acreditar identidad y detallando su solicitud concreta. Conforme a la ley, los pedidos de acceso serán respondidos dentro de los <strong>diez (10) días corridos</strong> y los pedidos de rectificación o supresión dentro de los <strong>cinco (5) días hábiles</strong> posteriores a su recepción.
       </div>
     </section>
 

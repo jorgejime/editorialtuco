@@ -8,7 +8,7 @@
       <div class="footer-staff-mini">
         <p><strong>Director y Editor Responsable:</strong> Rodolfo Giráldez</p>
         <p><strong>Domicilio Legal:</strong> Las Verbenas 455, Santa Clara del Mar (CP 7609), Pcia. de Buenos Aires, Argentina</p>
-        <p><strong>Contacto:</strong> <a href="mailto:editorialtuco@gmail.com">editorialtuco@gmail.com</a></p>
+        <p><strong>Contacto:</strong> <a href="mailto:info@editorialtuco.com">info@editorialtuco.com</a></p>
         <p class="muted">Registro DNDA en trámite · Obra amparada por la Ley Nº 11.723 de Propiedad Intelectual.</p>
       </div>
     </div>
