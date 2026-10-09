@@ -1803,12 +1803,16 @@ body.admin {
     padding-bottom: 48px;
   }
 
-  /* Hero con columna principal destacada y lateral periodístico */
   .hero {
     display: grid;
     grid-template-columns: 1.9fr 1fr;
     gap: 28px;
     padding-bottom: 28px;
+  }
+
+  .hero--single,
+  .hero:not(:has(.hero-side > *)) {
+    grid-template-columns: 1fr;
   }
 
   .hero-main {
@@ -1824,6 +1828,13 @@ body.admin {
   .hero-side {
     padding-top: 0;
     border-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .hero-side .hero-card:first-child {
+    padding-top: 0;
   }
 
   .hero-card {

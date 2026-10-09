@@ -5,16 +5,22 @@ $meta_description = 'Editorial Tucó: Portal periodístico digital independiente
 $canonical_url = 'https://editorialtuco.com/';
 $pdo = db();
 
-$destacadas = $pdo->query(
+// Obtener las noticias para el Hero:
+// Prioriza las notas marcadas como destacadas (destacada = 1), y si hay menos de 3,
+// complementa de forma automática con las notas publicadas más recientes.
+$hero_noticias = $pdo->query(
     "SELECT n.id, n.categoria_id, n.slug, n.titulo, n.resumen, n.imagen, n.destacada, n.publicada, n.fecha_pub, n.visitas, c.nombre AS categoria, c.slug AS categoria_slug
      FROM noticias n
      JOIN categorias c ON c.id = n.categoria_id
-     WHERE n.publicada = 1 AND n.destacada = 1
-     ORDER BY n.fecha_pub DESC LIMIT 3"
+     WHERE n.publicada = 1
+     ORDER BY n.destacada DESC, n.fecha_pub DESC LIMIT 3"
 )->fetchAll(PDO::FETCH_ASSOC);
 
-$ids_dest = array_column($destacadas, 'id');
-$where_not = $ids_dest ? 'AND n.id NOT IN (' . implode(',', array_map('intval', $ids_dest)) . ')' : '';
+$hero_principal = $hero_noticias ? $hero_noticias[0] : null;
+$hero_secundarias = $hero_noticias ? array_slice($hero_noticias, 1, 2) : [];
+
+$ids_hero = array_column($hero_noticias, 'id');
+$where_not = $ids_hero ? 'AND n.id NOT IN (' . implode(',', array_map('intval', $ids_hero)) . ')' : '';
 
 $ultimas = $pdo->query(
     "SELECT n.id, n.categoria_id, n.slug, n.titulo, n.resumen, n.imagen, n.destacada, n.publicada, n.fecha_pub, n.visitas, c.nombre AS categoria, c.slug AS categoria_slug
@@ -27,28 +33,29 @@ $ultimas = $pdo->query(
 include __DIR__ . '/inc/header.php';
 ?>
 
-<?php if ($destacadas): ?>
-<section class="hero">
-  <?php $p = $destacadas[0]; ?>
-  <a class="hero-main" href="noticia.php?slug=<?= e($p['slug']) ?>">
-    <img src="<?= e(img_noticia($p)) ?>" alt="<?= e($p['titulo']) ?>">
+<?php if ($hero_principal): ?>
+<section class="hero<?= empty($hero_secundarias) ? ' hero--single' : '' ?>">
+  <a class="hero-main" href="noticia.php?slug=<?= e($hero_principal['slug']) ?>">
+    <img src="<?= e(img_noticia($hero_principal)) ?>" alt="<?= e($hero_principal['titulo']) ?>">
     <div class="hero-txt">
-      <span class="kicker"><?= e($p['categoria']) ?> · Destacada</span>
-      <h2><?= e($p['titulo']) ?></h2>
-      <p><?= renderizar_resumen($p['resumen']) ?></p>
+      <span class="kicker"><?= e($hero_principal['categoria']) ?><?= $hero_principal['destacada'] ? ' · Destacada' : '' ?></span>
+      <h2><?= e($hero_principal['titulo']) ?></h2>
+      <p><?= renderizar_resumen($hero_principal['resumen']) ?></p>
     </div>
   </a>
+  <?php if ($hero_secundarias): ?>
   <div class="hero-side">
-    <?php foreach (array_slice($destacadas, 1, 2) as $s): ?>
+    <?php foreach ($hero_secundarias as $s): ?>
     <a class="hero-card" href="noticia.php?slug=<?= e($s['slug']) ?>">
       <img src="<?= e(img_noticia($s)) ?>" alt="<?= e($s['titulo']) ?>">
       <div class="hero-card-txt">
-        <span class="kicker"><?= e($s['categoria']) ?></span>
+        <span class="kicker"><?= e($s['categoria']) ?><?= $s['destacada'] ? ' · Destacada' : '' ?></span>
         <h3><?= e($s['titulo']) ?></h3>
       </div>
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endif; ?>
 </section>
 <?php endif; ?>
 
@@ -66,7 +73,7 @@ include __DIR__ . '/inc/header.php';
       </div>
     </a>
     <?php endforeach; ?>
-    <?php if (!$ultimas && !$destacadas): ?>
+    <?php if (!$ultimas && !$hero_principal): ?>
       <p>No hay noticias publicadas todavía.</p>
     <?php endif; ?>
   </div>
