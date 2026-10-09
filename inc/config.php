@@ -285,6 +285,21 @@ function db(): PDO {
     }
 }
 
+/**
+ * Genera un snapshot de seguridad inmutable de la base de datos en data/backups/
+ */
+function respaldar_bd(): void {
+    $db_file = DB_FILE;
+    if (!file_exists($db_file) || filesize($db_file) === 0) return;
+    $bdir = dirname($db_file) . '/backups';
+    if (!is_dir($bdir)) @mkdir($bdir, 0755, true);
+    $fecha = date('Y-m-d');
+    $dest = $bdir . "/portal_{$fecha}.db";
+    if (!file_exists($dest) || (time() - filemtime($dest) > 3600)) {
+        @copy($db_file, $dest);
+    }
+}
+
 function es_admin(): bool {
     if (session_status() === PHP_SESSION_NONE) {
         return false;

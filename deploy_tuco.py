@@ -57,7 +57,6 @@ FILES_TO_DEPLOY = [
     "assets/logo-editorial-tuco-dark.png",
     "assets/style.css",
     "data/.htaccess",
-    "data/portal.db",
     "data/tramites_consumidor.json",
     "inc/config.php",
     "inc/footer.php",

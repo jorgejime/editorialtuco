@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))");
                 $st->execute([$titulo, $slug, $resumen, $contenido, $imagen, $categoria_id, $destacada, $publicada]);
             }
+            respaldar_bd();
             header('Location: index.php');
             exit;
         }
