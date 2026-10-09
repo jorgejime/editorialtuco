@@ -1355,10 +1355,43 @@ body.admin {
   min-height: 38px;
   display: inline-flex;
   align-items: center;
+  color: #eee;
 }
 
 .adminbar nav a:hover {
   background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.adminbar nav .theme-toggle {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border-radius: 3px;
+  min-height: 38px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.adminbar nav .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+}
+
+.adminbar nav .theme-toggle svg {
+  color: #ffffff;
+  stroke: #ffffff;
+}
+
+.adminbar nav .theme-toggle .theme-toggle-label {
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .admin-main {
