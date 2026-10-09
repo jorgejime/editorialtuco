@@ -13,7 +13,7 @@ include __DIR__ . '/_head.php';
 ?>
 <div class="admin-title">
   <h1>Noticias</h1>
-  <a href="editar.php" class="btn">+ Nueva noticia</a>
+  <a href="editar.php" class="btn" style="display:inline-flex;align-items:center;gap:6px;background:var(--rojo);color:#fff;border-color:var(--rojo);">✍️ Redactar en Canvas</a>
 </div>
 <div class="tabla-scroll">
 <table class="tabla">

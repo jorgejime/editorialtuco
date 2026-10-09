@@ -4,8 +4,24 @@
 //  Configuración central: base de datos SQLite, sesiones,
 //  utilidades.
 // ============================================================
-session_start();
 date_default_timezone_set('America/Argentina/Buenos_Aires');
+
+function iniciar_sesion(): void {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+}
+
+// Iniciar sesión sólo en panel administrativo (/admin/) o envíos POST (formularios/login)
+$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+$request_method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+$es_admin_uri = str_contains($request_uri, '/admin/') || str_contains($script_name, '/admin/');
+$es_post = $request_method === 'POST';
+
+if ($es_admin_uri || $es_post) {
+    iniciar_sesion();
+}
 
 define('ROOT', dirname(__DIR__));
 define('DB_FILE', ROOT . '/data/portal.db');
@@ -20,6 +36,63 @@ define('ADMIN_PASS_SHA', 'f291698c75d5f37691a2405b8ee1886a299009d6b5e31c86c9f47f
 
 function e($s) {
     return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Sanitiza HTML para notas editoriales permitiendo únicamente etiquetas semánticas y seguras.
+ * Previene vectores XSS (scripts, atributos on*, estilos incrustados perjudiciales).
+ */
+function sanitizar_html_noticia(string $html): string {
+    $html = trim($html);
+    if ($html === '') return '';
+
+    if (!preg_match('/<[a-z][\s\S]*>/i', $html)) {
+        return htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+    }
+
+    $permitidas = '<p><br><hr><h2><h3><h4><h5><h6><strong><b><em><i><u><s><ul><ol><li><blockquote><a>';
+    $limpio = strip_tags($html, $permitidas);
+
+    $limpio = preg_replace_callback('/<a\s+([^>]*?)>/i', function($matches) {
+        $attrs = $matches[1];
+        if (preg_match('/href=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $href = trim($m[2]);
+            if (preg_match('/^(https?:\/\/|mailto:|\/|#)/i', $href)) {
+                $href_safe = htmlspecialchars($href, ENT_QUOTES, 'UTF-8');
+                return '<a href="' . $href_safe . '" target="_blank" rel="noopener noreferrer">';
+            }
+        }
+        return '<a>';
+    }, $limpio);
+
+    $limpio = preg_replace('/\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $limpio);
+    $limpio = preg_replace('/\s+style\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $limpio);
+
+    return trim($limpio);
+}
+
+/**
+ * Renderiza el cuerpo de una noticia.
+ * Si contiene marcado HTML semántico, lo desinfecta y lo imprime directamente.
+ * Si es texto plano heredado, aplica párrafos automáticos y nl2br para retrocompatibilidad total.
+ */
+function renderizar_contenido(string $contenido): string {
+    $c = trim($contenido);
+    if ($c === '') return '';
+
+    if (preg_match('/<(p|h[2-6]|ul|ol|blockquote|strong|b|em|i|u|br|hr)\b[^>]*>/i', $c)) {
+        return sanitizar_html_noticia($c);
+    }
+
+    $parrafos = preg_split("/\n\s*\n/", $c);
+    $salida = '';
+    foreach ($parrafos as $par) {
+        $t = trim($par);
+        if ($t !== '') {
+            $salida .= '<p>' . nl2br(e($t)) . '</p>' . "\n";
+        }
+    }
+    return $salida;
 }
 
 function slugify($t) {
@@ -64,23 +137,57 @@ function img_noticia($n) {
     return placeholder_img($n['titulo'], (int)($n['categoria_id'] ?? 1));
 }
 
-function db() {
+function db(): PDO {
     static $pdo = null;
     if ($pdo) return $pdo;
-    $nuevo = !file_exists(DB_FILE);
-    if (!is_dir(dirname(DB_FILE))) mkdir(dirname(DB_FILE), 0755, true);
+    $db_file = DB_FILE;
+    $nuevo = !file_exists($db_file) || filesize($db_file) === 0;
+    if (!is_dir(dirname($db_file))) mkdir(dirname($db_file), 0755, true);
     if (!is_dir(UPLOAD_DIR)) mkdir(UPLOAD_DIR, 0755, true);
-    $pdo = new PDO('sqlite:' . DB_FILE);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if ($nuevo) init_db($pdo);
-    return $pdo;
+
+    try {
+        $pdo = new PDO('sqlite:' . $db_file);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        // PRAGMAs de resiliencia y concurrencia para SQLite en entorno NVMe
+        $pdo->exec("PRAGMA journal_mode = WAL;");
+        $pdo->exec("PRAGMA busy_timeout = 5000;");
+        $pdo->exec("PRAGMA synchronous = NORMAL;");
+        $pdo->exec("PRAGMA foreign_keys = ON;");
+
+        if ($nuevo) {
+            init_db($pdo);
+        } else {
+            // Asegurar índices compuestos y columna visitas si la base de datos ya existía
+            $pdo->exec("CREATE INDEX IF NOT EXISTS idx_noticias_cat_fecha ON noticias (categoria_id, fecha_pub DESC);");
+            $pdo->exec("CREATE INDEX IF NOT EXISTS idx_noticias_destacada ON noticias (destacada, fecha_pub DESC);");
+            $pdo->exec("CREATE INDEX IF NOT EXISTS idx_noticias_pub_fecha ON noticias (publicada, fecha_pub DESC);");
+            try {
+                $pdo->exec("ALTER TABLE noticias ADD COLUMN visitas INTEGER NOT NULL DEFAULT 0;");
+            } catch (PDOException $ignored) {}
+        }
+        return $pdo;
+    } catch (PDOException $e) {
+        error_log('Error de conexión a base de datos SQLite: ' . $e->getMessage());
+        http_response_code(500);
+        if (php_sapi_name() === 'cli') {
+            throw $e;
+        }
+        echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Error de servicio · ' . e(SITE_NAME) . '</title></head><body><h1>Servicio temporalmente no disponible</h1><p>Por favor intente nuevamente en unos instantes.</p></body></html>';
+        exit;
+    }
 }
 
-function es_admin() {
+function es_admin(): bool {
+    if (session_status() === PHP_SESSION_NONE) {
+        return false;
+    }
     return !empty($_SESSION['admin']);
 }
 
-function exigir_admin() {
+function exigir_admin(): void {
+    iniciar_sesion();
     if (!es_admin()) {
         header('Location: login.php');
         exit;
@@ -105,8 +212,13 @@ function init_db($pdo) {
         publicada INTEGER NOT NULL DEFAULT 1,
         fecha_pub TEXT NOT NULL,
         creada TEXT NOT NULL,
+        visitas INTEGER NOT NULL DEFAULT 0,
         FOREIGN KEY (categoria_id) REFERENCES categorias(id)
     )");
+
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_noticias_cat_fecha ON noticias (categoria_id, fecha_pub DESC);");
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_noticias_destacada ON noticias (destacada, fecha_pub DESC);");
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_noticias_pub_fecha ON noticias (publicada, fecha_pub DESC);");
 
     $cats = ['Política', 'Economía', 'Deportes', 'Cultura', 'Tecnología'];
     $catIds = [];

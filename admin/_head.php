@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <title>Panel · <?= e(SITE_NAME) ?></title>
-<link rel="stylesheet" href="../assets/style.css?v=20261007_v2">
+<link rel="stylesheet" href="../assets/style.css?v=20261008_v3">
 </head>
 <body class="admin">
 <header class="adminbar">

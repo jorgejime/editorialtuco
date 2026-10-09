@@ -4,7 +4,7 @@ $pdo = db();
 $slug = $_GET['slug'] ?? '';
 
 $st = $pdo->prepare(
-    "SELECT n.*, c.nombre AS categoria FROM noticias n
+    "SELECT n.*, c.nombre AS categoria, c.slug AS categoria_slug FROM noticias n
      JOIN categorias c ON c.id = n.categoria_id
      WHERE n.slug = ? AND n.publicada = 1 LIMIT 1"
 );
@@ -12,11 +12,7 @@ $st->execute([$slug]);
 $n = $st->fetch(PDO::FETCH_ASSOC);
 
 if (!$n) {
-    http_response_code(404);
-    $page_title = 'Noticia no encontrada';
-    include __DIR__ . '/inc/header.php';
-    echo '<p>La noticia que buscas no existe o no está publicada.</p><p><a href="index.php">Volver a la portada</a></p>';
-    include __DIR__ . '/inc/footer.php';
+    require __DIR__ . '/404.php';
     exit;
 }
 
@@ -46,9 +42,7 @@ include __DIR__ . '/inc/header.php';
   <img class="articulo-img" src="<?= e(img_noticia($n)) ?>" alt="<?= e($n['titulo']) ?>">
   <p class="resumen"><?= e($n['resumen']) ?></p>
   <div class="contenido">
-    <?php foreach (preg_split("/\n\s*\n/", trim($n['contenido'])) as $par): ?>
-      <p><?= nl2br(e(trim($par))) ?></p>
-    <?php endforeach; ?>
+    <?= renderizar_contenido($n['contenido']) ?>
   </div>
 </article>
 
