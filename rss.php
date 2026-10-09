@@ -8,7 +8,8 @@ $site_url = 'https://editorialtuco.com';
 $pdo = db();
 
 $noticias = $pdo->query(
-    "SELECT n.*, c.nombre AS categoria FROM noticias n
+    "SELECT n.id, n.categoria_id, n.slug, n.titulo, n.resumen, n.imagen, n.destacada, n.publicada, n.fecha_pub, n.visitas, c.nombre AS categoria, c.slug AS categoria_slug
+     FROM noticias n
      JOIN categorias c ON c.id = n.categoria_id
      WHERE n.publicada = 1
      ORDER BY n.fecha_pub DESC LIMIT 20"

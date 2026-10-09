@@ -79,7 +79,7 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="bingbot" content="index, follow">
 
-<link rel="stylesheet" href="assets/style.css?v=20261007_v2">
+<link rel="stylesheet" href="assets/style.css?v=20261008_darkv4">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 
 <!-- Datos Estructurados JSON-LD (Schema.org / Google News / Motores de IA) -->
@@ -204,8 +204,8 @@ $og_type_val = isset($article_data) ? 'article' : 'website';
 <header class="masthead">
   <div class="wrap">
     <a href="index.php" class="brand-logo">
-      <img src="assets/logo-editorial-tuco.png" class="logo-light" alt="<?= e(SITE_NAME) ?>">
-      <img src="assets/logo-editorial-tuco-dark.png" class="logo-dark" alt="<?= e(SITE_NAME) ?>">
+      <img src="assets/logo-editorial-tuco.png" class="logo-light" alt="<?= e(SITE_NAME) ?>" width="965" height="175">
+      <img src="assets/logo-editorial-tuco-dark.png?v=20261008_v3" class="logo-dark" alt="<?= e(SITE_NAME) ?>" width="965" height="175">
     </a>
     <p class="tagline"><?= e(SITE_TAGLINE) ?></p>
   </div>
