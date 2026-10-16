@@ -829,8 +829,11 @@ body.admin {
 }
 
 /* Previsualización interactiva de Maqueta Periodística en el Canvas */
+/* 2026-10-16: la vista previa acompaña al sitio público — 1 columna en móvil.
+   Antes eran siempre 2/3 columnas: en pantallas angostas el justificado abría
+   huecos enormes entre palabras ("separa demasiado las palabras", Caro). */
 .sheet-content-canvas .columnas-automaticas-2 {
-  column-count: 2;
+  column-count: 1;
   column-gap: 32px;
   column-rule: 1px dashed #dcd7ce;
   margin: 22px 0;
@@ -838,11 +841,18 @@ body.admin {
   background: rgba(0, 0, 0, 0.015);
   border: 1px dashed #dcd7ce;
   border-radius: 4px;
-  text-align: justify;
+  text-align: left;
+}
+
+@media (min-width: 720px) {
+  .sheet-content-canvas .columnas-automaticas-2 {
+    column-count: 2;
+    text-align: justify;
+  }
 }
 
 .sheet-content-canvas .columnas-automaticas-3 {
-  column-count: 3;
+  column-count: 1;
   column-gap: 24px;
   column-rule: 1px dashed #dcd7ce;
   margin: 22px 0;
@@ -850,7 +860,14 @@ body.admin {
   background: rgba(0, 0, 0, 0.015);
   border: 1px dashed #dcd7ce;
   border-radius: 4px;
-  text-align: justify;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .sheet-content-canvas .columnas-automaticas-3 {
+    column-count: 3;
+    text-align: justify;
+  }
 }
 
 /* 2026-10-15: guionado en la vista previa del editor (igual que el sitio público) */
