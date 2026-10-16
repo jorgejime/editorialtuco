@@ -870,12 +870,22 @@ document.addEventListener('DOMContentLoaded', function() {
   // Los botones del ribbon le quitan el foco al canvas y el navegador puede
   // perder la selección; sin esto los bloques se insertaban en posiciones
   // impredecibles (bug: el cuadro siempre caía al final de la nota).
+  // Si no hay posición guardada válida (p. ej. primer clic en un botón sin
+  // haber tocado el canvas), se lleva el cursor al FINAL del contenido en
+  // vez de dejarlo caer al inicio (bug: el dúo se insertaba al principio).
   function restoreCaret() {
     canvas.focus();
     var sel = window.getSelection();
     if (savedRange && canvas.contains(savedRange.commonAncestorContainer)) {
       sel.removeAllRanges();
       sel.addRange(savedRange.cloneRange());
+    } else {
+      var r = document.createRange();
+      r.selectNodeContents(canvas);
+      r.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(r);
+      savedRange = r.cloneRange();
     }
   }
 
