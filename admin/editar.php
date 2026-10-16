@@ -54,13 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $slug = $base . '-' . ($i++);
             }
 
+            $fecha_pub_input = trim($_POST['fecha_pub'] ?? '');
+            if ($fecha_pub_input !== '') {
+                $ts = strtotime($fecha_pub_input);
+                $fecha_pub = $ts ? date('Y-m-d H:i:s', $ts) : date('Y-m-d H:i:s');
+            } else {
+                $fecha_pub = !empty($n['fecha_pub']) ? $n['fecha_pub'] : date('Y-m-d H:i:s');
+            }
+
             if ($id) {
-                $st = $pdo->prepare("UPDATE noticias SET titulo=?, slug=?, resumen=?, contenido=?, imagen=?, categoria_id=?, destacada=?, publicada=?, fecha_pub=datetime('now') WHERE id=?");
-                $st->execute([$titulo, $slug, $resumen, $contenido, $imagen, $categoria_id, $destacada, $publicada, $id]);
+                $st = $pdo->prepare("UPDATE noticias SET titulo=?, slug=?, resumen=?, contenido=?, imagen=?, categoria_id=?, destacada=?, publicada=?, fecha_pub=? WHERE id=?");
+                $st->execute([$titulo, $slug, $resumen, $contenido, $imagen, $categoria_id, $destacada, $publicada, $fecha_pub, $id]);
             } else {
                 $st = $pdo->prepare("INSERT INTO noticias (titulo, slug, resumen, contenido, imagen, categoria_id, destacada, publicada, fecha_pub, creada)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))");
-                $st->execute([$titulo, $slug, $resumen, $contenido, $imagen, $categoria_id, $destacada, $publicada]);
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))");
+                $st->execute([$titulo, $slug, $resumen, $contenido, $imagen, $categoria_id, $destacada, $publicada, $fecha_pub]);
             }
             respaldar_bd();
             header('Location: index.php');
@@ -96,7 +104,8 @@ foreach ($cats as $c) {
 
 include __DIR__ . '/_head.php';
 ?>
-<link rel="stylesheet" href="../assets/admin-editor.css?v=20261009_v6">
+<link rel="stylesheet" href="../assets/style.css?v=<?= file_exists(__DIR__ . '/../assets/style.css') ? filemtime(__DIR__ . '/../assets/style.css') : '20261010_maqueta' ?>">
+<link rel="stylesheet" href="../assets/admin-editor.css?v=<?= file_exists(__DIR__ . '/../assets/admin-editor.css') ? filemtime(__DIR__ . '/../assets/admin-editor.css') : '20261010_editor' ?>">
 
 <div class="editor-workspace">
   <div class="editor-container">
@@ -112,7 +121,12 @@ include __DIR__ . '/_head.php';
           <span>/</span>
           <strong><?= $id ? 'Editar Noticia #' . (int)$id : 'Nueva Noticia' ?></strong>
         </div>
-        <div class="editor-actions-top">
+        <div class="editor-actions-top" style="display:flex;gap:8px;align-items:center;">
+          <?php if ($id && !empty($n['slug'])): ?>
+            <a href="../noticia.php?slug=<?= e($n['slug']) ?>" target="_blank" class="btn-cancel-doc" style="gap:5px;display:inline-flex;align-items:center;background:var(--superficie);border:1px solid var(--toolbar-border);" title="Ver cómo se ve esta noticia publicada en el periódico">
+              👁️ Ver en Periódico
+            </a>
+          <?php endif; ?>
           <a href="index.php" class="btn-cancel-doc">Cancelar</a>
           <button type="submit" class="btn-save-doc" id="btnSubmitTop">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
@@ -195,15 +209,39 @@ include __DIR__ . '/_head.php';
 
         <div class="ribbon-divider"></div>
 
-        <!-- Multimedia y Columnas Periodísticas -->
-        <div class="ribbon-group">
-          <button type="button" class="ribbon-btn" id="btnInsertFotoCuerpo" title="Insertar fotografía con epígrafe o pie de foto" aria-label="Insertar foto con pie" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+        <!-- Maqueta Periodística y Bloques de Diseño -->
+        <div class="ribbon-group" style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+          <button type="button" class="ribbon-btn" id="btnInsertFotoCuerpo" title="Insertar fotografía grande o vertical en el texto sin recortes" aria-label="Insertar foto con pie" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            Foto y Pie
+            Foto en Texto
           </button>
-          <button type="button" class="ribbon-btn" id="btnInsertCols" title="Insertar sección a 2 columnas (Texto en paralelo)" aria-label="Insertar 2 columnas" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+          <button type="button" class="ribbon-btn" id="btnInsertCols2Auto" title="Insertar texto a 2 columnas que fluyen solas (Estilo periódico)" aria-label="2 columnas automáticas" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
-            2 Columnas
+            2 Cols Flujo
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertCols3Auto" title="Insertar texto a 3 columnas que fluyen solas" aria-label="3 columnas automáticas" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="5.5" height="18" rx="1"/><rect x="9.25" y="3" width="5.5" height="18" rx="1"/><rect x="16.5" y="3" width="5.5" height="18" rx="1"/></svg>
+            3 Cols Flujo
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertTitularSeccion" title="Insertar titular de sección a todo el ancho" aria-label="Titular de sección" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            Titular Sección
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertDuo" title="Insertar bloque: 2 fotos pegadas del mismo alto + columna de texto/cita" aria-label="Dúo de fotos" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="8" height="16"/><rect x="11" y="4" width="8" height="16"/></svg>
+            Dúo Fotos + Cita
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertMixto" title="Insertar bloque mixto: Foto vertical izquierda + foto horizontal con texto derecha" aria-label="Bloque mixto" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="18"/><rect x="12" y="3" width="9" height="7"/><line x1="12" y1="14" x2="21" y2="14"/></svg>
+            Bloque Mixto
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertCuadro" title="Insertar cuadro destacado con borde fino estilo periódico" aria-label="Cuadro destacado" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/></svg>
+            Cuadro
+          </button>
+          <button type="button" class="ribbon-btn" id="btnInsertVideo" title="Insertar video: subir archivo MP4/WebM o pegar enlace de YouTube/Vimeo" aria-label="Insertar video" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><polygon points="10,9 15,12 10,15" fill="currentColor" stroke="none"/></svg>
+            Video
           </button>
           <button type="button" class="ribbon-btn" id="btnExitCols" title="Insertar párrafo normal de 1 columna (Ancho completo)" aria-label="Párrafo normal" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
             1 Columna
@@ -304,6 +342,18 @@ include __DIR__ . '/_head.php';
             </div>
           </div>
 
+          <!-- Tarjeta de Fecha de Edición -->
+          <div class="inspector-card">
+            <div class="inspector-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Fecha de la Edición
+            </div>
+            <div class="inspector-field">
+              <label for="inputFechaPub" style="font-size:12px;color:var(--doc-muted);display:block;margin-bottom:4px;">Fecha en la cabecera del diario:</label>
+              <input type="datetime-local" name="fecha_pub" id="inputFechaPub" value="<?= date('Y-m-d\TH:i', strtotime($n['fecha_pub'] ?? 'now')) ?>" style="width:100%;padding:8px 10px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:13px;box-sizing:border-box;">
+            </div>
+          </div>
+
           <!-- Tarjeta de Estado y Visibilidad -->
           <div class="inspector-card">
             <div class="inspector-title">
@@ -380,6 +430,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!canvas.innerHTML.trim() || canvas.innerHTML.trim() === '<br>') {
     canvas.innerHTML = '<p><br></p>';
   }
+  // Repara notas viejas guardadas con columnas anidadas (se veían como 4 columnas)
+  try { desanidarColumnas(canvas); } catch (e) {}
+  try { normalizarBrs(canvas); } catch (e) {}
 
   // Auto-ajuste de altura del titular para comportamiento orgánico
   function adjustTitleHeight() {
@@ -411,9 +464,101 @@ document.addEventListener('DOMContentLoaded', function() {
   canvas.addEventListener('input', updateMetrics);
   updateMetrics();
 
+  // --- Anti-anidado de bloques de maqueta (fix: "pongo 2 columnas y me hace 4") ---
+  // Si un bloque de columnas queda dentro de otro, el navegador muestra 4 columnas.
+  // Estas funciones evitan el anidado al insertar y lo reparan al guardar.
+  function caretLayoutBlock() {
+    var sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return null;
+    var node = sel.anchorNode;
+    var el = (node && node.nodeType === 1) ? node : (node ? node.parentElement : null);
+    while (el && el !== canvas) {
+      if (el.classList && (el.classList.contains('columnas-automaticas-2') ||
+          el.classList.contains('columnas-automaticas-3') ||
+          el.classList.contains('columnas-2') ||
+          el.classList.contains('columnas-3') ||
+          el.classList.contains('bloque-duo-fotos') ||
+          el.classList.contains('bloque-mixto') ||
+          el.classList.contains('cuadro-editorial'))) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+  function placeCaretAfter(node) {
+    canvas.focus();
+    var range = document.createRange();
+    range.setStartAfter(node);
+    range.collapse(true);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  function desanidarColumnas(root) {
+    var sel = '.columnas-automaticas-2 .columnas-automaticas-2, .columnas-automaticas-3 .columnas-automaticas-3, ' +
+              '.columnas-automaticas-2 .columnas-automaticas-3, .columnas-automaticas-3 .columnas-automaticas-2, ' +
+              '.columnas-2 .columnas-2, .columnas-3 .columnas-3, ' +
+              '.columnas-2 .columnas-3, .columnas-3 .columnas-2';
+    var vuelta = true;
+    while (vuelta) {
+      vuelta = false;
+      root.querySelectorAll(sel).forEach(function(inner) {
+        var frag = document.createDocumentFragment();
+        while (inner.firstChild) frag.appendChild(inner.firstChild);
+        inner.parentNode.replaceChild(frag, inner);
+        vuelta = true;
+      });
+    }
+  }
+
+  // Normaliza <br> sueltos dentro del cuerpo (fix interlineado 2026-10-15):
+  // un <br> dentro de texto justificado estira las palabras de esa línea
+  // ("quedan muy separadas unas de otras"). Se convierten en párrafos reales
+  // y se eliminan los párrafos que quedan vacíos (solo espacios).
+  function normalizarBrs(root) {
+    root.querySelectorAll('p').forEach(function(p) {
+      if (p.closest('figcaption, blockquote, h1, h2, h3, h4')) return;
+      var kids = Array.prototype.slice.call(p.childNodes);
+      if (!kids.some(function(n) { return n.nodeName === 'BR'; })) return;
+      var frag = document.createDocumentFragment();
+      var cur = document.createElement('p');
+      kids.forEach(function(n) {
+        if (n.nodeName === 'BR') {
+          if (cur.textContent.replace(/\u00a0/g, ' ').trim() !== '' || cur.querySelector('img, figure')) {
+            frag.appendChild(cur);
+          }
+          cur = document.createElement('p');
+        } else {
+          cur.appendChild(n.cloneNode(true));
+        }
+      });
+      var resto = cur.textContent.replace(/\u00a0/g, ' ').trim();
+      if (resto !== '' || cur.querySelector('img, figure') || !frag.firstChild) frag.appendChild(cur);
+      p.replaceWith(frag);
+    });
+    // Párrafos separadores vacíos (solo espacios o &nbsp;) => fuera
+    root.querySelectorAll('p').forEach(function(p) {
+      var t = p.textContent.replace(/\u00a0/g, ' ').trim();
+      if (t === '' && !p.querySelector('img, figure, iframe')) p.remove();
+    });
+    // <br> huérfanos pegados a bloques o imágenes => fuera
+    root.querySelectorAll('br').forEach(function(br) {
+      var prev = br.previousSibling, next = br.nextSibling;
+      function esBloque(n) { return n && n.nodeType === 1 && /^(IMG|FIGURE|DIV|P|H1|H2|H3|H4|BLOCKQUOTE|HR|UL|OL)$/.test(n.nodeName); }
+      if (!prev || !next || (prev.nodeName === 'BR') || (next.nodeName === 'BR') || esBloque(prev) || esBloque(next)) {
+        br.remove();
+      }
+    });
+  }
+
   // Sincronizar contenido del canvas al input hidden
   function syncContent() {
-    var html = canvas.innerHTML.trim();
+    var clone = canvas.cloneNode(true);
+    clone.querySelectorAll('.btn-quitar-foto').forEach(function(el) { el.remove(); });
+    desanidarColumnas(clone);
+    normalizarBrs(clone);
+    var html = clone.innerHTML.trim();
     // Limpieza de estados vacíos habituales en contenteditable
     if (html === '<p><br></p>' || html === '<p></p>' || html === '<br>') {
       html = '';
@@ -584,32 +729,244 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 1. Inserción de 2 Columnas Periodísticas
-  var btnInsertCols = document.getElementById('btnInsertCols');
-  if (btnInsertCols) {
-    btnInsertCols.addEventListener('click', function(e) {
+  // 1. Inserción de 2 Columnas que fluyen automáticamente (Estilo Periódico)
+  var btnInsertCols2Auto = document.getElementById('btnInsertCols2Auto');
+  if (btnInsertCols2Auto) {
+    btnInsertCols2Auto.addEventListener('click', function(e) {
       e.preventDefault();
-      canvas.focus();
-      var colsHtml = '<div class="editorial-cols">' +
-        '<div class="editorial-col"><p>Columna 1: escribe aquí el primer bloque de texto...</p></div>' +
-        '<div class="editorial-col"><p>Columna 2: escribe aquí el segundo bloque de texto...</p></div>' +
-        '</div><p><br></p>';
-      document.execCommand('insertHTML', false, colsHtml);
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
+      var html = '<div class="columnas-automaticas-2"><p>Escribe aquí tu texto continuo a 2 columnas. A medida que redactes o pegues párrafos, el texto pasará de forma automática y balanceada hacia la columna siguiente, como en un periódico real...</p></div><p><br></p>';
+      document.execCommand('insertHTML', false, html);
       syncContent();
       updateMetrics();
     });
   }
 
-  // 2. Salir de columnas a párrafo normal (1 Columna)
+  // 2. Inserción de 3 Columnas que fluyen automáticamente
+  var btnInsertCols3Auto = document.getElementById('btnInsertCols3Auto');
+  if (btnInsertCols3Auto) {
+    btnInsertCols3Auto.addEventListener('click', function(e) {
+      e.preventDefault();
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
+      var html = '<div class="columnas-automaticas-3"><p>Escribe aquí tu texto continuo a 3 columnas. El contenido se distribuirá automáticamente en tres columnas...</p></div><p><br></p>';
+      document.execCommand('insertHTML', false, html);
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 3. Titular de Sección a Todo el Ancho
+  var btnInsertTitularSeccion = document.getElementById('btnInsertTitularSeccion');
+  if (btnInsertTitularSeccion) {
+    btnInsertTitularSeccion.addEventListener('click', function(e) {
+      e.preventDefault();
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
+      var html = '<h2 class="titular-seccion-ancho">TITULAR DE SECCIÓN A TODO EL ANCHO</h2><p><br></p>';
+      document.execCommand('insertHTML', false, html);
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 4. Bloque Superior: Dúo de Fotos Pegadas + Cita/Texto Corto
+  var btnInsertDuo = document.getElementById('btnInsertDuo');
+  if (btnInsertDuo) {
+    btnInsertDuo.addEventListener('click', function(e) {
+      e.preventDefault();
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
+      var html = '<div class="bloque-duo-fotos">' +
+        '<div class="duo-fotos-grid">' +
+        '  <div class="duo-foto-item"><img src="../assets/favicon.png" alt="Foto 1"><figcaption contenteditable="true">Pie de foto 1</figcaption></div>' +
+        '  <div class="duo-foto-item"><img src="../assets/favicon.png" alt="Foto 2"><figcaption contenteditable="true">Pie de foto 2</figcaption></div>' +
+        '</div>' +
+        '<div class="duo-fotos-texto"><p>Columna de texto corto, cita destacada o párrafo de introducción que acompaña al bloque de imágenes superior...</p></div>' +
+        '</div><p><br></p>';
+      document.execCommand('insertHTML', false, html);
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 5. Bloque Mixto: Foto Vertical Izquierda + Foto Horizontal Derecha con Texto
+  var btnInsertMixto = document.getElementById('btnInsertMixto');
+  if (btnInsertMixto) {
+    btnInsertMixto.addEventListener('click', function(e) {
+      e.preventDefault();
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
+      var html = '<div class="bloque-mixto">' +
+        '<div class="mixto-izq-vert">' +
+        '  <img src="../assets/favicon.png" alt="Foto vertical">' +
+        '  <figcaption contenteditable="true">Pie de foto vertical</figcaption>' +
+        '</div>' +
+        '<div class="mixto-der-bloque">' +
+        '  <div class="mixto-der-foto"><img src="../assets/favicon.png" alt="Foto horizontal"></div>' +
+        '  <div class="mixto-der-texto">' +
+        '    <h3 contenteditable="true">Titular de la Subsección</h3>' +
+        '    <div class="columnas-automaticas-2"><p>Texto en columnas debajo de la fotografía horizontal...</p></div>' +
+        '  </div>' +
+        '</div>' +
+        '</div><p><br></p>';
+      document.execCommand('insertHTML', false, html);
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 6. Cuadro Destacado Estilo Periódico / Word
+  var btnInsertCuadro = document.getElementById('btnInsertCuadro');
+  if (btnInsertCuadro) {
+    btnInsertCuadro.addEventListener('click', function(e) {
+      e.preventDefault();
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
+      var html = '<div class="cuadro-editorial"><h3>CLAVES O DESPIECE DESTACADO</h3><p>Escribe aquí el texto del cuadro destacado o análisis complementario...</p></div><p><br></p>';
+      document.execCommand('insertHTML', false, html);
+      syncContent();
+      updateMetrics();
+    });
+  }
+
+  // 7. Salir de bloques a párrafo normal (1 Columna)
   var btnExitCols = document.getElementById('btnExitCols');
   if (btnExitCols) {
     btnExitCols.addEventListener('click', function(e) {
       e.preventDefault();
-      canvas.focus();
+      restoreCaret();
+      var blkS = caretLayoutBlock();
+      if (blkS) placeCaretAfter(blkS);
       document.execCommand('insertHTML', false, '<p><br></p>');
       syncContent();
       updateMetrics();
     });
+  }
+
+  // Gestión de selección continua en el canvas
+  var savedRange = null;
+  function saveSelection() {
+    var sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      var r = sel.getRangeAt(0);
+      if (canvas.contains(r.commonAncestorContainer)) {
+        savedRange = r.cloneRange();
+      }
+    }
+  }
+  canvas.addEventListener('keyup', saveSelection);
+  canvas.addEventListener('mouseup', saveSelection);
+  canvas.addEventListener('touchend', saveSelection);
+
+  // Restaura el cursor a la última posición conocida dentro del canvas.
+  // Los botones del ribbon le quitan el foco al canvas y el navegador puede
+  // perder la selección; sin esto los bloques se insertaban en posiciones
+  // impredecibles (bug: el cuadro siempre caía al final de la nota).
+  function restoreCaret() {
+    canvas.focus();
+    var sel = window.getSelection();
+    if (savedRange && canvas.contains(savedRange.commonAncestorContainer)) {
+      sel.removeAllRanges();
+      sel.addRange(savedRange.cloneRange());
+    }
+  }
+
+  function attachPhotoEvents(fig) {
+    var btn = fig.querySelector('.btn-quitar-foto');
+    if (btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (confirm('¿Eliminar esta fotografía de la noticia?')) {
+          fig.remove();
+          syncContent();
+          updateMetrics();
+        }
+      });
+    }
+  }
+
+  // Clic en una foto de los bloques dúo/mixto => reemplazarla (bug: "no deja pegar fotos")
+  canvas.addEventListener('click', function(e) {
+    var t = e.target;
+    if (t && t.tagName === 'IMG' && t.closest('.bloque-duo-fotos, .bloque-mixto')) {
+      e.preventDefault();
+      e.stopPropagation();
+      saveSelection();
+      openFotoModal(t);
+    }
+  });
+
+  // Inicializar figuras fotográficas existentes al abrir la noticia
+  canvas.querySelectorAll('figure.foto-cuerpo').forEach(function(fig) {
+    if (!fig.querySelector('.btn-quitar-foto')) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-quitar-foto';
+      btn.title = 'Eliminar esta foto';
+      btn.textContent = '✕ Quitar foto';
+      fig.appendChild(btn);
+    }
+    fig.setAttribute('contenteditable', 'false');
+    var cap = fig.querySelector('figcaption');
+    if (cap) cap.setAttribute('contenteditable', 'true');
+    attachPhotoEvents(fig);
+  });
+
+  // Inicializar figuras de video existentes al abrir la noticia
+  canvas.querySelectorAll('figure.video-cuerpo').forEach(function(fig) {
+    fig.setAttribute('contenteditable', 'false');
+    var cap = fig.querySelector('figcaption');
+    if (cap) cap.setAttribute('contenteditable', 'true');
+  });
+
+  // Compresión automática en cliente para fotos grandes de celular
+  function compressImageIfNeeded(file, callback) {
+    if (!file || !file.type.match(/image\/(jpeg|png|webp)/i) || file.size < 1.5 * 1024 * 1024) {
+      callback(file);
+      return;
+    }
+    var img = new Image();
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      img.onload = function() {
+        var maxDim = 1920;
+        var w = img.width;
+        var h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        var cvs = document.createElement('canvas');
+        cvs.width = w;
+        cvs.height = h;
+        var ctx = cvs.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        cvs.toBlob(function(blob) {
+          if (blob && blob.size < file.size) {
+            var newFile = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' });
+            callback(newFile);
+          } else {
+            callback(file);
+          }
+        }, 'image/jpeg', 0.86);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   // 3. Modal de Inserción de Fotografía con Epígrafe
@@ -626,13 +983,15 @@ document.addEventListener('DOMContentLoaded', function() {
   var modalEpigrafeInput = document.getElementById('modalEpigrafeInput');
   var modalAlignSelect = document.getElementById('modalAlignSelect');
   var modalUploadStatus = document.getElementById('modalUploadStatus');
-  var savedRange = null;
+  var modalFotoTitle = document.getElementById('modalFotoTitle');
+  // Cuando no es null, el modal de foto está en modo "reemplazar" la imagen indicada
+  // (fotos de los bloques dúo/mixto) en lugar de insertar una figura nueva.
+  var replaceTargetImg = null;
 
-  function openFotoModal() {
-    var sel = window.getSelection();
-    if (sel.rangeCount > 0) {
-      savedRange = sel.getRangeAt(0).cloneRange();
-    }
+  function openFotoModal(replaceImg) {
+    replaceTargetImg = replaceImg || null;
+    if (modalFotoTitle) modalFotoTitle.textContent = replaceTargetImg ? '📷 Reemplazar Fotografía' : '📷 Insertar Fotografía con Epígrafe';
+    saveSelection();
     modalFileInput.value = '';
     modalUrlInput.value = '';
     modalEpigrafeInput.value = '';
@@ -643,12 +1002,14 @@ document.addEventListener('DOMContentLoaded', function() {
     modalUploadStatus.style.display = 'none';
     modalUploadStatus.textContent = '';
     btnModalConfirm.disabled = false;
-    btnModalConfirm.textContent = 'Insertar en la Noticia';
+    btnModalConfirm.textContent = replaceTargetImg ? 'Reemplazar Fotografía' : 'Insertar en la Noticia';
     modalFoto.classList.add('active');
   }
 
   function closeFotoModal() {
     modalFoto.classList.remove('active');
+    replaceTargetImg = null;
+    if (modalFotoTitle) modalFotoTitle.textContent = '📷 Insertar Fotografía con Epígrafe';
   }
 
   if (btnInsertFotoCuerpo) {
@@ -697,13 +1058,74 @@ document.addEventListener('DOMContentLoaded', function() {
     reader.readAsDataURL(file);
   }
 
+  // Inserción en el cuerpo vía DOM estructurado
+  function insertPhotoHtml(imgSrc) {
+    var safeEpigrafe = (modalEpigrafeInput.value || '').trim()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    var align = modalAlignSelect.value || 'align-center';
+
+    var fig = document.createElement('figure');
+    fig.className = 'foto-cuerpo ' + align;
+    fig.setAttribute('contenteditable', 'false');
+    fig.innerHTML = '<img src="' + imgSrc + '" alt="' + safeEpigrafe + '" loading="lazy">' +
+      '<figcaption contenteditable="true">' + (safeEpigrafe || 'Pie de foto / Epígrafe aquí') + '</figcaption>' +
+      '<button type="button" class="btn-quitar-foto" title="Eliminar esta foto">✕ Quitar foto</button>';
+
+    canvas.focus();
+    var sel = window.getSelection();
+    var range = null;
+    if (savedRange && canvas.contains(savedRange.commonAncestorContainer)) {
+      range = savedRange;
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } else if (sel.rangeCount > 0 && canvas.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+      range = sel.getRangeAt(0);
+    }
+
+    if (range) {
+      range.deleteContents();
+      var node = range.commonAncestorContainer;
+      var block = node.nodeType === 1 ? node : node.parentElement;
+      while (block && block !== canvas && !/^(P|H[1-6]|BLOCKQUOTE|FIGURE|LI)$/i.test(block.tagName)) {
+        if (block.parentElement === canvas || (block.classList && (block.classList.contains('editorial-col') || block.classList.contains('columnas-automaticas-2') || block.classList.contains('columnas-automaticas-3')))) {
+          break;
+        }
+        block = block.parentElement;
+      }
+      if (block && block !== canvas && canvas.contains(block) && (!block.classList || !block.classList.contains('editorial-cols'))) {
+        block.parentNode.insertBefore(fig, block.nextSibling);
+      } else {
+        range.insertNode(fig);
+      }
+    } else {
+      canvas.appendChild(fig);
+    }
+
+    var pAfter = document.createElement('p');
+    pAfter.innerHTML = '<br>';
+    fig.parentNode.insertBefore(pAfter, fig.nextSibling);
+
+    var newRange = document.createRange();
+    newRange.setStart(pAfter, 0);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+    savedRange = newRange.cloneRange();
+
+    attachPhotoEvents(fig);
+    syncContent();
+    updateMetrics();
+    closeFotoModal();
+  }
+
   // Confirmar inserción en el cuerpo
   if (btnModalConfirm) {
     btnModalConfirm.addEventListener('click', function() {
       var file = modalFileInput.files && modalFileInput.files[0];
       var extUrl = (modalUrlInput.value || '').trim();
-      var epigrafe = (modalEpigrafeInput.value || '').trim();
-      var align = modalAlignSelect.value || 'align-center';
 
       if (!file && !extUrl) {
         modalUploadStatus.textContent = 'Por favor selecciona un archivo o escribe una URL de imagen.';
@@ -711,64 +1133,202 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      function insertPhotoHtml(imgSrc) {
-        canvas.focus();
-        if (savedRange) {
-          var sel = window.getSelection();
-          sel.removeAllRanges();
-          sel.addRange(savedRange);
-        }
-        var safeEpigrafe = epigrafe
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-
-        var figHtml = '<figure class="foto-cuerpo ' + align + '" contenteditable="false">' +
-          '<img src="' + imgSrc + '" alt="' + safeEpigrafe + '" loading="lazy">' +
-          '<figcaption contenteditable="true">' + (safeEpigrafe || 'Pie de foto / Epígrafe aquí') + '</figcaption>' +
-          '</figure><p><br></p>';
-
-        document.execCommand('insertHTML', false, figHtml);
-        syncContent();
-        updateMetrics();
-        closeFotoModal();
-      }
-
       if (file) {
         btnModalConfirm.disabled = true;
-        btnModalConfirm.textContent = 'Subiendo imagen...';
+        btnModalConfirm.textContent = 'Procesando imagen...';
         modalUploadStatus.style.display = 'none';
 
-        var fd = new FormData();
-        fd.append('foto', file);
+        compressImageIfNeeded(file, function(readyFile) {
+          btnModalConfirm.textContent = 'Subiendo imagen...';
+          var fd = new FormData();
+          fd.append('foto', readyFile);
 
-        fetch('upload_inline.php', {
-          method: 'POST',
-          body: fd
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (data && data.ok) {
-            insertPhotoHtml(data.url);
-          } else {
-            modalUploadStatus.textContent = (data && data.error) ? data.error : 'Error al subir la imagen.';
+          fetch('upload_inline.php', {
+            method: 'POST',
+            body: fd
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data && data.ok) {
+              if (replaceTargetImg) {
+                replaceTargetImg.src = data.url;
+                var epi = (modalEpigrafeInput.value || '').trim();
+                if (epi) replaceTargetImg.alt = epi;
+                syncContent();
+                updateMetrics();
+                closeFotoModal();
+              } else {
+                insertPhotoHtml(data.url);
+              }
+            } else {
+              modalUploadStatus.textContent = (data && data.error) ? data.error : 'Error al subir la imagen.';
+              modalUploadStatus.style.display = 'block';
+              btnModalConfirm.disabled = false;
+              btnModalConfirm.textContent = 'Insertar en la Noticia';
+            }
+          })
+          .catch(function(err) {
+            modalUploadStatus.textContent = 'Error al subir la imagen: ' + err.message;
             modalUploadStatus.style.display = 'block';
             btnModalConfirm.disabled = false;
             btnModalConfirm.textContent = 'Insertar en la Noticia';
-          }
-        })
-        .catch(function(err) {
-          modalUploadStatus.textContent = 'Error al subir la imagen: ' + err.message;
-          modalUploadStatus.style.display = 'block';
-          btnModalConfirm.disabled = false;
-          btnModalConfirm.textContent = 'Insertar en la Noticia';
+          });
         });
       } else if (extUrl) {
-        insertPhotoHtml(extUrl);
+        if (replaceTargetImg) {
+          replaceTargetImg.src = extUrl;
+          var epi2 = (modalEpigrafeInput.value || '').trim();
+          if (epi2) replaceTargetImg.alt = epi2;
+          syncContent();
+          updateMetrics();
+          closeFotoModal();
+        } else {
+          insertPhotoHtml(extUrl);
+        }
       }
     });
   }
+
+  // ============ Bloque Video: subir archivo o pegar enlace ============
+  var btnInsertVideo = document.getElementById('btnInsertVideo');
+  var modalVideo = document.getElementById('modalInsertVideo');
+  var modalVideoFile = document.getElementById('modalVideoFile');
+  var modalVideoUrl = document.getElementById('modalVideoUrl');
+  var modalVideoEpi = document.getElementById('modalVideoEpi');
+  var modalVideoStatus = document.getElementById('modalVideoStatus');
+  var btnVideoClose = document.getElementById('btnVideoClose');
+  var btnVideoCancel = document.getElementById('btnVideoCancel');
+  var btnVideoConfirm = document.getElementById('btnVideoConfirm');
+
+  function openVideoModal() {
+    saveSelection();
+    modalVideoFile.value = '';
+    modalVideoUrl.value = '';
+    modalVideoEpi.value = '';
+    modalVideoStatus.style.display = 'none';
+    modalVideoStatus.textContent = '';
+    btnVideoConfirm.disabled = false;
+    btnVideoConfirm.textContent = 'Insertar Video';
+    modalVideo.classList.add('active');
+  }
+  function closeVideoModal() { modalVideo.classList.remove('active'); }
+  if (btnInsertVideo) btnInsertVideo.addEventListener('click', function(e) { e.preventDefault(); openVideoModal(); });
+  if (btnVideoClose) btnVideoClose.addEventListener('click', closeVideoModal);
+  if (btnVideoCancel) btnVideoCancel.addEventListener('click', closeVideoModal);
+
+  function videoIdFromUrl(url) {
+    var m;
+    if ((m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i))) {
+      return { type: 'youtube', id: m[1] };
+    }
+    if ((m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i))) {
+      return { type: 'vimeo', id: m[1] };
+    }
+    return null;
+  }
+
+  function insertVideoFigure(innerHtml, epigrafe) {
+    var safeEpi = (epigrafe || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    var fig = document.createElement('figure');
+    fig.className = 'video-cuerpo align-center';
+    fig.setAttribute('contenteditable', 'false');
+    fig.innerHTML = innerHtml + '<figcaption contenteditable="true">' + (safeEpi || 'Ep\u00edgrafe del video\u2026') + '</figcaption>';
+    restoreCaret();
+    var sel = window.getSelection();
+    var range = null;
+    if (savedRange && canvas.contains(savedRange.commonAncestorContainer)) {
+      range = savedRange.cloneRange();
+    } else if (sel.rangeCount > 0 && canvas.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+      range = sel.getRangeAt(0);
+    }
+    if (range) {
+      sel.removeAllRanges();
+      sel.addRange(range);
+      var node = range.commonAncestorContainer;
+      var block = node.nodeType === 1 ? node : node.parentElement;
+      while (block && block !== canvas && !/^(P|H[1-6]|BLOCKQUOTE|FIGURE|LI)$/i.test(block.tagName)) {
+        if (block.parentElement === canvas) break;
+        block = block.parentElement;
+      }
+      if (block && block !== canvas && canvas.contains(block)) {
+        block.parentNode.insertBefore(fig, block.nextSibling);
+      } else {
+        range.insertNode(fig);
+      }
+    } else {
+      canvas.appendChild(fig);
+    }
+    var pAfter = document.createElement('p');
+    pAfter.innerHTML = '<br>';
+    fig.parentNode.insertBefore(pAfter, fig.nextSibling);
+    var newRange = document.createRange();
+    newRange.setStart(pAfter, 0);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+    savedRange = newRange.cloneRange();
+    syncContent();
+    updateMetrics();
+    closeVideoModal();
+  }
+
+  if (btnVideoConfirm) btnVideoConfirm.addEventListener('click', function() {
+    var file = modalVideoFile.files && modalVideoFile.files[0];
+    var url = (modalVideoUrl.value || '').trim();
+    if (!file && !url) {
+      modalVideoStatus.textContent = 'Seleccion\u00e1 un archivo de video o peg\u00e1 un enlace.';
+      modalVideoStatus.style.display = 'block';
+      return;
+    }
+    var epi = modalVideoEpi.value || '';
+    if (file) {
+      var ext = (file.name.split('.').pop() || '').toLowerCase();
+      if (['mp4', 'webm'].indexOf(ext) < 0) {
+        modalVideoStatus.textContent = 'Formato no soportado. Sub\u00ed MP4 o WebM (m\u00e1x. 64 MB).';
+        modalVideoStatus.style.display = 'block';
+        return;
+      }
+      if (file.size > 64 * 1024 * 1024) {
+        modalVideoStatus.textContent = 'El archivo supera los 64 MB.';
+        modalVideoStatus.style.display = 'block';
+        return;
+      }
+      btnVideoConfirm.disabled = true;
+      btnVideoConfirm.textContent = 'Subiendo video...';
+      var fd = new FormData();
+      fd.append('video', file);
+      fetch('upload_video.php', { method: 'POST', body: fd })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.ok) {
+            insertVideoFigure('<video controls preload="metadata" playsinline src="' + data.url + '"></video>', epi);
+          } else {
+            modalVideoStatus.textContent = (data && data.error) || 'Error al subir el video.';
+            modalVideoStatus.style.display = 'block';
+            btnVideoConfirm.disabled = false;
+            btnVideoConfirm.textContent = 'Insertar Video';
+          }
+        })
+        .catch(function(err) {
+          modalVideoStatus.textContent = 'Error al subir: ' + err.message;
+          modalVideoStatus.style.display = 'block';
+          btnVideoConfirm.disabled = false;
+          btnVideoConfirm.textContent = 'Insertar Video';
+        });
+    } else {
+      var v = videoIdFromUrl(url);
+      if (v && v.type === 'youtube') {
+        insertVideoFigure('<div class="video-responsive"><iframe src="https://www.youtube-nocookie.com/embed/' + v.id + '" loading="lazy" allowfullscreen title="Video"></iframe></div>', epi);
+      } else if (v && v.type === 'vimeo') {
+        insertVideoFigure('<div class="video-responsive"><iframe src="https://player.vimeo.com/video/' + v.id + '" loading="lazy" allowfullscreen title="Video"></iframe></div>', epi);
+      } else if (/\.(mp4|webm)(\?|#|$)/i.test(url)) {
+        insertVideoFigure('<video controls preload="metadata" playsinline src="' + url.replace(/"/g, '&quot;') + '"></video>', epi);
+      } else {
+        modalVideoStatus.textContent = 'Enlace no reconocido. Peg\u00e1 un link de YouTube, Vimeo o un MP4/WebM directo.';
+        modalVideoStatus.style.display = 'block';
+      }
+    }
+  });
 });
 </script>
 
@@ -819,6 +1379,35 @@ document.addEventListener('DOMContentLoaded', function() {
       <button type="button" class="btn-save-doc" id="btnModalConfirm">
         Insertar en la Noticia
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Insertar Video en el Cuerpo -->
+<div id="modalInsertVideo" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalVideoTitle">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modalVideoTitle">🎬 Insertar Video</h3>
+      <button type="button" class="modal-close-btn" id="btnVideoClose" aria-label="Cerrar modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">1. Sub&iacute; un archivo de video (MP4 o WebM, m&aacute;x. 64 MB)</label>
+        <input type="file" id="modalVideoFile" accept="video/mp4,video/webm" style="width:100%;padding:8px 10px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:13px;box-sizing:border-box;">
+      </div>
+      <div style="margin-top:10px;">
+        <label for="modalVideoUrl" style="font-size:12px;font-weight:500;color:var(--doc-muted);display:block;margin-bottom:4px;">O peg&aacute; un enlace (YouTube, Vimeo o MP4 directo):</label>
+        <input type="url" id="modalVideoUrl" placeholder="https://www.youtube.com/watch?v=..." style="width:100%;padding:8px 10px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:13px;box-sizing:border-box;">
+      </div>
+      <div style="margin-top:10px;">
+        <label for="modalVideoEpi" style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">2. Ep&iacute;grafe del video</label>
+        <input type="text" id="modalVideoEpi" placeholder="Ej: El momento del gol que defini&oacute; el partido." style="width:100%;padding:9px 12px;border:1px solid var(--toolbar-border);border-radius:4px;font-size:14px;box-sizing:border-box;">
+      </div>
+      <div id="modalVideoStatus" style="font-size:12px;color:var(--rojo);font-weight:600;display:none;margin-top:8px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel-doc" id="btnVideoCancel">Cancelar</button>
+      <button type="button" class="btn-save-doc" id="btnVideoConfirm">Insertar Video</button>
     </div>
   </div>
 </div>
