@@ -250,6 +250,7 @@ include __DIR__ . '/_head.php';
           <button type="button" class="ribbon-btn" id="btnExitCols" title="Insertar párrafo normal de 1 columna (Ancho completo)" aria-label="Párrafo normal" style="font-weight:600;font-size:12px;gap:4px;display:inline-flex;align-items:center;">
             1 Columna
           </button>
+          <span id="editorVer" title="Versión del editor" style="font-size:10px;color:#a09a8e;margin-left:4px;user-select:none;white-space:nowrap;">v16d</span>
         </div>
       </div>
 
@@ -500,6 +501,28 @@ document.addEventListener('DOMContentLoaded', function() {
     sel.addRange(range);
   }
 
+  // Versión por rango guardado (no depende de la selección en vivo, que en
+  // móviles puede perderse con el foco del botón). Misma lista de clases
+  // que caretLayoutBlock().
+  function layoutBlockFromRange(range) {
+    if (!range) return null;
+    var node = range.startContainer;
+    var el = (node && node.nodeType === 1) ? node : (node ? node.parentElement : null);
+    while (el && el !== canvas) {
+      if (el.classList && (el.classList.contains('columnas-automaticas-2') ||
+          el.classList.contains('columnas-automaticas-3') ||
+          el.classList.contains('columnas-2') ||
+          el.classList.contains('columnas-3') ||
+          el.classList.contains('bloque-duo-fotos') ||
+          el.classList.contains('bloque-mixto') ||
+          el.classList.contains('cuadro-editorial'))) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
   // Inserción de bloques por manipulación directa del DOM.
   // Reemplaza document.execCommand('insertHTML'), que en navegadores móviles
   // inserta en posiciones impredecibles (bug reportado por Caro 16-oct-2026:
@@ -524,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var last = null;
     while (tmp.firstChild) { last = tmp.firstChild; frag.appendChild(last); }
 
-    var blkS = caretLayoutBlock();
+    var blkS = layoutBlockFromRange(range);
     var done = false;
 
     if (blkS && blkS.parentElement) {
