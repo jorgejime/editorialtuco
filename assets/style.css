@@ -951,357 +951,546 @@ main.wrap {
 }
 
 /* ==========================================================================
-   Estilo Periódico Noticias Clásico Elegante (Inspirado en PDF A4 Broadsheet)
+   MAQUETA EDITORIAL PERIÓDICO (CANVA / BROADSHEET CLASSIC)
+   Fondo crema claro, texto gris casi negro, sans-serif pura, líneas finas,
+   columnas que fluyen automáticamente y bloques visuales sin recortes.
    ========================================================================== */
 
-.articulo-periodico-clasico {
-  max-width: 900px;
+:root {
+  --periodico-fondo: #FAF8F5;
+  --periodico-tinta: #1A1A1A;
+  --periodico-tinta-suave: #2A2A2A;
+  --periodico-gris: #555555;
+  --periodico-linea-fina: #1A1A1A;
+  --periodico-linea-columna: #DCD7CE;
+  --periodico-linea-suave: #E8E3DA;
+}
+
+[data-theme="dark"] {
+  --periodico-fondo: #131417;
+  --periodico-tinta: #EEEEEE;
+  --periodico-tinta-suave: #D0D0D0;
+  --periodico-gris: #999999;
+  --periodico-linea-fina: #EEEEEE;
+  --periodico-linea-columna: #2E3238;
+  --periodico-linea-suave: #22252A;
+}
+
+/* Envoltura general de la página de artículo */
+.pagina-periodico-wrap {
+  width: 100%;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 8px 0 44px;
+  padding: 24px 20px 48px;
 }
 
-/* 1. Folio de Cabecera Broadsheet */
-.periodico-folio {
-  text-align: center;
-  padding: 10px 0 16px;
-  border-bottom: 3px double var(--linea);
-  margin-bottom: 24px;
+/* La Hoja de Periódico */
+.hoja-periodico {
+  background: var(--periodico-fondo);
+  color: var(--periodico-tinta);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  padding: 40px 44px 44px;
+  border: 1px solid var(--periodico-linea-suave);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
 }
 
-.folio-marca {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 13px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gris);
-  margin-bottom: 6px;
-  font-weight: 600;
+@media (max-width: 768px) {
+  .pagina-periodico-wrap {
+    padding: 12px 8px 32px;
+  }
+  .hoja-periodico {
+    padding: 24px 16px 32px;
+    border: none;
+    box-shadow: none;
+  }
 }
 
-.folio-seccion {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(26px, 4.5vw, 38px);
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--tinta);
-  line-height: 1.15;
-  margin-bottom: 12px;
-}
-
-.folio-cintillo {
+/* 1. Encabezado de cada nota (Medio | Fecha | Sección) */
+.periodico-cintillo-superior {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 0 4px;
-}
-
-.cintillo-linea {
-  flex: 1;
-  height: 1px;
-  background: var(--linea);
-}
-
-.cintillo-texto {
-  font-family: Georgia, serif;
-  font-style: italic;
   font-size: 13px;
-  color: var(--gris);
-  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--periodico-tinta);
+  padding: 4px 0 8px;
+  gap: 12px;
 }
 
-@media (max-width: 600px) {
-  .cintillo-texto {
-    font-size: 11.5px;
-    white-space: normal;
+.cintillo-col {
+  min-width: 0;
+}
+
+.cintillo-medio {
+  flex: 1;
+  text-align: left;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.cintillo-fecha {
+  flex: 1.6;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--periodico-gris);
+  font-size: 12px;
+}
+
+.cintillo-seccion {
+  flex: 1;
+  text-align: right;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+  .periodico-cintillo-superior {
+    flex-direction: column;
+    gap: 4px;
     text-align: center;
   }
-  .cintillo-linea {
-    display: none;
+  .cintillo-medio, .cintillo-fecha, .cintillo-seccion {
+    text-align: center;
+    flex: auto;
   }
 }
 
-/* 2. Encabezado de Noticia y Titular */
-.periodico-header {
-  margin-bottom: 22px;
+/* Línea fina separadora */
+.periodico-linea-fina {
+  width: 100%;
+  height: 1px;
+  background-color: var(--periodico-linea-fina);
+  margin: 10px 0 24px;
+  border: 0;
 }
 
-.periodico-kicker-row {
-  margin-bottom: 12px;
+/* 2. Título y bajada */
+.periodico-cabecera-nota {
+  text-align: center;
+  margin: 20px 0 24px;
 }
 
-/* Badge Negro / Acento oscuro idéntico al PDF */
-.periodico-badge-negro {
-  display: inline-block;
-  background: var(--tinta);
-  color: var(--fondo) !important;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+.periodico-titular-principal {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  padding: 5px 12px;
-  border-radius: 2px;
-}
-
-[data-theme="dark"] .periodico-badge-negro {
-  background: #ffffff;
-  color: #0e1013 !important;
-}
-
-.periodico-titulo {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(28px, 4.8vw, 44px);
-  font-weight: 700;
-  line-height: 1.14;
-  color: var(--tinta);
-  letter-spacing: -0.015em;
-  margin: 10px 0 16px;
+  line-height: 1.15;
+  color: var(--periodico-tinta);
+  margin: 0 auto 16px;
+  max-width: 960px;
+  letter-spacing: -0.025em;
   word-break: break-word;
 }
 
-.periodico-bajada {
-  padding: 14px 0;
-  border-top: 1px solid var(--linea);
-  border-bottom: 1px solid var(--linea);
-  margin-bottom: 22px;
+.periodico-bajada-principal {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--periodico-gris);
+  max-width: 820px;
+  margin: 0 auto;
+  font-weight: 400;
 }
 
-.periodico-bajada p {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(17px, 2.2vw, 20px);
-  font-style: italic;
-  line-height: 1.55;
-  color: var(--tinta-suave);
+.periodico-bajada-principal p {
   margin: 0;
 }
 
-/* 3. Fotografía de Portada */
-.periodico-foto-principal {
-  margin: 0 0 24px;
-  border: 1px solid var(--linea);
-  border-radius: 2px;
-  overflow: hidden;
-  background: var(--superficie);
+/* Fotografía principal destacada sin recorte */
+.periodico-foto-destacada {
+  margin: 24px 0 28px;
+  width: 100%;
 }
 
-.periodico-foto-principal img {
+.periodico-foto-destacada img {
   display: block;
   width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.periodico-foto-principal figcaption {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  color: var(--gris);
+.periodico-foto-destacada figcaption {
+  font-size: 12.5px;
+  color: var(--periodico-gris);
   font-style: italic;
-  padding: 9px 14px;
-  background: var(--superficie);
-  border-top: 1px solid var(--linea);
+  padding: 6px 0;
+  border-top: 1px solid var(--periodico-linea-columna);
+  margin-top: 6px;
+  text-align: left;
 }
 
-/* 4. Barra de herramientas de lectura */
-.periodico-toolbar-lectura {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 0 16px;
-  border-bottom: 1px solid var(--linea);
-  margin-bottom: 24px;
-  font-size: 12px;
-  color: var(--gris);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.layout-toggle-btns {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-layout-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: 3px;
-  font-size: 11px;
-  font-family: Arial, sans-serif;
-  font-weight: 600;
-  color: var(--gris);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-layout-toggle:hover {
-  border-color: var(--rojo);
-  color: var(--tinta);
-}
-
-.btn-layout-toggle.is-active {
-  background: var(--tinta);
-  border-color: var(--tinta);
-  color: var(--fondo);
-}
-
-[data-theme="dark"] .btn-layout-toggle.is-active {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0e1013;
-}
-
-/* 5. Cuerpo de Noticia: Formato a Dos Columnas Estilo Periódico */
-.periodico-cuerpo {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 18px;
-  line-height: 1.74;
-  color: var(--tinta-suave);
+/* Cuerpo de la Maqueta Periodística: 2 Columnas continuas por defecto en formato diario */
+.periodico-cuerpo-maqueta {
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--periodico-tinta-suave);
   word-break: break-word;
 }
 
-/* Letra Capitular (Drop Cap) en el primer párrafo */
-.periodico-cuerpo > p:first-of-type::first-letter {
-  float: left;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 3.6em;
-  line-height: 0.82;
-  padding-top: 4px;
-  padding-right: 10px;
-  padding-bottom: 2px;
-  font-weight: 700;
-  color: var(--tinta);
-}
-
-.periodico-cuerpo p {
-  margin-bottom: 1.25em;
-}
-
-/* Reglas de Columna en Escritorio (>=768px) */
-@media (min-width: 768px) {
-  .periodico-cuerpo.layout-2cols {
+@media (min-width: 720px) {
+  .periodico-cuerpo-maqueta {
     column-count: 2;
-    column-gap: 38px;
-    column-rule: 1px solid var(--linea);
-    text-align: justify;
-    hyphens: auto;
-    -webkit-hyphens: auto;
+    column-gap: 36px;
+    column-rule: 1px solid var(--periodico-linea-columna);
+  }
+
+  .periodico-cuerpo-maqueta .editorial-cols,
+  .periodico-cuerpo-maqueta .titular-seccion-ancho,
+  .periodico-cuerpo-maqueta .bloque-duo-fotos,
+  .periodico-cuerpo-maqueta .bloque-mixto,
+  .periodico-cuerpo-maqueta .columnas-automaticas-2,
+  .periodico-cuerpo-maqueta .columnas-2,
+  .periodico-cuerpo-maqueta .columnas-automaticas-3,
+  .periodico-cuerpo-maqueta .columnas-3,
+  .periodico-cuerpo-maqueta .foto-grande,
+  .periodico-cuerpo-maqueta hr {
+    column-span: all;
   }
 }
 
-.periodico-cuerpo.layout-1col {
-  column-count: 1 !important;
-  text-align: left !important;
+.periodico-cuerpo-maqueta p {
+  margin-bottom: 1.3em;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  orphans: 2;
+  widows: 2;
 }
 
-/* Títulos y Elementos Estructurales dentro de las columnas */
-.periodico-cuerpo h2,
-.periodico-cuerpo h3,
-.periodico-cuerpo h4 {
-  font-family: Georgia, "Times New Roman", serif;
-  color: var(--tinta);
-  font-weight: 700;
-  line-height: 1.25;
-  margin-top: 1.6em;
-  margin-bottom: 0.5em;
+@media (max-width: 719px) {
+  .periodico-cuerpo-maqueta p {
+    text-align: left;
+  }
+}
+
+.periodico-cuerpo-maqueta figure,
+.periodico-cuerpo-maqueta .cuadro-editorial,
+.periodico-cuerpo-maqueta .cuadro-destacado,
+.periodico-cuerpo-maqueta blockquote {
   break-inside: avoid;
-  break-after: avoid;
 }
 
-.periodico-cuerpo h2 {
-  font-size: 24px;
-  column-span: all;
-  border-bottom: 1px solid var(--linea);
-  padding-bottom: 6px;
-  margin-top: 2em;
-}
-
-.periodico-cuerpo h3 { font-size: 20px; }
-.periodico-cuerpo h4 { font-size: 18px; }
-
-/* Citas que cortan las columnas (Column-span: all) */
-.periodico-cuerpo blockquote {
-  column-span: all;
-  break-inside: avoid;
-  border-left: 3px solid var(--rojo);
-  padding: 16px 24px;
-  margin: 28px 0;
-  font-family: Georgia, serif;
-  font-style: italic;
-  font-size: 20px;
-  line-height: 1.55;
-  color: var(--tinta);
-  background: var(--superficie);
-  border-radius: 0 3px 3px 0;
-}
-
-/* Figuras e Imágenes en Columnas */
-.periodico-cuerpo figure.foto-cuerpo {
-  break-inside: avoid;
-  margin: 22px 0;
-  border: 1px solid var(--linea);
-  border-radius: 3px;
-  overflow: hidden;
-  background: var(--superficie);
-}
-
-.periodico-cuerpo figure.foto-cuerpo img {
-  display: block;
+.periodico-cuerpo-maqueta figure img {
   width: 100%;
   height: auto;
+  display: block;
 }
 
-.periodico-cuerpo figure.foto-cuerpo figcaption {
-  font-family: Arial, Helvetica, sans-serif;
+.periodico-cuerpo-maqueta figcaption {
   font-size: 12px;
-  line-height: 1.4;
-  color: var(--gris);
-  padding: 8px 12px;
-  background: var(--superficie);
-  border-top: 1px solid var(--linea);
+  color: var(--periodico-gris);
   font-style: italic;
+  padding: 5px 0 0;
+  text-align: left;
+  line-height: 1.4;
+  border-top: 1px solid var(--periodico-linea-columna);
+  margin-top: 5px;
 }
 
-.periodico-cuerpo figure.foto-cuerpo.align-center {
-  column-span: all;
+.periodico-cuerpo-maqueta h2,
+.periodico-cuerpo-maqueta h3,
+.periodico-cuerpo-maqueta h4 {
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+/* 4. Titular de sección y texto en columnas que fluyen solas */
+.titular-seccion-ancho {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1.4rem, 2.3vw, 1.95rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--periodico-tinta);
+  margin: 36px 0 16px;
+  border-bottom: 1px solid var(--periodico-linea-fina);
+  padding-bottom: 6px;
+  width: 100%;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+.columnas-automaticas-2,
+.columnas-2 {
+  column-count: 1;
+  column-gap: 36px;
+  margin: 22px 0;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (min-width: 720px) {
+  .columnas-automaticas-2,
+  .columnas-2 {
+    column-count: 2;
+    column-gap: 36px;
+    column-rule: 1px solid var(--periodico-linea-columna);
+  }
+}
+
+.columnas-automaticas-3,
+.columnas-3 {
+  column-count: 1;
+  column-gap: 28px;
+  margin: 22px 0;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (min-width: 768px) {
+  .columnas-automaticas-3,
+  .columnas-3 {
+    column-count: 3;
+    column-gap: 28px;
+    column-rule: 1px solid var(--periodico-linea-columna);
+  }
+}
+
+/* 2026-10-15: guionado en bloques de maqueta: con texto justificado en columnas
+   angostas evita que las palabras queden muy separadas ("ríos" de espacio). */
+.columnas-automaticas-2, .columnas-2,
+.columnas-automaticas-3, .columnas-3,
+.editorial-cols, .duo-fotos-texto, .mixto-der-texto,
+.bloque-duo-fotos, .bloque-mixto {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Guardia anti-anidado (2026-10-15): un bloque de columnas nunca va dentro de otro.
+   Sin esto, columnas dentro de columnas se ven como 4 columnas. */
+.columnas-automaticas-2 .columnas-automaticas-2,
+.columnas-automaticas-3 .columnas-automaticas-3,
+.columnas-automaticas-2 .columnas-automaticas-3,
+.columnas-automaticas-3 .columnas-automaticas-2,
+.columnas-2 .columnas-2,
+.columnas-3 .columnas-3,
+.columnas-2 .columnas-3,
+.columnas-3 .columnas-2 {
+  column-count: 1;
+}
+
+
+/* Compatibilidad total con .editorial-cols previo */
+.editorial-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 24px 0;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (min-width: 720px) {
+  .editorial-cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+.editorial-col {
+  min-width: 0;
+}
+
+.editorial-col p {
+  margin-bottom: 1.25em;
+}
+
+/* 3. Bloque de imágenes superior (Dúo lado a lado pegadas + texto corto al costado) */
+.bloque-duo-fotos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
   margin: 28px 0;
+  align-items: start;
 }
 
-.periodico-cuerpo .editorial-cols {
-  column-span: all;
+@media (min-width: 768px) {
+  .bloque-duo-fotos {
+    grid-template-columns: 2fr 1fr;
+    gap: 28px;
+  }
 }
 
-.periodico-cuerpo hr {
-  column-span: all;
-  border: 0;
-  height: 1px;
-  background: var(--linea);
+.duo-fotos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px; /* Pegadas entre sí */
+  width: 100%;
+}
+
+.duo-foto-item img {
+  display: block;
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.duo-fotos-texto {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--periodico-tinta);
+  font-style: italic;
+  padding-left: 8px;
+  border-left: 2px solid var(--periodico-linea-fina);
+}
+
+/* 5. Bloque mixto (Vertical a la izquierda + Horizontal arriba a la derecha + Texto) */
+.bloque-mixto {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 32px 0;
+}
+
+@media (min-width: 768px) {
+  .bloque-mixto {
+    grid-template-columns: 1fr 1.6fr;
+    gap: 32px;
+  }
+}
+
+.mixto-izq-vert img {
+  width: 100%;
+  height: auto !important;
+  max-height: 540px;
+  object-fit: contain !important;
+  display: block;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.mixto-izq-vert figcaption {
+  font-size: 12px;
+  color: var(--periodico-gris);
+  font-style: italic;
+  margin-top: 6px;
+}
+
+.mixto-der-foto img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.mixto-der-texto h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 16px 0 10px;
+  color: var(--periodico-tinta);
+}
+
+/* Cuadro destacado estilo Word */
+.cuadro-editorial,
+.cuadro-destacado {
+  border: 1px solid var(--periodico-linea-fina);
+  padding: 22px 26px;
   margin: 28px 0;
+  background: rgba(0, 0, 0, 0.015);
+  break-inside: avoid;
+}
+
+.cuadro-editorial h3,
+.cuadro-destacado h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--periodico-tinta);
+}
+
+/* Imágenes dentro del cuerpo (Sin bordes, sin sombras, NUNCA cortadas) */
+.periodico-cuerpo-maqueta figure.foto-cuerpo,
+figure.foto-cuerpo {
+  margin: 28px 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  width: 100%;
+}
+
+.periodico-cuerpo-maqueta figure.foto-cuerpo img,
+figure.foto-cuerpo img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.periodico-cuerpo-maqueta figure.foto-cuerpo figcaption,
+figure.foto-cuerpo figcaption {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--periodico-gris);
+  padding: 8px 0;
+  background: transparent !important;
+  border-top: 1px solid var(--periodico-linea-columna);
+  margin-top: 6px;
+  font-style: italic;
+  text-align: left;
+}
+
+/* 6. Pie de página de la nota */
+.periodico-pie-nota {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--periodico-gris);
+  padding: 8px 0 12px;
+}
+
+.pie-dominio {
+  text-transform: lowercase;
+  font-weight: 700;
+  color: var(--periodico-tinta);
+}
+
+.pie-pagina-num {
+  text-align: right;
+  font-weight: 700;
+}
+
+.periodico-acciones-fuera {
+  margin-top: 24px;
 }
 
 /* 6. Firma y Créditos al Pie del Artículo (Página 2 del PDF) */
 .periodico-firma {
-  margin-top: 40px;
-  padding-top: 24px;
+  margin-top: 36px;
+  padding-top: 20px;
 }
 
 .firma-linea-doble {
   height: 4px;
   border-top: 1px solid var(--linea);
   border-bottom: 1px solid var(--linea);
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .firma-cuerpo {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px 20px;
+  padding: 14px 18px;
   background: var(--superficie);
   border: 1px solid var(--linea);
   border-radius: 4px;
@@ -1321,7 +1510,7 @@ main.wrap {
 
 .firma-rol {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: var(--gris);
@@ -1330,13 +1519,13 @@ main.wrap {
 
 .firma-nombre {
   font-family: Georgia, serif;
-  font-size: 17px;
+  font-size: 16.5px;
   color: var(--tinta);
 }
 
 .firma-locacion {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--gris);
   margin: 0;
 }
@@ -1344,6 +1533,320 @@ main.wrap {
 .firma-locacion a {
   color: var(--rojo);
   text-decoration: underline;
+}
+
+/* 7. Columna Lateral de Despieces Periodísticos (Estilo Cuadros PDF Broadsheet) */
+@media (min-width: 960px) {
+  .periodico-sidebar-despiece {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+.despiece-caja {
+  border: 1px solid var(--tinta);
+  background: var(--superficie);
+  margin-bottom: 22px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.despiece-badge-negro {
+  background: var(--tinta);
+  color: var(--fondo) !important;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  display: block;
+  text-align: left;
+}
+
+[data-theme="dark"] .despiece-badge-negro {
+  background: #ffffff;
+  color: #0e1013 !important;
+}
+
+.despiece-contenido {
+  padding: 14px 16px;
+}
+
+.despiece-puntos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.despiece-puntos li {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--tinta);
+  position: relative;
+  padding-left: 13px;
+}
+
+.despiece-puntos li::before {
+  content: "▪";
+  position: absolute;
+  left: 0;
+  color: var(--tinta);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.despiece-rel-item {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.despiece-rel-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.despiece-rel-fecha {
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--gris);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.despiece-rel-titulo {
+  font-family: Georgia, serif;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 700;
+  margin: 0;
+}
+
+.despiece-rel-titulo a {
+  color: var(--tinta);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+
+.despiece-rel-titulo a:hover {
+  color: var(--rojo);
+  text-decoration: underline;
+}
+
+.despiece-desc-share {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: var(--gris);
+  line-height: 1.4;
+  margin: 0 0 10px;
+}
+
+.despiece-botones-share {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.btn-despiece-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 8px;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  border-radius: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--tinta);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.btn-despiece-share:hover {
+  border-color: var(--tinta);
+  background: var(--superficie);
+}
+
+.toast-copiado {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #10b981;
+  color: #ffffff;
+  border-radius: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Barra de Difusión y Compartir al Pie */
+.articulo-acciones-pie {
+  margin: 36px 0 20px;
+  padding: 16px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.acciones-pie-titulo {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--gris);
+}
+
+.articulo-acciones-pie .despiece-botones-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.articulo-acciones-pie .btn-despiece-share {
+  padding: 8px 16px;
+  font-size: 11.5px;
+}
+
+/* Ediciones Vinculadas / Artículos Relacionados al Pie */
+.periodico-relacionadas-pie {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 2px solid var(--linea);
+}
+
+.relacionadas-pie-titulo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--tinta);
+  margin: 0 0 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.relacionadas-pie-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .relacionadas-pie-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+.relacionadas-pie-card {
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all .15s ease;
+  align-items: center;
+}
+
+.relacionadas-pie-card:hover {
+  border-color: var(--rojo);
+  transform: translateY(-1px);
+}
+
+.rel-card-thumb {
+  width: 90px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.rel-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rel-card-fecha {
+  font-family: Arial, sans-serif;
+  font-size: 10.5px;
+  color: var(--gris);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rel-card-titulo {
+  font-family: Georgia, serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--tinta);
+  margin: 0;
+}
+
+.relacionadas-pie-card:hover .rel-card-titulo {
+  color: var(--rojo);
+}
+
+/* 8. Impresión de Alta Fidelidad Broadsheet (A4 Clásico) */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .topbar, .masthead, .mainnav, .periodico-toolbar-lectura, .despiece-caja-acciones, .footer, .cookie-banner, .theme-toggle {
+    display: none !important;
+  }
+  main.wrap {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+  .articulo-periodico-clasico {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  .periodico-broadsheet-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 240px !important;
+    gap: 20px !important;
+  }
+  .periodico-cuerpo {
+    column-count: 2 !important;
+    column-gap: 22px !important;
+    column-rule: 1px solid #000 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    text-align: justify !important;
+  }
+  .despiece-caja {
+    border: 1px solid #000 !important;
+    page-break-inside: avoid;
+  }
+  .despiece-badge-negro {
+    background: #000 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 /* ==========================================================================
@@ -2562,3 +3065,9 @@ body.admin {
     align-items: center;
   }
 }
+/* ============ Bloque Video (2026-10-16): video en el cuerpo de la nota, mobile-first ============ */
+.video-cuerpo { margin: 28px 0; }
+.video-cuerpo video { width: 100%; height: auto; display: block; background: #000; }
+.video-responsive { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
+.video-responsive iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-cuerpo figcaption { font-size: 12.5px; line-height: 1.45; color: var(--periodico-gris, #666); padding: 8px 0; }
