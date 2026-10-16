@@ -1,6 +1,10 @@
 <?php
 require __DIR__ . '/../inc/config.php';
 exigir_admin();
+// El JS del editor cambia seguido: evitar que el navegador sirva una copia
+// vieja cacheada (bug de Caro 16-oct-2026: probaba con el JS anterior).
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
 $pdo = db();
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -495,6 +499,91 @@ document.addEventListener('DOMContentLoaded', function() {
     sel.removeAllRanges();
     sel.addRange(range);
   }
+
+  // Inserción de bloques por manipulación directa del DOM.
+  // Reemplaza document.execCommand('insertHTML'), que en navegadores móviles
+  // inserta en posiciones impredecibles (bug reportado por Caro 16-oct-2026:
+  // el cuadro y el dúo caían al final de la nota aunque el cursor estuviera
+  // en el medio). En escritorio el comportamiento es idéntico al anterior:
+  // el bloque queda exactamente donde está el cursor, o justo después del
+  // bloque de maquetación que lo contiene (nunca adentro, para no romper
+  // las columnas).
+  function insertBlockHtml(html) {
+    restoreCaret();
+    var sel = window.getSelection();
+    var range = null;
+    if (savedRange && canvas.contains(savedRange.commonAncestorContainer)) {
+      range = savedRange.cloneRange();
+    } else if (sel.rangeCount > 0 && canvas.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+      range = sel.getRangeAt(0).cloneRange();
+    }
+
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    var frag = document.createDocumentFragment();
+    var last = null;
+    while (tmp.firstChild) { last = tmp.firstChild; frag.appendChild(last); }
+
+    var blkS = caretLayoutBlock();
+    var done = false;
+
+    if (blkS && blkS.parentElement) {
+      // Dentro de un bloque de maquetación: insertar justo después de él.
+      blkS.parentNode.insertBefore(frag, blkS.nextSibling);
+      done = true;
+    } else if (range) {
+      var node = range.startContainer;
+      var el = node.nodeType === 1 ? node : node.parentElement;
+      var block = null, b = el;
+      while (b && b !== canvas) {
+        if (/^(P|H[1-6]|BLOCKQUOTE|FIGURE|LI|DIV)$/i.test(b.tagName || '')) { block = b; break; }
+        b = b.parentElement;
+      }
+      if (block && block.parentElement) {
+        var rStart = document.createRange();
+        rStart.selectNodeContents(block); rStart.collapse(true);
+        var rEnd = document.createRange();
+        rEnd.selectNodeContents(block); rEnd.collapse(false);
+        var atStart = range.compareBoundaryPoints(Range.START_TO_START, rStart) === 0;
+        var atEnd = range.compareBoundaryPoints(Range.END_TO_END, rEnd) === 0;
+        if (atStart) {
+          block.parentNode.insertBefore(frag, block);
+          done = true;
+        } else if (atEnd) {
+          block.parentNode.insertBefore(frag, block.nextSibling);
+          done = true;
+        } else {
+          // Cursor en el medio del bloque: partirlo e insertar entre las mitades.
+          var tail = document.createRange();
+          tail.setStart(range.startContainer, range.startOffset);
+          tail.setEnd(block, block.childNodes.length);
+          var tailFrag = tail.extractContents();
+          var newBlock = document.createElement(/^H[1-6]$/i.test(block.tagName) ? block.tagName.toLowerCase() : 'p');
+          newBlock.appendChild(tailFrag);
+          block.parentNode.insertBefore(newBlock, block.nextSibling);
+          block.parentNode.insertBefore(frag, newBlock);
+          if (!block.textContent.replace(/ /g, ' ').trim() && !block.querySelector('img')) {
+            block.parentNode.removeChild(block);
+          }
+          done = true;
+        }
+      }
+    }
+    if (!done) {
+      if (range) {
+        try { range.deleteContents(); range.insertNode(frag); }
+        catch (e) { canvas.appendChild(frag); }
+      } else {
+        canvas.appendChild(frag);
+      }
+    }
+
+    if (last && last.parentNode) { placeCaretAfter(last); }
+    else { canvas.focus(); }
+    saveSelection();
+    syncContent();
+    updateMetrics();
+  }
   function desanidarColumnas(root) {
     var sel = '.columnas-automaticas-2 .columnas-automaticas-2, .columnas-automaticas-3 .columnas-automaticas-3, ' +
               '.columnas-automaticas-2 .columnas-automaticas-3, .columnas-automaticas-3 .columnas-automaticas-2, ' +
@@ -734,13 +823,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnInsertCols2Auto) {
     btnInsertCols2Auto.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
       var html = '<div class="columnas-automaticas-2"><p>Escribe aquí tu texto continuo a 2 columnas. A medida que redactes o pegues párrafos, el texto pasará de forma automática y balanceada hacia la columna siguiente, como en un periódico real...</p></div><p><br></p>';
-      document.execCommand('insertHTML', false, html);
-      syncContent();
-      updateMetrics();
+      insertBlockHtml(html);
     });
   }
 
@@ -749,13 +833,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnInsertCols3Auto) {
     btnInsertCols3Auto.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
       var html = '<div class="columnas-automaticas-3"><p>Escribe aquí tu texto continuo a 3 columnas. El contenido se distribuirá automáticamente en tres columnas...</p></div><p><br></p>';
-      document.execCommand('insertHTML', false, html);
-      syncContent();
-      updateMetrics();
+      insertBlockHtml(html);
     });
   }
 
@@ -764,13 +843,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnInsertTitularSeccion) {
     btnInsertTitularSeccion.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
       var html = '<h2 class="titular-seccion-ancho">TITULAR DE SECCIÓN A TODO EL ANCHO</h2><p><br></p>';
-      document.execCommand('insertHTML', false, html);
-      syncContent();
-      updateMetrics();
+      insertBlockHtml(html);
     });
   }
 
@@ -779,9 +853,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnInsertDuo) {
     btnInsertDuo.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
       var html = '<div class="bloque-duo-fotos">' +
         '<div class="duo-fotos-grid">' +
         '  <div class="duo-foto-item"><img src="../assets/favicon.png" alt="Foto 1"><figcaption contenteditable="true">Pie de foto 1</figcaption></div>' +
@@ -789,9 +860,7 @@ document.addEventListener('DOMContentLoaded', function() {
         '</div>' +
         '<div class="duo-fotos-texto"><p>Columna de texto corto, cita destacada o párrafo de introducción que acompaña al bloque de imágenes superior...</p></div>' +
         '</div><p><br></p>';
-      document.execCommand('insertHTML', false, html);
-      syncContent();
-      updateMetrics();
+      insertBlockHtml(html);
     });
   }
 
@@ -800,9 +869,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnInsertMixto) {
     btnInsertMixto.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
       var html = '<div class="bloque-mixto">' +
         '<div class="mixto-izq-vert">' +
         '  <img src="../assets/favicon.png" alt="Foto vertical">' +
@@ -816,9 +882,7 @@ document.addEventListener('DOMContentLoaded', function() {
         '  </div>' +
         '</div>' +
         '</div><p><br></p>';
-      document.execCommand('insertHTML', false, html);
-      syncContent();
-      updateMetrics();
+      insertBlockHtml(html);
     });
   }
 
@@ -827,13 +891,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnInsertCuadro) {
     btnInsertCuadro.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
       var html = '<div class="cuadro-editorial"><h3>CLAVES O DESPIECE DESTACADO</h3><p>Escribe aquí el texto del cuadro destacado o análisis complementario...</p></div><p><br></p>';
-      document.execCommand('insertHTML', false, html);
-      syncContent();
-      updateMetrics();
+      insertBlockHtml(html);
     });
   }
 
@@ -842,12 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnExitCols) {
     btnExitCols.addEventListener('click', function(e) {
       e.preventDefault();
-      restoreCaret();
-      var blkS = caretLayoutBlock();
-      if (blkS) placeCaretAfter(blkS);
-      document.execCommand('insertHTML', false, '<p><br></p>');
-      syncContent();
-      updateMetrics();
+      insertBlockHtml('<p><br></p>');
     });
   }
 
