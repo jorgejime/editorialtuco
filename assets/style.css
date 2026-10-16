@@ -1261,6 +1261,19 @@ main.wrap {
   -webkit-hyphens: auto;
 }
 
+/* 2026-10-16: en móvil los bloques de columnas son de 1 columna; con
+   justificado igual se abrían huecos entre palabras ("separa demasiado
+   las palabras", Caro). Alineación a la izquierda como el cuerpo. */
+@media (max-width: 719px) {
+  .columnas-automaticas-2,
+  .columnas-automaticas-3,
+  .columnas-2,
+  .columnas-3,
+  .editorial-cols {
+    text-align: left;
+  }
+}
+
 /* Guardia anti-anidado (2026-10-15): un bloque de columnas nunca va dentro de otro.
    Sin esto, columnas dentro de columnas se ven como 4 columnas. */
 .columnas-automaticas-2 .columnas-automaticas-2,
