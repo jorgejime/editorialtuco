@@ -167,7 +167,7 @@ function sanitizar_html_noticia(string $html): string {
         return htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
     }
 
-    $permitidas = '<p><br><hr><h2><h3><h4><h5><h6><strong><b><em><i><u><s><ul><ol><li><blockquote><a><figure><figcaption><img><div><span>';
+    $permitidas = '<p><br><hr><h2><h3><h4><h5><h6><strong><b><em><i><u><s><ul><ol><li><blockquote><a><figure><figcaption><img><div><span><video><source><iframe>';
     $limpio = strip_tags($html, $permitidas);
 
     // Sanitizar enlaces <a>
@@ -201,6 +201,56 @@ function sanitizar_html_noticia(string $html): string {
         return '<img src="' . $src . '" alt="' . $alt . '" loading="lazy">';
     }, $limpio);
 
+    // Sanitizar videos <video> (solo atributos seguros; src como imagen, sin data:)
+    $limpio = preg_replace_callback('/<video(\s+[^>]*?)?>/i', function($matches) {
+        $attrs = $matches[1] ?? '';
+        $out = [];
+        if (preg_match('/src=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $src_val = trim($m[2]);
+            if (preg_match('/^(\.{0,2}\/)?uploads\/|^https?:\/\//i', $src_val)) {
+                $out[] = 'src="' . htmlspecialchars($src_val, ENT_QUOTES, 'UTF-8') . '"';
+            }
+        }
+        if (empty($out)) return '';
+        if (preg_match('/poster=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $p_val = trim($m[2]);
+            if (preg_match('/^(\.{0,2}\/)?uploads\/|^https?:\/\/|^data:image\//i', $p_val)) {
+                $out[] = 'poster="' . htmlspecialchars($p_val, ENT_QUOTES, 'UTF-8') . '"';
+            }
+        }
+        if (preg_match('/\bcontrols\b/i', $attrs)) $out[] = 'controls';
+        if (preg_match('/preload=([\'"])(metadata|none|auto)\1/i', $attrs, $m)) $out[] = 'preload="' . $m[2] . '"';
+        if (preg_match('/\bplaysinline\b/i', $attrs)) $out[] = 'playsinline';
+        return '<video ' . implode(' ', $out) . '>';
+    }, $limpio);
+
+    // Sanitizar <source> de video (src validado, type inferido)
+    $limpio = preg_replace_callback('/<source(\s+[^>]*?)?>/i', function($matches) {
+        $attrs = $matches[1] ?? '';
+        if (preg_match('/src=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $src_val = trim($m[2]);
+            if (preg_match('/^(\.{0,2}\/)?uploads\/|^https?:\/\//i', $src_val)) {
+                $s = htmlspecialchars($src_val, ENT_QUOTES, 'UTF-8');
+                $type = '';
+                if (preg_match('/\.webm(\?|$)/i', $src_val)) $type = ' type="video/webm"';
+                elseif (preg_match('/\.mp4(\?|$)/i', $src_val)) $type = ' type="video/mp4"';
+                return '<source src="' . $s . '"' . $type . '>';
+            }
+        }
+        return '';
+    }, $limpio);
+
+    // Sanitizar <iframe> — SOLO embeds de YouTube-nocookie y Vimeo (regex estricta anti-XSS)
+    $limpio = preg_replace_callback('/<iframe(\s+[^>]*?)?>/i', function($matches) {
+        $attrs = $matches[1] ?? '';
+        if (preg_match('/src=([\'"])(.*?)\1/i', $attrs, $m)) {
+            $src_val = trim($m[2]);
+            if (preg_match('#^https://(www\.youtube-nocookie\.com/embed/|player\.vimeo\.com/video/)[A-Za-z0-9_-]+$#', $src_val)) {
+                return '<iframe src="' . htmlspecialchars($src_val, ENT_QUOTES, 'UTF-8') . '" loading="lazy" allowfullscreen title="Video">';
+            }
+        }
+        return '';
+    }, $limpio);
     // Sanitizar figuras <figure> (permitir clases foto-cuerpo y alineaciones)
     $limpio = preg_replace_callback('/<figure(\s+[^>]*?)?>/i', function($matches) {
         $attrs = $matches[1] ?? '';
@@ -208,7 +258,7 @@ function sanitizar_html_noticia(string $html): string {
         if (preg_match('/class=([\'"])(.*?)\1/i', $attrs, $m)) {
             $cls_list = explode(' ', $m[2]);
             foreach ($cls_list as $c) {
-                if (in_array($c, ['foto-cuerpo', 'align-left', 'align-right', 'align-center'], true)) {
+                if (in_array($c, ['foto-cuerpo', 'align-left', 'align-right', 'align-center', 'foto-grande', 'foto-vertical', 'foto-horizontal', 'video-cuerpo'], true)) {
                     $classes[] = $c;
                 }
             }
@@ -217,14 +267,22 @@ function sanitizar_html_noticia(string $html): string {
         return '<figure class="' . implode(' ', $classes) . '">';
     }, $limpio);
 
-    // Sanitizar contenedores <div> (permitir clases de columnas editoriales)
+    // Sanitizar contenedores <div> (permitir clases de columnas y bloques de maqueta periodística)
     $limpio = preg_replace_callback('/<div(\s+[^>]*?)?>/i', function($matches) {
         $attrs = $matches[1] ?? '';
         $classes = [];
         if (preg_match('/class=([\'"])(.*?)\1/i', $attrs, $m)) {
             $cls_list = explode(' ', $m[2]);
+            $permitidas_div = [
+                'editorial-cols', 'editorial-col',
+                'columnas-2', 'columnas-3', 'columnas-automaticas-2', 'columnas-automaticas-3',
+                'bloque-duo-fotos', 'duo-fotos-grid', 'duo-foto-item', 'duo-fotos-texto',
+                'bloque-mixto', 'mixto-izq-vert', 'mixto-der-bloque', 'mixto-der-foto', 'mixto-der-texto',
+                'cuadro-editorial', 'cuadro-destacado', 'bloque-columnas-wrap',
+                'titular-seccion-ancho', 'video-cuerpo', 'video-responsive'
+            ];
             foreach ($cls_list as $c) {
-                if (in_array($c, ['editorial-cols', 'editorial-col'], true)) {
+                if (in_array($c, $permitidas_div, true)) {
                     $classes[] = $c;
                 }
             }
@@ -276,6 +334,18 @@ function fecha_larga($iso) {
     $meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
     $ts = strtotime($iso);
     return date('j', $ts) . ' de ' . $meses[(int)date('n', $ts) - 1] . ' de ' . date('Y', $ts);
+}
+
+function fecha_larga_periodico($iso) {
+    $meses = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+    $dias = ['DOMINGO','LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO'];
+    $ts = strtotime($iso);
+    if (!$ts) return date('d/m/Y');
+    $dia_semana = $dias[(int)date('w', $ts)];
+    $dia_mes = date('j', $ts);
+    $mes = $meses[(int)date('n', $ts) - 1];
+    $anio = date('Y', $ts);
+    return "{$dia_semana}, {$dia_mes} DE {$mes} DE {$anio}";
 }
 
 // Imagen de reemplazo (SVG inline) cuando la noticia no tiene foto.
